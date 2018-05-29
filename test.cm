@@ -1,5 +1,6 @@
 Group is 
-        grammar/grammar.sml
+        src/grammar.sml
+        src/evaluators.sml
         test.sml
         
         $/basis.cm

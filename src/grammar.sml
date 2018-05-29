@@ -1,3 +1,6 @@
+structure Grammar =
+struct 
+
 datatype tipo_primitivo = Int_ of int 
                         | String_ of string 
                         | Float_ of real
@@ -33,13 +36,13 @@ datatype Exp = Const of tipo
 
 infix 1 :=
 
-datatype Cmd = Title of string | Seq of Cmd list | := of Var * Exp;  
+datatype Cmd = Seq of Cmd list | := of Var * Exp;  
+
+type Memory = (Var * tipo) list;
+
+type Program = string * Cmd;
 
 
-structure Aux =
-struct 
-
-fun algo(x) = x+1;
 
 
 end

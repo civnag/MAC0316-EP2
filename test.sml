@@ -1,10 +1,10 @@
-use "grammar/grammar.sml";
+use "src/evaluators.sml";
 structure Test =
 struct
 
 fun main (prog_name, args) =
     let
-      val _ = print ("OLA MUNDO! " ^ Int.toString(Aux.algo(2)) ^  " \n")
+      val _ = print ("OLA MUNDO! \n")
     in
       1
     end
