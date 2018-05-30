@@ -85,5 +85,11 @@ fun eval (e: Grammar.Exp, m:Grammar.Memory): Grammar.tipo =
 fun exec(cmd: Grammar.Cmd, m:Grammar.Memory):unit =
     case cmd of
          Grammar.:= (v,e) => updateHt(v,eval(e,m),m)
-
+         | Grammar.Seq (c :: cs) => 
+            let 
+                val _ = exec(c,m)
+            in 
+                exec(Grammar.Seq cs,m)         
+            end
+        | Grammar.Seq Nil => ()
 end
