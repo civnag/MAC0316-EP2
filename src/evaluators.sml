@@ -3,6 +3,7 @@ use "src/grammar.sml";
 exception TypeMismatch;
 exception OperationNotDefined;
 exception DivisionByZero;
+exception VariableNotDeclared;
 
 structure Eval =
 struct 
@@ -52,6 +53,14 @@ fun sum_op((x,y):Grammar.tipo * Grammar.tipo):Grammar.tipo =
 fun eval (e: Grammar.Exp, m:Grammar.Memory): Grammar.tipo =
     case e of
         Grammar.Const n => n
+        | Grammar.Variable var => 
+            let 
+                val achou = HashTable.find m var
+            in
+                case achou of
+                    NONE => raise VariableNotDeclared
+                    | SOME v => v
+            end
         | Grammar.Add (e1,e2) => sum_op(eval(e1,m),eval(e2,m))
         | Grammar.Sub (e1,e2) => sub_op(eval(e1,m),eval(e2,m))
         | Grammar.Mul (e1,e2) => mul_op(eval(e1,m),eval(e2,m))

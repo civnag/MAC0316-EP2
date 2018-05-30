@@ -25,7 +25,7 @@ datatype tipo = Tupla of tipo_tupla
               | Sample of sample_of
               | Primitivo of tipo_primitivo;
 
-type Var = tipo * string;  
+type Var = string
 
 datatype Exp = Const of tipo                                                         
              | Variable of Var                                                   
@@ -38,9 +38,11 @@ infix 1 :=
 
 datatype Cmd = Seq of Cmd list | := of Var * Exp;  
 
-type Memory = (Var * tipo) list;
+type Memory = (Var, tipo) HashTable.hash_table;
 
-type Program = string * Cmd;
+type Decl = (Var * tipo) list;
+
+type Program = string * Decl * Cmd;
 
 
 
