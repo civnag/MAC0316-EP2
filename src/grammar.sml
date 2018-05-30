@@ -34,7 +34,8 @@ datatype Exp = Const of tipo
              | Mul of Exp * Exp                                                 
              | Div of Exp * Exp;  
 
-infix 1 :=
+
+infix :=
 
 datatype Cmd = Seq of Cmd list | := of Var * Exp;  
 
