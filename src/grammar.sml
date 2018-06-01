@@ -4,7 +4,8 @@ struct
 datatype tipo_primitivo = Int_ of int 
                         | String_ of string 
                         | Float_ of real
-                        | Boolean_ of bool;
+                        | Boolean_ of bool
+                        | Void;
 
 datatype tipo_tupla = tipo_tupla2 of tipo_primitivo * tipo_primitivo
                     | tipo_tupla3 of tipo_primitivo * tipo_primitivo * tipo_primitivo
@@ -28,7 +29,9 @@ datatype tipo = Tupla of tipo_tupla
 type Var = string
 
 datatype Exp = Const of tipo                                                         
-             | Variable of Var                                                   
+             | Variable of Var
+             | ToString of Exp
+             | Print of Exp
              | Add of Exp * Exp                                                      
              | Sub of Exp * Exp                                                  
              | Mul of Exp * Exp                                                 
@@ -37,7 +40,7 @@ datatype Exp = Const of tipo
 
 infix :=
 
-datatype Cmd = Seq of Cmd list | := of Var *  Exp;  
+datatype Cmd = Seq of Cmd list | := of Var *  Exp | Action of Exp
 
 type Memory = (Var, tipo) HashTable.hash_table;
 
