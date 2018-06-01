@@ -37,7 +37,7 @@ datatype Exp = Const of tipo
 
 infix :=
 
-datatype Cmd = Seq of Cmd list | := of Var * Exp;  
+datatype Cmd = Seq of Cmd list | := of Var *  Exp;  
 
 type Memory = (Var, tipo) HashTable.hash_table;
 

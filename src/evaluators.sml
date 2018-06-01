@@ -82,9 +82,10 @@ fun eval (e: Grammar.Exp, m:Grammar.Memory): Grammar.tipo =
         | Grammar.Div (e1,e2) => div_op(eval(e1,m),eval(e2,m))
 
 
+
 fun exec(cmd: Grammar.Cmd, m:Grammar.Memory):unit =
     case cmd of
-         Grammar.:= (v,e) => updateHt(v,eval(e,m),m)
+         Grammar.:= (v, e) => updateHt(v,eval(e,m),m)
          | Grammar.Seq (c :: cs) => 
             let 
                 val _ = exec(c,m)
@@ -102,5 +103,12 @@ fun run((title, vars, cmd)): unit =
     in 
         exec(cmd,mem)
     end
+
+fun pgmTeste(): Grammar.Program = ("Primeiro programa"
+                            , [("x",Grammar.Primitivo (Grammar.Int_ 0)),("y",Grammar.Primitivo (Grammar.Int_ 0))]
+                            , Grammar.Seq ([Grammar.:= ("x", (Grammar.Add ((Grammar.Variable "x"), (Grammar.Const (Grammar.Primitivo (Grammar.Int_ 1))))))
+                                  , Grammar.:= ("y", ((Grammar.Mul ((Grammar.Variable "x"), (Grammar.Const (Grammar.Primitivo (Grammar.Int_ 2)))))))
+                                  ])
+                            )
 
 end
