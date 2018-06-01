@@ -23,6 +23,10 @@ fun updateHt(a: 'a,b: 'b,ht: ('a, 'b) HashTable.hash_table): unit =
 structure Eval =
 struct 
 
+(*
+    Funcoes auxiliares para calculos e checagem de tipos.
+*)
+
 fun div_op((x,y):Grammar.tipo * Grammar.tipo):Grammar.tipo =
     case (x,y) of
         (Grammar.Primitivo (Grammar.Int_ i), Grammar.Primitivo(Grammar.Int_ 0)) => 
@@ -84,7 +88,20 @@ fun print_op(x:Grammar.tipo):Grammar.tipo =
                 Grammar.Primitivo Grammar.Void
             end
         | _ => raise TypeMismatch
+(*
+    Fim funcoes auxiliares
+*)
 
+
+(*
+    eval: Funcao que calcula expressoes.
+    Se a expressao for constante, retorna-se a apenas seu valor.
+    Se for variavel, olhamos na tabela(memoria) e devolve este valor.
+    Se for Add, Sub, Mul ou Div realiza-se a expressao aritmetica (tipos checados
+    em sum_op, sub_op, ...)
+    Se for ToString, convertemos um tipo primitivo para string (tipo checado em toString_op).
+    Se for print, mostra a string na tela (tipo checado em print_op)
+*)
 
 fun eval (e: Grammar.Exp, m:Grammar.Memory): Grammar.tipo =
     case e of
@@ -106,6 +123,12 @@ fun eval (e: Grammar.Exp, m:Grammar.Memory): Grammar.tipo =
 
 
 
+(* 
+    exec: Funcao que interpreta o bloco. 
+    Se for uma atribuicao, atualizamos a hashtable.
+    Se for sequencia, executamos um comando e, recursivamente, executamos o proximo.
+    Se for uma acao, apenas calculamos a expressao.
+*)
 fun exec(cmd: Grammar.Cmd, m:Grammar.Memory):unit =
     case cmd of
          Grammar.:= (v, e) => updateHt(v,eval(e,m),m)
@@ -123,7 +146,11 @@ fun exec(cmd: Grammar.Cmd, m:Grammar.Memory):unit =
                 ()
             end
 
-(* Run a program *)
+(* run: Executa um programa. 
+   Um programa eh composto por titulo, variaveis e o bloco (cmd).
+   Uma hastable de 1000 posicoes sera criada e com isso, pode-se usar ateh 1000 vriaveis.
+   Essa funcao cria as variaveis declaradas na tabela e executa o programa.
+*)
 fun run((title, vars, cmd)): unit = 
     let 
         val _ = print ("Programa " ^ title ^ "\n")
@@ -133,6 +160,7 @@ fun run((title, vars, cmd)): unit =
         exec(cmd,mem)
     end
 
+(* Teste da semantica. *)
 fun pgmTeste(): Grammar.Program = ("Primeiro programa"
                             , [("x",Grammar.Primitivo (Grammar.Int_ 0)),("y",Grammar.Primitivo (Grammar.Int_ 0))]
                             , Grammar.Seq ([Grammar.:= ("x", (Grammar.Add ((Grammar.Variable "x"), (Grammar.Const (Grammar.Primitivo (Grammar.Int_ 1))))))
