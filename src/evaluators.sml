@@ -126,7 +126,7 @@ fun exec(cmd: Grammar.Cmd, m:Grammar.Memory):unit =
 (* Run a program *)
 fun run((title, vars, cmd)): unit = 
     let 
-        val _ = print ("Programa " ^ title)
+        val _ = print ("Programa " ^ title ^ "\n")
         val mem = HashTable.mkTable (HashString.hashString, op=) (1000, Fail "not found")
         val _ = List.app (fn(x) => HashTable.insert mem x) vars
     in 
