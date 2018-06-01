@@ -4,7 +4,7 @@ struct
 
 fun main (prog_name, args) =
     let
-      val _ = print ("OLA MUNDO! \n")
+      val _ = Eval.run(Eval.pgmTeste())
     in
       1
     end
