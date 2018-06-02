@@ -17,4 +17,4 @@ fun variance_pop(amostra) = sigma_summation_p(amostra, mean(amostra), length(amo
 
 fun sigma_summation(head::tail, mean) = pow(head - mean, 2.0) + sigma_summation(tail, mean) | sigma_summation(nil, mean) = 0.0;
 fun variance(amostra) = 1.0 / (length(amostra) - 1.0) * sigma_summation(amostra, mean(amostra));
-variance([1.0,3.0,5.0,8.0,6.0,8.0,9.0])
+
