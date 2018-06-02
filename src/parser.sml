@@ -19,6 +19,15 @@ fun (Parser{parse=p}) >>= f = Parser ({parse=fn(s) =>
       end) (p s))
 })
 
+infix 4 <$>;
+
+fun f <$> (Parser{parse=p}) = Parser ({parse=fn(s) =>
+    let 
+        val as' = p s 
+    in 
+        List.map (fn (a,s') => (f a, s')) as'
+    end
+})
 
 signature PARSER = 
 sig 
