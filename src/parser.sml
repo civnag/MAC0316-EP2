@@ -1,22 +1,33 @@
 use "src/grammar.sml"; 
 
-datatype 'a Parser = Parser of {parse : string -> ('a*string) list} 
 
 exception StreamError;
 exception ParsingError;
+
+datatype 'a Parser = Parser of {parse : string -> ('a*string) list} 
 
 signature PARSER = 
 sig 
   val runP : 'a Parser -> string -> 'a 
   val item : char Parser
+  val >>= : 'a Parser * ('a -> 'b Parser) -> 'b Parser
 end 
 
 
-structure Parser : PARSER =
+structure Syntax : PARSER =
 struct 
 
+infix 9 >>=;
 
-
+fun (Parser{parse=p}) >>= f = Parser ({parse=fn(s) => 
+    List.concat (List.map (fn(a, s') => 
+      let 
+          val (Parser{parse=q}) = f a 
+      in
+          q s'
+      end) (p s))
+})
+  
 fun runP (Parser{parse=p}) s = 
   let 
     val l = p s
