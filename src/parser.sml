@@ -11,11 +11,14 @@ sig
   val runP : 'a Parser -> string -> 'a 
   val item : char Parser
   val >>= : 'a Parser * ('a -> 'b Parser) -> 'b Parser
+  val ret : 'a -> 'a Parser
 end 
 
 
 structure Syntax : PARSER =
 struct 
+
+fun ret a = Parser ({parse=fn(s) => [(a,s)]})
 
 infix 9 >>=;
 
