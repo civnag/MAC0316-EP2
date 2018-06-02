@@ -7,4 +7,4 @@ use "mean.sml";
 open Math;
 
 fun sigma_summation(head::tail, mean) = pow(head - mean, 2.0) + sigma_summation(tail, mean) | sigma_summation(nil, mean) = 0.0;
-fun standardDeviation(amostra) = sqrt(1.0 / length(amostra) * sigma_summation(amostra, mean(amostra)));
+fun standardDeviation(amostra) = sqrt(1.0 / (length(amostra) - 1.0) * sigma_summation(amostra, mean(amostra)));

@@ -1,4 +1,3 @@
-
 (*
  * Calcula a correlação de duas amostras de flutuantes.
  * O retorno é um flutuante, resultado das amostras fornecidas.
