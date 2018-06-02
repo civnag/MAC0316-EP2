@@ -6,21 +6,9 @@ exception ParsingError;
 
 datatype 'a Parser = Parser of {parse : string -> ('a*string) list} 
 
-signature PARSER = 
-sig 
-  val runP : 'a Parser -> string -> 'a 
-  val item : char Parser
-  val >>= : 'a Parser * ('a -> 'b Parser) -> 'b Parser
-  val ret : 'a -> 'a Parser
-end 
-
-
-structure Syntax : PARSER =
-struct 
-
 fun ret a = Parser ({parse=fn(s) => [(a,s)]})
 
-infix 9 >>=;
+infix 1 >>=;
 
 fun (Parser{parse=p}) >>= f = Parser ({parse=fn(s) => 
     List.concat (List.map (fn(a, s') => 
@@ -30,7 +18,18 @@ fun (Parser{parse=p}) >>= f = Parser ({parse=fn(s) =>
           q s'
       end) (p s))
 })
-  
+
+
+signature PARSER = 
+sig 
+  val runP : 'a Parser -> string -> 'a 
+  val item : char Parser
+end 
+
+
+structure Syntax : PARSER =
+struct 
+
 fun runP (Parser{parse=p}) s = 
   let 
     val l = p s
