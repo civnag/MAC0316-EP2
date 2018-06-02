@@ -29,6 +29,25 @@ fun f <$> (Parser{parse=p}) = Parser ({parse=fn(s) =>
     end
 })
 
+(* (Parser cs1) <*> (Parser cs2) = 
+Parser (\s -> [(f a, s2) | (f, s1) <- cs1 s, (a, s2) <- cs2 s1]) *)
+
+infix 4 <*>;
+
+fun (Parser{parse=cs}) <*> (Parser{parse=p}) = Parser ({parse=fn(s) =>
+    let 
+        val fs = cs s 
+    in 
+        List.concat(List.map (fn (f,s1) => 
+          let 
+            val as' = p s1 
+          in 
+            List.map (fn(a,s2) => (f a,s2)) as'
+          end) fs)  
+    end
+})
+
+
 signature PARSER = 
 sig 
   val runP : 'a Parser -> string -> 'a 
