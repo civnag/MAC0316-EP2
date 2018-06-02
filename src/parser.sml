@@ -5,10 +5,19 @@ datatype 'a Parser = Parser of {parse : string -> ('a*string) list}
 exception StreamError;
 exception ParsingError;
 
-structure Parser =
+signature PARSER = 
+sig 
+  val runP : 'a Parser -> string -> 'a 
+  val item : char Parser
+end 
+
+
+structure Parser : PARSER =
 struct 
 
-fun runP(Parser{parse=p}, s: string): 'a = 
+
+
+fun runP (Parser{parse=p}) s = 
   let 
     val l = p s
   in
@@ -19,7 +28,7 @@ fun runP(Parser{parse=p}, s: string): 'a =
   end
   
 
-fun item(): char Parser =
+val item =
   Parser ({parse = fn(s: string) =>
     let 
       val css = String.explode s 
