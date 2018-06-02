@@ -47,6 +47,28 @@ fun (Parser{parse=cs}) <*> (Parser{parse=p}) = Parser ({parse=fn(s) =>
     end
 })
 
+infix 4 <|>;
+
+fun (Parser{parse=p}) <|> (Parser{parse=q}) = Parser ({parse=fn(s) =>
+    let
+        val ps = p s 
+    in 
+        case ps of
+          nil => q s
+          | x => x
+    end
+})
+
+fun pcombine (Parser{parse=p}) (Parser{parse=q}) = Parser ({parse=fn(s) =>
+    let
+        val ps = p s 
+        val qs = q s 
+    in 
+        ps @ qs
+    end
+})
+
+val pfail = Parser {parse= fn(s) => nil}
 
 signature PARSER = 
 sig 
