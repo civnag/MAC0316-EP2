@@ -90,11 +90,20 @@ sig
   val chainleft : 'a Parser -> ('a -> 'a -> 'a) Parser -> 'a -> 'a Parser
   val charp : char -> char Parser
   val nump : int Parser
+  val stringp : char list -> string Parser
+  val spaces : string Parser
+  val digit : char Parser
+  val tokenp : 'a Parser -> 'a Parser
+  val reserved : string -> string Parser
+  val isnumberp : int Parser
+  val parens : 'a Parser -> 'a Parser
 end 
 
 
 structure Syntax : PARSER =
 struct 
+
+(****** Funcoes para imitar as expressoes regulares ********)
 
 fun runP (Parser{parse=p}) s = 
   let 
@@ -131,11 +140,28 @@ fun auxchain p po = p >>= (fn(a) => rest a po p)
 
 fun chainleft p po a = (auxchain p po) <|> ret a
 
-(****** REAL PARSERS ********)
+(****** PARSERS DE FATO ********)
 
+(* Satifaz um dado char *)
 fun charp c = satisfy (fn(x) => c = x)
 
+(* Eh numero? *)
 val nump = Option.valOf <$> (Int.fromString <$> (String.implode <$> some (satisfy Char.isDigit)))
+
+fun stringp nil = ret ""
+  | stringp (c::cs) = (charp c) >>= (fn(x) => stringp cs >>= (fn(y) => ret (String.implode(c::cs))))
+
+val spaces = String.implode <$> (many (oneOf " \n\r"))
+
+val digit = satisfy (Char.isDigit)
+
+fun tokenp p = p >>= (fn(a) => spaces >>= (fn(x) => ret a))
+
+fun reserved s = tokenp (stringp (String.explode s))
+
+val isnumberp = (stringp (String.explode "-") <|> ret "") >>= (fn(s) => String.implode <$> (some digit) >>= (fn(cs) => ret (Option.valOf (Int.fromString (s ^ cs)))))
+
+fun parens p = reserved "(" >>= (fn(y) => p >>= (fn(n) => reserved ")" >>= (fn(x) => ret n)))
 
 end
 
