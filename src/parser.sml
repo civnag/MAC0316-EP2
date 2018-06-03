@@ -88,6 +88,8 @@ sig
   val oneOf : string -> char Parser
   val auxchain : 'a Parser -> ('a -> 'a -> 'a) Parser -> 'a Parser
   val chainleft : 'a Parser -> ('a -> 'a -> 'a) Parser -> 'a -> 'a Parser
+  val charp : char -> char Parser
+  val nump : int Parser
 end 
 
 
@@ -128,6 +130,12 @@ fun rest a po p = (po >>= (fn(f) => p >>= (fn(b) => rest (f a b) po p))) <|> ret
 fun auxchain p po = p >>= (fn(a) => rest a po p)
 
 fun chainleft p po a = (auxchain p po) <|> ret a
+
+(****** REAL PARSERS ********)
+
+fun charp c = satisfy (fn(x) => c = x)
+
+val nump = Option.valOf <$> (Int.fromString <$> (String.implode <$> some (satisfy Char.isDigit)))
 
 end
 
