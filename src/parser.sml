@@ -1,5 +1,5 @@
 use "src/grammar.sml"; 
-
+use "src/evaluators.sml"; 
 
 exception StreamError;
 exception ParsingError;
@@ -97,6 +97,15 @@ sig
   val reserved : string -> string Parser
   val isnumberp : int Parser
   val parens : 'a Parser -> 'a Parser
+  val infixOp : string -> ('a * 'a -> 'a) -> ('a * 'a -> 'a) Parser
+  
+  val intp : G.Exp Parser 
+  (* val factor : G.Exp Parser *)
+  (* val termp : G.Exp Parser *)
+  val addop : (G.Exp * G.Exp -> G.Exp) Parser
+  val mulop : (G.Exp * G.Exp -> G.Exp) Parser
+  
+  (* val runLine : string -> G.Exp *)
 end 
 
 
@@ -162,6 +171,22 @@ fun reserved s = tokenp (stringp (String.explode s))
 val isnumberp = (stringp (String.explode "-") <|> ret "") >>= (fn(s) => String.implode <$> (some digit) >>= (fn(cs) => ret (Option.valOf (Int.fromString (s ^ cs)))))
 
 fun parens p = reserved "(" >>= (fn(y) => p >>= (fn(n) => reserved ")" >>= (fn(x) => ret n)))
+
+fun infixOp s f = reserved s >>= (fn(x) => ret f)
+
+(****** Conversao para a AST *******)
+
+val intp = isnumberp >>= (fn(n) => ret (G.Const (G.Primitivo (G.Int_ n)))) 
+
+val addop = (infixOp "+" G.Add) <|> (infixOp "-" G.Sub)
+
+val mulop = (infixOp "*" G.Mul) <|> (infixOp "/" G.Div) 
+
+(* val factor = intp <|> parens (auxchain termp addop) *)
+
+(* val termp = auxchain factor mulop *)
+
+(* fun runLine = runP factor *)
 
 end
 
