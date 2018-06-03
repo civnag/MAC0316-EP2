@@ -100,12 +100,13 @@ sig
   val infixOp : string -> ('a * 'a -> 'a) -> ('a * 'a -> 'a) Parser
   
   val intp : G.Exp Parser 
+  val expressionp : unit -> G.Exp Parser 
   (* val factor : G.Exp Parser *)
-  (* val termp : G.Exp Parser *)
+  (* val termp : unit -> G.Exp Parser *)
   val addop : (G.Exp * G.Exp -> G.Exp) Parser
   val mulop : (G.Exp * G.Exp -> G.Exp) Parser
   
-  (* val runLine : string -> G.Exp *)
+  val runLine : string -> G.Exp 
 end 
 
 
@@ -182,11 +183,9 @@ val addop = (infixOp "+" G.Add) <|> (infixOp "-" G.Sub)
 
 val mulop = (infixOp "*" G.Mul) <|> (infixOp "/" G.Div) 
 
-(* val factor = intp <|> parens (auxchain termp addop) *)
+fun expressionp() = auxchain (auxchain (intp <|> parens (expressionp())) (curry <$> mulop)) (curry <$> addop)
 
-(* val termp = auxchain factor mulop *)
-
-(* fun runLine = runP factor *)
+val runLine = runP (expressionp()) 
 
 end
 
