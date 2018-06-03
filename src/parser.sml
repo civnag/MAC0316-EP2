@@ -12,6 +12,9 @@ fun curry abc a b = abc (a,b);
 
 (************)
 
+(* Verifica se um carater pertence a uma string *)
+fun elem s c = String.isSubstring (str c) s 
+
 fun ret a = Parser ({parse=fn(s) => [(a,s)]})
 
 infix 1 >>=;
@@ -77,11 +80,12 @@ fun some(p: 'a Parser): ('a list) Parser = curry (op ::) <$> p <*> (some p <|> r
 
 fun many(p: 'a Parser): ('a list) Parser = (curry (op ::) <$> p <*> many p) <|> ret nil 
 
-
 signature PARSER = 
 sig 
   val runP : 'a Parser -> string -> 'a 
   val item : char Parser
+  val satisfy : (char -> bool) -> char Parser
+  val oneOf : string -> char Parser
 end 
 
 
@@ -98,7 +102,6 @@ fun runP (Parser{parse=p}) s =
       | _           => raise ParsingError
   end
   
-
 val item =
   Parser ({parse = fn(s: string) =>
     let 
@@ -109,4 +112,14 @@ val item =
           | (c::cs) => [(c,String.implode cs)]
     end
   }) 
+  
+fun satisfy pred = item >>= (fn(c) => 
+  if (pred c) 
+  then ret c 
+  else pfail
+)
+
+fun oneOf s = satisfy (elem s)
+
 end
+
