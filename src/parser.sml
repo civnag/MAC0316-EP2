@@ -87,6 +87,7 @@ sig
   val satisfy : (char -> bool) -> char Parser
   val oneOf : string -> char Parser
   val auxchain : 'a Parser -> ('a -> 'a -> 'a) Parser -> 'a Parser
+  val chainleft : 'a Parser -> ('a -> 'a -> 'a) Parser -> 'a -> 'a Parser
 end 
 
 
@@ -125,6 +126,8 @@ fun oneOf s = satisfy (elem s)
 fun rest a po p = (po >>= (fn(f) => p >>= (fn(b) => rest (f a b) po p))) <|> ret a  
 
 fun auxchain p po = p >>= (fn(a) => rest a po p)
+
+fun chainleft p po a = (auxchain p po) <|> ret a
 
 end
 
