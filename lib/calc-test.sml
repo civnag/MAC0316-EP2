@@ -15,7 +15,10 @@ struct
 			val (r, strm', errs) = CP.parse lex AtomMap.empty strm
 			val _ = print (Int.toString (Option.valOf r))
 		in 
-			1
+			print (String.concatWith "\n"
+				(List.map (AntlrRepair.repairToString tok2s sm)
+				errs));
+			r
 		end
 
 	fun main (prog_name, args) =
