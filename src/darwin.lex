@@ -1,11 +1,11 @@
-%name CalcLexer;
+%name DarwinLexer;
 
 %let digit = [0-9];
 %let int = {digit}+;
 %let alpha = [a-zA-Z];
 %let id = {alpha}({alpha} | {digit})*;
 %defs (
-    structure T = CalcTokens
+    structure T = DarwinTokens
     type lex_result = T.token
     fun eof() = T.EOF
 );

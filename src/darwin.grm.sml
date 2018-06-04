@@ -1,5 +1,5 @@
 structure 
-CalcTokens = struct
+DarwinTokens = struct
 
     datatype token = EOF
       | RP
@@ -52,11 +52,11 @@ CalcTokens = struct
 
 end
 
-functor CalcParseFn(Lex : ANTLR_LEXER) = struct
+functor DarwinParseFn(Lex : ANTLR_LEXER) = struct
 
   local
     structure Tok = 
-CalcTokens
+DarwinTokens
     structure UserCode = struct
 
 

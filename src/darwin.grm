@@ -1,4 +1,4 @@
-%name Calc;
+%name Darwin;
 
 %tokens
     : KW_let ("let") | KW_in ("in")

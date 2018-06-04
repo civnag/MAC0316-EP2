@@ -1,4 +1,4 @@
-structure CalcLexer  = struct
+structure DarwinLexer  = struct
 
     datatype yystart_state = 
 INITIAL
@@ -6,7 +6,7 @@ INITIAL
       struct
 
  
-    structure T = CalcTokens
+    structure T = DarwinTokens
     type lex_result = T.token
     fun eof() = T.EOF
 

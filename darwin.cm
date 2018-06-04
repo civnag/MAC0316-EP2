@@ -1,0 +1,12 @@
+Library
+    structure DarwinLexer
+    functor DarwinParseFn
+    structure DarwinTest
+is
+    $/basis.cm
+    $/smlnj-lib.cm
+    $/ml-lpt-lib.cm
+    
+    src/darwin.grm : ml-antlr
+    src/darwin.lex : ml-ulex
+    src/darwin-main.sml
