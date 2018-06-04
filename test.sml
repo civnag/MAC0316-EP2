@@ -5,7 +5,7 @@ open Eval
 
 fun main (prog_name, args) =
     let
-      val _ = run(Eval.pgmTeste())
+      val _ = Eval.run(Eval.pgmTeste())
     in
       1
     end
