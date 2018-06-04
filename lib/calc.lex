@@ -22,3 +22,4 @@ in => ( T.KW_in );
 ")" => ( T.RP );
 " " | \n | \t 
     => ( continue() );
+"end program"   => ( eof() ); 

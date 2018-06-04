@@ -1,5 +1,6 @@
 structure CalcTest =
 struct
+	
 	structure CP = CalcParseFn(CalcLexer)
 	
 	fun tok2s (CalcTokens.ID s) = s
@@ -12,16 +13,14 @@ struct
 			val lex = CalcLexer.lex sm
 			val strm = CalcLexer.streamifyInstream instrm
 			val (r, strm', errs) = CP.parse lex AtomMap.empty strm
-		in
-			print (String.concatWith "\n"
-				(List.map (AntlrRepair.repairToString tok2s sm)
-				errs));
-			r
+			val _ = print (Int.toString (Option.valOf r))
+		in 
+			1
 		end
 
 	fun main (prog_name, args) =
     	let
-      		val _ = print "OI"
+      		val _ = calc (TextIO.stdIn)
     	in
       		1
     	end
