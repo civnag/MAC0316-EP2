@@ -6,7 +6,7 @@ sig
     val >>= : 'a Parser * ('a -> 'b Parser) -> 'b Parser
     val <*> : ('a -> 'b) Parser * 'a Parser -> 'b Parser
     val <$> : ('a -> 'b) * 'a Parser -> 'b Parser
-    val <|> : 'a Parser * 'a Parser -> 'a Parser
+    val <|> : 'a Parser * (unit -> 'a Parser) -> 'a Parser
     val ret : 'a -> 'a Parser
     val some : 'a Parser -> ('a list) Parser
     val many : 'a Parser -> ('a list) Parser
