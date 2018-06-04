@@ -1,12 +1,12 @@
 signature COMB =
 sig
-    datatype 'a Parser = Parser of {parse : string -> ('a*string) list} 
+    type 'a Parser = {parse : string -> ('a*string) list} 
     val curry : (('a * 'b) -> 'c) -> 'a -> 'b -> 'c
     val elem : string -> char -> bool
     val >>= : 'a Parser * ('a -> 'b Parser) -> 'b Parser
     val <*> : ('a -> 'b) Parser * 'a Parser -> 'b Parser
     val <$> : ('a -> 'b) * 'a Parser -> 'b Parser
-    val <|> : 'a Parser * 'a Parser -> 'a Parser
+    val <|> : 'a Parser * (unit -> 'a Parser) -> 'a Parser
     val ret : 'a -> 'a Parser
     val some : 'a Parser -> ('a list) Parser
     val many : 'a Parser -> ('a list) Parser
@@ -17,7 +17,7 @@ end
 structure Combinator : COMB = 
 struct
 
-datatype 'a Parser = Parser of {parse : string -> ('a*string) list} 
+type 'a Parser = {parse : string -> ('a*string) list} 
 
 (* CURRYING *)
 
@@ -28,14 +28,14 @@ fun curry abc a b = abc (a,b);
 (* Verifica se um carater pertence a uma string *)
 fun elem s c = String.isSubstring (str c) s 
 
-fun ret a = Parser ({parse=fn(s) => [(a,s)]})
+fun ret a = ({parse=fn(s) => [(a,s)]})
 
 infix 1 >>=;
 
-fun (Parser{parse=p}) >>= f = Parser ({parse=fn(s) => 
+fun {parse=p} >>= f = ({parse=fn(s) => 
     List.concat (List.map (fn(a, s') => 
       let 
-          val (Parser{parse=q}) = f a 
+          val {parse=q} = f a 
       in
           q s'
       end) (p s))
@@ -43,7 +43,7 @@ fun (Parser{parse=p}) >>= f = Parser ({parse=fn(s) =>
 
 infix 4 <$>;
 
-fun f <$> (Parser{parse=p}) = Parser ({parse=fn(s) =>
+fun f <$> {parse=p} = ({parse=fn(s) =>
     let 
         val as' = p s 
     in 
@@ -53,7 +53,7 @@ fun f <$> (Parser{parse=p}) = Parser ({parse=fn(s) =>
 
 infix 4 <*>;
 
-fun (Parser{parse=cs}) <*> (Parser{parse=p}) = Parser ({parse=fn(s) =>
+fun {parse=cs} <*> {parse=p} = ({parse=fn(s) =>
     let 
         val fs = cs s 
     in 
@@ -68,17 +68,22 @@ fun (Parser{parse=cs}) <*> (Parser{parse=p}) = Parser ({parse=fn(s) =>
 
 infix 4 <|>;
 
-fun (Parser{parse=p}) <|> (Parser{parse=q}) = Parser ({parse=fn(s) =>
+fun {parse=p} <|> f = ({parse=fn(s) =>
     let
         val ps = p s 
     in 
         case ps of
-          nil => q s
+          nil => 
+            let 
+                val {parser=q} = f () 
+            in 
+                q s 
+            end
           | x => x
     end
 })
 
-fun pcombine (Parser{parse=p}) (Parser{parse=q}) = Parser ({parse=fn(s) =>
+fun pcombine {parse=p} {parse=q} = ({parse=fn(s) =>
     let
         val ps = p s 
         val qs = q s 
@@ -87,10 +92,17 @@ fun pcombine (Parser{parse=p}) (Parser{parse=q}) = Parser ({parse=fn(s) =>
     end
 })
 
-val pfail = Parser {parse= fn(s) => nil}
+val pfail ={parse= fn(s) => nil}
 
-fun some(p: 'a Parser): ('a list) Parser = curry (op ::) <$> p <*> (some p <|> ret nil) 
+open Lazy;
 
-fun many(p: 'a Parser): ('a list) Parser = (curry (op ::) <$> p <*> many p) <|> ret nil 
+fun some(p: 'a Parser): ('a list) Parser = some_v p
+    and many_v p = (some_v p) <|> (fn() => ret nil)
+    and some_v p = ((curry (op ::)) <$> p) <*> (many_v p)
+    
+fun many(p: 'a Parser): ('a list) Parser = many_v p
+    and many_v p = (some_v p) <|> (fn() => ret nil)
+    and some_v p = ((curry (op ::)) <$> p) <*> (many_v p)
+
 
 end
