@@ -1,6 +1,6 @@
 signature COMB =
 sig
-    type 'a Parser = {parse : string -> ('a*string) list} 
+    type 'a Parser
     val curry : (('a * 'b) -> 'c) -> 'a -> 'b -> 'c
     val elem : string -> char -> bool
     val >>= : 'a Parser * ('a -> 'b Parser) -> 'b Parser
@@ -17,7 +17,7 @@ end
 structure Combinator : COMB = 
 struct
 
-type 'a Parser = {parse : string -> ('a*string) list} 
+type 'a Parser = string -> ('a*string) list
 
 (* CURRYING *)
 
@@ -28,32 +28,29 @@ fun curry abc a b = abc (a,b);
 (* Verifica se um carater pertence a uma string *)
 fun elem s c = String.isSubstring (str c) s 
 
-fun ret a = ({parse=fn(s) => [(a,s)]})
+fun ret a = fn(s) => [(a,s)]
 
 infix 1 >>=;
 
-fun {parse=p} >>= f = ({parse=fn(s) => 
+fun p >>= f = (fn(s) => 
     List.concat (List.map (fn(a, s') => 
-      let 
-          val {parse=q} = f a 
-      in
-          q s'
-      end) (p s))
-})
+          f a s'
+    ) (p s))
+)
 
 infix 4 <$>;
 
-fun f <$> {parse=p} = ({parse=fn(s) =>
+fun f <$> p = (fn(s) =>
     let 
         val as' = p s 
     in 
         List.map (fn (a,s') => (f a, s')) as'
     end
-})
+)
 
 infix 4 <*>;
 
-fun {parse=cs} <*> {parse=p} = ({parse=fn(s) =>
+fun cs <*> p = (fn(s) =>
     let 
         val fs = cs s 
     in 
@@ -64,37 +61,30 @@ fun {parse=cs} <*> {parse=p} = ({parse=fn(s) =>
             List.map (fn(a,s2) => (f a,s2)) as'
           end) fs)  
     end
-})
+)
 
 infix 4 <|>;
 
-fun {parse=p} <|> f = ({parse=fn(s) =>
+fun p <|> f = (fn(s) =>
     let
         val ps = p s 
     in 
         case ps of
-          nil => 
-            let 
-                val {parser=q} = f () 
-            in 
-                q s 
-            end
+          nil => f () s 
           | x => x
     end
-})
+)
 
-fun pcombine {parse=p} {parse=q} = ({parse=fn(s) =>
+fun pcombine p q = (fn(s) =>
     let
         val ps = p s 
         val qs = q s 
     in 
         ps @ qs
     end
-})
+)
 
-val pfail ={parse= fn(s) => nil}
-
-open Lazy;
+val pfail = fn(s) => nil
 
 fun some(p: 'a Parser): ('a list) Parser = some_v p
     and many_v p = (some_v p) <|> (fn() => ret nil)
