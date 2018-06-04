@@ -8,6 +8,7 @@ sig
   val satisfy : (char -> bool) -> char Combinator.Parser
   val oneOf : string -> char Combinator.Parser
   val auxchain : 'a Combinator.Parser -> ('a -> 'a -> 'a) Combinator.Parser -> 'a Combinator.Parser
+  val rest : 'a -> ('a -> 'a -> 'a) Combinator.Parser -> 'a Combinator.Parser -> 'a Combinator.Parser
   val chainleft : 'a Combinator.Parser -> ('a -> 'a -> 'a) Combinator.Parser -> 'a -> 'a Combinator.Parser
 end 
 
