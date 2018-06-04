@@ -4,7 +4,7 @@
 %let int = {digit}+;
 %let alpha = [a-zA-Z];
 %let id = {alpha}({alpha} | {digit})*;
-%let str = "{id}";
+%let str = ["]{id}["];
 %let tipo = [int,string,boolean];
 %defs (
     structure T = DarwinTokens
@@ -13,9 +13,9 @@
 );
 
 let => ( T.KW_let );
-"variables:" => ( T.KW_variables );
+"variables" => ( T.KW_variables );
 "title" => ( T.KW_title );
-"comands:" => ( T.KW_comands );
+"commands" => ( T.KW_comands );
 "print" => ( T.KW_Print );
 in => ( T.KW_in );
 {tipo} => ( T.TIPO yytext );

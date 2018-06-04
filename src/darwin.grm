@@ -13,8 +13,8 @@
     | EQ ("=") | PLUS ("+")
     | TIMES ("*") | MINUS ("-")
     | LP ("(") | RP (")")
-    | KW_variables ("variables:") | SEMI | TIPO of string
-    | KW_comands ("comands:") | STR of string | KW_Print ("print")
+    | KW_variables ("variables") | SEMI | TIPO of string
+    | KW_comands ("commands") | STR of string | KW_Print ("print")
     ;
 %keywords
     KW_variables,
@@ -22,15 +22,16 @@
     KW_comands
     ;
 program(env,v)
-    : KW_title ID SEMI
+    : KW_title STR SEMI
+      KW_variables
       variables@(v)
       KW_comands
       commands@(v)
       exp@(env)
     ;
 commands(v)
-   :  KW_Print STR => (print STR)
-   |  KW_Print ID => (print (Grammar.show (valOf (AtomMap.find (v, Atom.atom ID)))))
+   :  KW_Print STR SEMI => (print STR)
+   |  KW_Print ID SEMI => (print (Grammar.show (valOf (AtomMap.find (v, Atom.atom ID)))))
    ;
 exp(env)
     : "let" ID "=" exp@(env)
@@ -58,8 +59,7 @@ atomicExp(env)
         | "(" exp@(env) ")"
     ;
 variables(v)
-    : "variables:" 
-      (declaration@(v))* 
+    :    (declaration@(v))* 
     ;
 declaration(v)
     : TIPO ID SEMI => (let 
