@@ -1,4 +1,3 @@
-use "src/grammar.sml";
 
 exception TypeMismatch;
 exception OperationNotDefined;

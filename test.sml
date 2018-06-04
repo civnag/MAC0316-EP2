@@ -1,6 +1,7 @@
-use "src/evaluators.sml";
 structure Test =
 struct
+
+open Eval
 
 fun main (prog_name, args) =
     let

@@ -1,0 +1,33 @@
+  val reserved : string -> string Combinator.Parser
+  val isnumberp : int Combinator.Parser
+  val parens : 'a Combinator.Parser -> 'a Combinator.Parser
+  val infixOp : string -> ('a * 'a -> 'a) -> ('a * 'a -> 'a) Combinator.Parser
+  
+  val intp :  Grammar.Exp Combinator.Parser 
+  val expressionp : unit ->  Grammar.Exp Combinator.Parser 
+  (* val factor :  Exp Parser *)
+  (* val termp : unit ->  Exp Parser *)
+  val addop : ( Grammar.Exp *  Grammar.Exp ->  Grammar.Exp) Combinator.Parser
+  val mulop : ( Grammar.Exp *  Grammar.Exp ->  Grammar.Exp) Combinator.Parser
+  
+  val runLine : string ->  Grammar.Exp 
+
+fun reserved s = tokenp (stringp (String.explode s))
+
+val isnumberp = (stringp (String.explode "-") <|> ret "") >>= (fn(s) => String.implode <$> (some digit) >>= (fn(cs) => ret (Option.valOf (Int.fromString (s ^ cs)))))
+
+fun parens p = reserved "(" >>= (fn(y) => p >>= (fn(n) => reserved ")" >>= (fn(x) => ret n)))
+
+fun infixOp s f = reserved s >>= (fn(x) => ret f)
+
+(****** Conversao para a AST *******)
+
+val intp = isnumberp >>= (fn(n) => ret ( Const ( Primitivo ( Int_ n)))) 
+
+val addop = (infixOp "+"  Add) <|> (infixOp "-"  Sub)
+
+val mulop = (infixOp "*"  Mul) <|> (infixOp "/"  Div) 
+
+fun expressionp() = auxchain (auxchain (intp <|> parens (expressionp())) (curry <$> mulop)) (curry <$> addop)
+
+val runLine = runP (expressionp()) 

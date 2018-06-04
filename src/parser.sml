@@ -1,6 +1,3 @@
-use "src/combinators.sml";
-
-
 signature PARSER = 
 sig
   val runP : 'a Combinator.Parser -> string -> 'a 
