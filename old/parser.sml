@@ -27,7 +27,7 @@ exception ParsingError;
 (****** Funcoes para imitar as expressoes regulares ********)
 
 
-fun runP (Parser{parse=p}) s = 
+fun runP p s = 
   let 
     val l = p s
   in
@@ -38,7 +38,7 @@ fun runP (Parser{parse=p}) s =
   end
   
 val item =
-  Parser ({parse = fn(s: string) =>
+  fn(s: string) =>
     let 
       val css = String.explode s 
     in
@@ -46,7 +46,7 @@ val item =
           nil => nil
           | (c::cs) => [(c,String.implode cs)]
     end
-  }) 
+ 
   
 fun satisfy pred = item >>= (fn(c) => 
   if (pred c) 
@@ -56,11 +56,11 @@ fun satisfy pred = item >>= (fn(c) =>
 
 fun oneOf s = satisfy (elem s)
 
-fun rest a po p = (po >>= (fn(f) => p >>= (fn(b) => rest (f a b) po p))) <|> ret a  
+fun rest a po p = (po >>= (fn(f) => p >>= (fn(b) => rest (f a b) po p))) <|> ( ret a ) 
 
 fun auxchain p po = p >>= (fn(a) => rest a po p)
 
-fun chainleft p po a = (auxchain p po) <|> ret a
+fun chainleft p po a = (auxchain p po) <|> (ret a)
 
 end
 

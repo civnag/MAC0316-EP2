@@ -1,6 +1,6 @@
 signature COMB =
 sig
-    datatype 'a Parser = Parser of {parse : string -> ('a*string) list} 
+    type 'a Parser
     val curry : (('a * 'b) -> 'c) -> 'a -> 'b -> 'c
     val elem : string -> char -> bool
     val >>= : 'a Parser * ('a -> 'b Parser) -> 'b Parser
@@ -17,7 +17,9 @@ end
 structure Combinator : COMB = 
 struct
 
-datatype 'a Parser = Parser of {parse : string -> ('a*string) list} 
+open SMLofNJ.Susp
+
+type 'a Parser = string -> ('a*string) list
 
 (* CURRYING *)
 
@@ -28,32 +30,29 @@ fun curry abc a b = abc (a,b);
 (* Verifica se um carater pertence a uma string *)
 fun elem s c = String.isSubstring (str c) s 
 
-fun ret a = Parser ({parse=fn(s) => [(a,s)]})
+fun ret a = fn(s) => [(a,s)]
 
 infix 1 >>=;
 
-fun (Parser{parse=p}) >>= f = Parser ({parse=fn(s) => 
+fun p >>= f = (fn(s) => 
     List.concat (List.map (fn(a, s') => 
-      let 
-          val (Parser{parse=q}) = f a 
-      in
-          q s'
-      end) (p s))
-})
+          f a s'
+    ) (p s))
+)
 
 infix 4 <$>;
 
-fun f <$> (Parser{parse=p}) = Parser ({parse=fn(s) =>
+fun f <$> p = (fn(s) =>
     let 
         val as' = p s 
     in 
         List.map (fn (a,s') => (f a, s')) as'
     end
-})
+)
 
 infix 4 <*>;
 
-fun (Parser{parse=cs}) <*> (Parser{parse=p}) = Parser ({parse=fn(s) =>
+fun cs <*> p = (fn(s) =>
     let 
         val fs = cs s 
     in 
@@ -64,33 +63,47 @@ fun (Parser{parse=cs}) <*> (Parser{parse=p}) = Parser ({parse=fn(s) =>
             List.map (fn(a,s2) => (f a,s2)) as'
           end) fs)  
     end
-})
+)
 
 infix 4 <|>;
 
-fun (Parser{parse=p}) <|> (Parser{parse=q}) = Parser ({parse=fn(s) =>
+fun p <|> f = (fn(s) =>
     let
         val ps = p s 
     in 
         case ps of
-          nil => q s
+          nil => f s 
           | x => x
     end
-})
+)
 
-fun pcombine (Parser{parse=p}) (Parser{parse=q}) = Parser ({parse=fn(s) =>
+fun pcombine p q = (fn(s) =>
     let
         val ps = p s 
         val qs = q s 
     in 
         ps @ qs
     end
-})
+)
 
-val pfail = Parser {parse= fn(s) => nil}
+val pfail = fn(s) => nil
 
-fun some(p: 'a Parser): ('a list) Parser = curry (op ::) <$> p <*> (some p <|> ret nil) 
+fun some(p: 'a Parser): ('a list) Parser = some_v p
+    and many_v p = 
+        let 
+            val aux = delay(fn () => (fn(x) => some_v p <|> x))
+        in
+            (force aux) (ret nil)
+        end
+    and some_v p = 
+        let 
+            val aux = delay (fn () => (many_v p))
+        in
+            ((curry (op ::)) <$> p) <*> force aux
+        end
+fun many(p: 'a Parser): ('a list) Parser = many_v p
+    and many_v p = (some_v p) <|> ret nil
+    and some_v p = ((curry (op ::)) <$> p) <*> (many_v p)
 
-fun many(p: 'a Parser): ('a list) Parser = (curry (op ::) <$> p <*> many p) <|> ret nil 
 
 end

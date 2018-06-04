@@ -1,0 +1,12 @@
+Library
+    structure CalcLexer
+    functor CalcParseFn
+    structure CalcTest
+is
+    $/basis.cm
+    $/smlnj-lib.cm
+    $/ml-lpt-lib.cm
+    
+    lib/calc.grm : ml-antlr
+    lib/calc.lex : ml-ulex
+    lib/calc-test.sml
