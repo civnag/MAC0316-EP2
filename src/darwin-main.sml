@@ -1,6 +1,6 @@
 structure DarwinTest =
 struct
-	
+	open Grammar
 	structure CP = DarwinParseFn(DarwinLexer)
 	
 	fun tok2s (DarwinTokens.ID s) = s
@@ -12,8 +12,7 @@ struct
 			val sm = AntlrStreamPos.mkSourcemap()
 			val lex = DarwinLexer.lex sm
 			val strm = DarwinLexer.streamifyInstream instrm
-			val (r, strm', errs) = CP.parse lex AtomMap.empty strm
-			val _ = print (Int.toString (Option.valOf r))
+			val (r, strm', errs) = CP.parse lex (AtomMap.empty,AtomMap.empty) strm
 		in 
 			print (String.concatWith "\n"
 				(List.map (AntlrRepair.repairToString tok2s sm)

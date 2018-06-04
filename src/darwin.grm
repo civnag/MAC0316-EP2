@@ -1,12 +1,37 @@
 %name Darwin;
 
+%defs (
+    fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Int_ 0)
+    fun insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.String_ "")
+    fun insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Float_ 0.0)
+    fun insere(hm,n,"bool") = AtomMap.insert(hm, n, Grammar.Boolean_ false)
+);
+
 %tokens
-    : KW_let ("let") | KW_in ("in")
+    : KW_let ("let") | KW_in ("in") | KW_title ("title") 
     | ID of string | NUM of Int.int
     | EQ ("=") | PLUS ("+")
     | TIMES ("*") | MINUS ("-")
     | LP ("(") | RP (")")
+    | KW_variables ("variables:") | SEMI | TIPO of string
+    | KW_comands ("comands:") | STR of string | KW_Print ("print")
     ;
+%keywords
+    KW_variables,
+    KW_title,
+    KW_comands
+    ;
+program(env,v)
+    : KW_title ID SEMI
+      variables@(v)
+      KW_comands
+      commands@(v)
+      exp@(env)
+    ;
+commands(v)
+   :  KW_Print STR => (print STR)
+   |  KW_Print ID => (print (Grammar.show (valOf (AtomMap.find (v, Atom.atom ID)))))
+   ;
 exp(env)
     : "let" ID "=" exp@(env)
     "in" exp@(AtomMap.insert(env, Atom.atom ID, exp1))
@@ -31,4 +56,16 @@ atomicExp(env)
         => ( valOf(AtomMap.find (env, Atom.atom ID)) )
     | NUM
         | "(" exp@(env) ")"
+    ;
+variables(v)
+    : "variables:" 
+      (declaration@(v))* 
+    ;
+declaration(v)
+    : TIPO ID SEMI => (let 
+                           val _ = insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO))
+                       in 
+                           ()
+                       end
+                      )
     ;

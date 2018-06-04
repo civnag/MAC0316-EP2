@@ -5,7 +5,14 @@ datatype tipo_primitivo = Int_ of int
                         | String_ of string 
                         | Float_ of real
                         | Boolean_ of bool
-                        | Void;
+
+fun show (Int_ i) = Int.toString i
+    | show (String_ s) = s
+    | show (Boolean_ b) = Bool.toString b 
+    | show (Float_ b) = Real.toString b 
+
+fun extractInt (Int_ i) = i
+
 
 datatype tipo_tupla = tipo_tupla2 of tipo_primitivo * tipo_primitivo
                     | tipo_tupla3 of tipo_primitivo * tipo_primitivo * tipo_primitivo

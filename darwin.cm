@@ -6,7 +6,7 @@ is
     $/basis.cm
     $/smlnj-lib.cm
     $/ml-lpt-lib.cm
-    
+    src/grammar.sml
     src/darwin.grm : ml-antlr
     src/darwin.lex : ml-ulex
     src/darwin-main.sml
