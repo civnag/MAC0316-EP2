@@ -5,8 +5,6 @@ exception OperationNotDefined;
 exception DivisionByZero;
 exception VariableNotDeclared;
 
-structure G = Grammar
-
 fun updateHt(a: 'a,b: 'b,ht: ('a, 'b) HashTable.hash_table): unit = 
     let
         val achou = HashTable.find ht a
@@ -25,69 +23,71 @@ fun updateHt(a: 'a,b: 'b,ht: ('a, 'b) HashTable.hash_table): unit =
 structure Eval =
 struct 
 
+open Grammar;
+
 (*
     Funcoes auxiliares para calculos e checagem de tipos.
 *)
 
-fun div_op((x,y):G.tipo * G.tipo):G.tipo =
+fun div_op((x,y): tipo *  tipo): tipo =
     case (x,y) of
-        (G.Primitivo (G.Int_ i), G.Primitivo(G.Int_ 0)) => 
+        ( Primitivo ( Int_ i),  Primitivo( Int_ 0)) => 
             raise DivisionByZero
-        | (G.Primitivo (G.Int_ i), G.Primitivo(G.Int_ j)) => 
-            G.Primitivo (G.Int_ (Int.div(i,j))) 
-        | (G.Primitivo (G.Float_ i), G.Primitivo(G.Float_ j)) => 
-                G.Primitivo (G.Float_ (i/j)) 
-        | (G.Primitivo n, G.Primitivo q) => raise TypeMismatch
+        | ( Primitivo ( Int_ i),  Primitivo( Int_ j)) => 
+             Primitivo ( Int_ (Int.div(i,j))) 
+        | ( Primitivo ( Float_ i),  Primitivo( Float_ j)) => 
+                 Primitivo ( Float_ (i/j)) 
+        | ( Primitivo n,  Primitivo q) => raise TypeMismatch
         | (_, _) => raise OperationNotDefined
 
 
-fun mul_op((x,y):G.tipo * G.tipo):G.tipo =
+fun mul_op((x,y): tipo *  tipo): tipo =
     case (x,y) of
-        (G.Primitivo (G.Int_ i), G.Primitivo(G.Int_ j)) => 
-            G.Primitivo (G.Int_ (i*j)) 
-        | (G.Primitivo (G.Float_ i), G.Primitivo(G.Float_ j)) => 
-            G.Primitivo (G.Float_ (i*j)) 
-        | (G.Primitivo n, G.Primitivo q) => raise TypeMismatch
+        ( Primitivo ( Int_ i),  Primitivo( Int_ j)) => 
+             Primitivo ( Int_ (i*j)) 
+        | ( Primitivo ( Float_ i),  Primitivo( Float_ j)) => 
+             Primitivo ( Float_ (i*j)) 
+        | ( Primitivo n,  Primitivo q) => raise TypeMismatch
         | (_, _) => raise OperationNotDefined
 
 
-fun sub_op((x,y):G.tipo * G.tipo):G.tipo =
+fun sub_op((x,y): tipo *  tipo): tipo =
     case (x,y) of
-        (G.Primitivo (G.Int_ i), G.Primitivo(G.Int_ j)) => 
-            G.Primitivo (G.Int_ (i-j)) 
-        | (G.Primitivo (G.Float_ i), G.Primitivo(G.Float_ j)) => 
-            G.Primitivo (G.Float_ (i-j)) 
-        | (G.Primitivo n, G.Primitivo q) => raise TypeMismatch
+        ( Primitivo ( Int_ i),  Primitivo( Int_ j)) => 
+             Primitivo ( Int_ (i-j)) 
+        | ( Primitivo ( Float_ i),  Primitivo( Float_ j)) => 
+             Primitivo ( Float_ (i-j)) 
+        | ( Primitivo n,  Primitivo q) => raise TypeMismatch
         | (_, _) => raise OperationNotDefined
 
-fun sum_op((x,y):G.tipo * G.tipo):G.tipo =
+fun sum_op((x,y): tipo *  tipo): tipo =
     case (x,y) of
-        (G.Primitivo (G.Int_ i), G.Primitivo(G.Int_ j)) => 
-            G.Primitivo (G.Int_ (i+j)) 
-        | (G.Primitivo (G.Float_ i), G.Primitivo(G.Float_ j)) => 
-            G.Primitivo (G.Float_ (i+j)) 
-        | (G.Primitivo (G.String_ i), G.Primitivo(G.String_ j)) => 
-            G.Primitivo (G.String_ (i^j)) 
-        | (G.Primitivo n, G.Primitivo q) => raise TypeMismatch
+        ( Primitivo ( Int_ i),  Primitivo( Int_ j)) => 
+             Primitivo ( Int_ (i+j)) 
+        | ( Primitivo ( Float_ i),  Primitivo( Float_ j)) => 
+             Primitivo ( Float_ (i+j)) 
+        | ( Primitivo ( String_ i),  Primitivo( String_ j)) => 
+             Primitivo ( String_ (i^j)) 
+        | ( Primitivo n,  Primitivo q) => raise TypeMismatch
         | (_, _) => raise OperationNotDefined
 
-fun toString_op(x:G.tipo):G.tipo =
+fun toString_op(x: tipo): tipo =
     case x of
-        G.Primitivo (G.Int_ v) => 
-            G.Primitivo (G.String_ (Int.toString v))
-        | G.Primitivo (G.Float_ v) => 
-            G.Primitivo (G.String_ (Real.toString v))
-        | G.Primitivo (G.String_ v) => 
-            G.Primitivo (G.String_ v)
+         Primitivo ( Int_ v) => 
+             Primitivo ( String_ (Int.toString v))
+        |  Primitivo ( Float_ v) => 
+             Primitivo ( String_ (Real.toString v))
+        |  Primitivo ( String_ v) => 
+             Primitivo ( String_ v)
         | _ => raise TypeMismatch
 
-fun print_op(x:G.tipo):G.tipo =
+fun print_op(x: tipo): tipo =
     case x of
-        G.Primitivo (G.String_ v) => 
+         Primitivo ( String_ v) => 
             let
                 val _ = print v
             in
-                G.Primitivo G.Void
+                 Primitivo  Void
             end
         | _ => raise TypeMismatch
 (*
@@ -105,10 +105,10 @@ fun print_op(x:G.tipo):G.tipo =
     Se for print, mostra a string na tela (tipo checado em print_op)
 *)
 
-fun eval (e: G.Exp, m:G.Memory): G.tipo =
+fun eval (e:  Exp, m: Memory):  tipo =
     case e of
-        G.Const n => n
-        | G.Variable var => 
+         Const n => n
+        |  Variable var => 
             let 
                 val achou = HashTable.find m var
             in
@@ -116,12 +116,12 @@ fun eval (e: G.Exp, m:G.Memory): G.tipo =
                     NONE => raise VariableNotDeclared
                     | SOME v => v
             end
-        | G.Add (e1,e2) => sum_op(eval(e1,m),eval(e2,m))
-        | G.Sub (e1,e2) => sub_op(eval(e1,m),eval(e2,m))
-        | G.Mul (e1,e2) => mul_op(eval(e1,m),eval(e2,m))
-        | G.Div (e1,e2) => div_op(eval(e1,m),eval(e2,m))
-        | G.ToString e => toString_op(eval(e,m))
-        | G.Print e => print_op(eval(e,m))
+        |  Add (e1,e2) => sum_op(eval(e1,m),eval(e2,m))
+        |  Sub (e1,e2) => sub_op(eval(e1,m),eval(e2,m))
+        |  Mul (e1,e2) => mul_op(eval(e1,m),eval(e2,m))
+        |  Div (e1,e2) => div_op(eval(e1,m),eval(e2,m))
+        |  ToString e => toString_op(eval(e,m))
+        |  Print e => print_op(eval(e,m))
 
 
 
@@ -131,17 +131,17 @@ fun eval (e: G.Exp, m:G.Memory): G.tipo =
     Se for sequencia, executamos um comando e, recursivamente, executamos o proximo.
     Se for uma acao, apenas calculamos a expressao.
 *)
-fun exec(cmd: G.Cmd, m:G.Memory):unit =
+fun exec(cmd:  Cmd, m: Memory):unit =
     case cmd of
-         G.:= (v, e) => updateHt(v,eval(e,m),m)
-         | G.Seq (c :: cs) => 
+          v := e => updateHt(v,eval(e,m),m)
+         |  Seq (c :: cs) => 
             let 
                 val _ = exec(c,m)
             in 
-                exec(G.Seq cs,m)         
+                exec( Seq cs,m)         
             end
-        | G.Seq Nil => ()
-        | G.Action e => 
+        |  Seq Nil => ()
+        |  Action e => 
             let 
                 val _ = eval(e,m)
             in 
@@ -163,12 +163,12 @@ fun run((title, vars, cmd)): unit =
     end
 
 (* Teste da semantica. *)
-fun pgmTeste(): G.Program = ("Primeiro programa"
-                            , [("x",G.Primitivo (G.Int_ 0)),("y",G.Primitivo (G.Int_ 0))]
-                            , G.Seq 
-                                 ([G.:= ("x", (G.Add ((G.Variable "x"), (G.Const (G.Primitivo (G.Int_ 1))))))
-                                  , G.:= ("y", ((G.Mul ((G.Variable "x"), (G.Const (G.Primitivo (G.Int_ 2)))))))
-                                  , G.Action (G.Print (G.ToString (G.Variable "y")))
+fun pgmTeste():  Program = ("Primeiro programa"
+                            , [("x", Primitivo ( Int_ 0)),("y", Primitivo ( Int_ 0))]
+                            ,  Seq 
+                                 ([ "x" := ( Add (( Variable "x"), ( Const ( Primitivo ( Int_ 1)))))
+                                  , "y" := (( Mul (( Variable "x"), ( Const ( Primitivo ( Int_ 2))))))
+                                  ,  Action ( Print ( ToString ( Variable "y")))
                                   ])
                             )
 
