@@ -146,7 +146,8 @@ fun yyAction15 (strm, lastMatch : yymatch) = (yystrm := strm;   T.TIMES )
 fun yyAction16 (strm, lastMatch : yymatch) = (yystrm := strm;   T.LP )
 fun yyAction17 (strm, lastMatch : yymatch) = (yystrm := strm;   T.RP )
 fun yyAction18 (strm, lastMatch : yymatch) = (yystrm := strm;   continue() )
-fun yyAction19 (strm, lastMatch : yymatch) = (yystrm := strm;   eof() )
+fun yyAction19 (strm, lastMatch : yymatch) = (yystrm := strm;
+        T.KW_terminate )
 fun yyAction20 (strm, lastMatch : yymatch) = let
       val yytext = yymktext(strm)
       in

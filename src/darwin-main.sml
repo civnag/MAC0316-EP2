@@ -20,7 +20,7 @@ struct
 		in 
 			case r of
 				NONE => print "Nothing"
-				| SOME s => List.app print s
+				| SOME s => List.app print (List.rev s)
 		end
 
 	fun main (prog_name, args) =

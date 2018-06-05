@@ -1,9 +1,10 @@
 title "lol";
 variables
-int y;
-string z;
-int p;
+    int y;
+    string z;
+    int p;
 end variables
 commands
-print("lol");
+    print("lol");
+    print("lool");
 terminate

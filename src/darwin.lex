@@ -31,6 +31,6 @@ in => ( T.KW_in );
 "(" => ( T.LP );
 ")" => ( T.RP );
 " " | \n | \t => ( continue() );
-"terminate"   => ( eof() ); 
+"terminate"   => ( T.KW_terminate ); 
 .		=> (print (concat ["Unexpected character: '", yytext,
 			           "'\n"]); continue());

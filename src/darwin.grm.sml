@@ -2,6 +2,7 @@ structure
 DarwinTokens = struct
 
     datatype token = EOF
+      | KW_terminate
       | KW_endvars
       | KW_Print
       | STR of string
@@ -22,11 +23,12 @@ DarwinTokens = struct
       | KW_in
       | KW_let
 
-    val allToks = [EOF, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, SPACE, RP, LP, MINUS, TIMES, PLUS, EQ, KW_title, KW_in, KW_let]
+    val allToks = [EOF, KW_terminate, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, SPACE, RP, LP, MINUS, TIMES, PLUS, EQ, KW_title, KW_in, KW_let]
 
     fun toString tok =
 (case (tok)
  of (EOF) => "EOF"
+  | (KW_terminate) => "terminate"
   | (KW_endvars) => "end variables"
   | (KW_Print) => "print"
   | (STR(_)) => "STR"
@@ -50,6 +52,7 @@ DarwinTokens = struct
     fun isKW tok =
 (case (tok)
  of (EOF) => false
+  | (KW_terminate) => true
   | (KW_endvars) => true
   | (KW_Print) => false
   | (STR(_)) => false
@@ -93,18 +96,14 @@ DarwinTokens
       | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Boolean_ false)
 
 
-fun program_PROD_1_ACT (v, ps, STR, env, exp, SEMI, KW_title, commandsAux, KW_variables, variables, STR_SPAN : (Lex.pos * Lex.pos), exp_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_title_SPAN : (Lex.pos * Lex.pos), commandsAux_SPAN : (Lex.pos * Lex.pos), KW_variables_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
-  ( commandsAux)
-fun commands_PROD_1_ACT (v, LP, RP, ps, STR, KW_Print, SEMI, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), STR_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
-  ( STR::ps)
-fun commands_PROD_2_ACT (v, ID, LP, RP, ps, KW_Print, SEMI, ID_SPAN : (Lex.pos * Lex.pos), LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
-  ( 
-        let 
-            val v = AtomMap.find (v, Atom.atom ID)
-        in 
-            (Grammar.show (valOf v))::ps
-        end
-      )
+fun program_PROD_1_ACT (v, ps, STR, env, commands, SEMI, KW_title, KW_variables, variables, KW_comands, STR_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_title_SPAN : (Lex.pos * Lex.pos), KW_variables_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), KW_comands_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
+  ( commands)
+fun commands_PROD_2_ACT (v, ps, KW_terminate, KW_terminate_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
+  ( ps)
+fun prints_PROD_1_ACT (v, LP, RP, ps, STR, KW_Print, commands, SEMI, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), STR_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
+  (  commands )
+fun prints_PROD_2_ACT (v, ID, LP, RP, ps, KW_Print, commands, SEMI, ID_SPAN : (Lex.pos * Lex.pos), LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
+  ( commands)
 fun exp_PROD_1_ACT (EQ, ID, env, exp1, exp2, KW_in, KW_let, EQ_SPAN : (Lex.pos * Lex.pos), ID_SPAN : (Lex.pos * Lex.pos), exp1_SPAN : (Lex.pos * Lex.pos), exp2_SPAN : (Lex.pos * Lex.pos), KW_in_SPAN : (Lex.pos * Lex.pos), KW_let_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
   (  exp2 )
 fun addExp_PROD_1_ACT (SR, env, multExp, SR_SPAN : (Lex.pos * Lex.pos), multExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
@@ -121,35 +120,43 @@ fun declaration_PROD_1_ACT (v, ID, SEMI, TIPO, variables, ID_SPAN : (Lex.pos * L
   ( variables)
 fun ARGS_4 (v, ps, STR, env, SEMI, KW_title, KW_variables) = 
   (v)
-fun ARGS_5 (v, ps, STR, env, SEMI, KW_title, KW_variables, variables) = 
+fun ARGS_5 (v, ps, STR, env, SEMI, KW_title, KW_variables, variables, KW_comands) = 
   (variables,ps)
-fun ARGS_6 (v, ps, STR, env, SEMI, KW_title, commandsAux, KW_variables, variables) = 
-  (print (Int.toString (AtomMap.numItems variables));env)
-fun ARGS_7 (v, ps, KW_comands) = 
+fun ARGS_6 (v, ps) = 
   (v,ps)
-fun ARGS_11 (EQ, ID, env, KW_let) = 
+fun ARGS_9 (v, LP, RP, ps, STR, KW_Print, SEMI) = 
+  (v,STR::ps)
+fun ARGS_11 (v, ID, LP, RP, ps, KW_Print, SEMI) = 
+  (
+        let 
+            val k = Grammar.show (valOf (AtomMap.find (v, Atom.atom ID)))
+        in 
+            (v,k::ps)
+        end
+      )
+fun ARGS_13 (EQ, ID, env, KW_let) = 
   (env)
-fun ARGS_12 (EQ, ID, env, exp1, KW_in, KW_let) = 
+fun ARGS_14 (EQ, ID, env, exp1, KW_in, KW_let) = 
   (AtomMap.insert(env, Atom.atom ID, exp1))
-fun ARGS_13 (env) = 
-  (env)
-fun ARGS_16 (env, PLUS, multExp) = 
-  (env)
 fun ARGS_15 (env) = 
   (env)
-fun ARGS_19 (env, TIMES, prefixExp) = 
+fun ARGS_18 (env, PLUS, multExp) = 
   (env)
-fun ARGS_18 (env) = 
+fun ARGS_17 (env) = 
+  (env)
+fun ARGS_21 (env, TIMES, prefixExp) = 
   (env)
 fun ARGS_20 (env) = 
   (env)
-fun ARGS_22 (env, MINUS) = 
+fun ARGS_22 (env) = 
   (env)
-fun ARGS_24 (LP, env) = 
+fun ARGS_24 (env, MINUS) = 
   (env)
-fun ARGS_25 (v) = 
+fun ARGS_26 (LP, env) = 
+  (env)
+fun ARGS_27 (v) = 
   (v)
-fun ARGS_28 (v, ID, SEMI, TIPO) = 
+fun ARGS_30 (v, ID, SEMI, TIPO) = 
   (insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO)))
 
     end
@@ -176,6 +183,10 @@ fun unwrap (ret, strm, repairs) = (ret, strm, repairs)
           in try prods end
 fun matchEOF strm = (case (lex(strm))
  of (Tok.EOF, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_terminate strm = (case (lex(strm))
+ of (Tok.KW_terminate, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
 fun matchKW_endvars strm = (case (lex(strm))
@@ -257,148 +268,50 @@ fun matchKW_let strm = (case (lex(strm))
 
 val (program_NT) = 
 let
-fun exp_NT (env_RES) (strm) = let
-      fun exp_PROD_1 (strm) = let
-            val (KW_let_RES, KW_let_SPAN, strm') = matchKW_let(strm)
-            val (ID_RES, ID_SPAN, strm') = matchID(strm')
-            val (EQ_RES, EQ_SPAN, strm') = matchEQ(strm')
-            val (exp1_RES, exp1_SPAN, strm') = (exp_NT (UserCode.ARGS_11 (EQ_RES, ID_RES, env_RES, KW_let_RES)))(strm')
-            val (KW_in_RES, KW_in_SPAN, strm') = matchKW_in(strm')
-            val (exp2_RES, exp2_SPAN, strm') = (exp_NT (UserCode.ARGS_12 (EQ_RES, ID_RES, env_RES, exp1_RES, KW_in_RES, KW_let_RES)))(strm')
-            val FULL_SPAN = (#1(KW_let_SPAN), #2(exp2_SPAN))
-            in
-              (UserCode.exp_PROD_1_ACT (EQ_RES, ID_RES, env_RES, exp1_RES, exp2_RES, KW_in_RES, KW_let_RES, EQ_SPAN : (Lex.pos * Lex.pos), ID_SPAN : (Lex.pos * Lex.pos), exp1_SPAN : (Lex.pos * Lex.pos), exp2_SPAN : (Lex.pos * Lex.pos), KW_in_SPAN : (Lex.pos * Lex.pos), KW_let_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
-                FULL_SPAN, strm')
-            end
-      fun exp_PROD_2 (strm) = let
-            val (addExp_RES, addExp_SPAN, strm') = (addExp_NT (UserCode.ARGS_13 (env_RES)))(strm)
-            val FULL_SPAN = (#1(addExp_SPAN), #2(addExp_SPAN))
-            in
-              ((addExp_RES), FULL_SPAN, strm')
-            end
-      in
-        (case (lex(strm))
-         of (Tok.ID(_), _, strm') => exp_PROD_2(strm)
-          | (Tok.NUM(_), _, strm') => exp_PROD_2(strm)
-          | (Tok.MINUS, _, strm') => exp_PROD_2(strm)
-          | (Tok.LP, _, strm') => exp_PROD_2(strm)
-          | (Tok.KW_let, _, strm') => exp_PROD_1(strm)
-          | _ => fail()
-        (* end case *))
-      end
-and addExp_NT (env_RES) (strm) = let
-      val (multExp_RES, multExp_SPAN, strm') = (multExp_NT (UserCode.ARGS_15 (env_RES)))(strm)
-      fun addExp_PROD_1_SUBRULE_1_NT (strm) = let
-            val (PLUS_RES, PLUS_SPAN, strm') = matchPLUS(strm)
-            val (multExp_RES, multExp_SPAN, strm') = (multExp_NT (UserCode.ARGS_16 (env_RES, PLUS_RES, multExp_RES)))(strm')
-            val FULL_SPAN = (#1(PLUS_SPAN), #2(multExp_SPAN))
-            in
-              ((multExp_RES), FULL_SPAN, strm')
-            end
-      fun addExp_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
-             of (Tok.PLUS, _, strm') => true
-              | _ => false
-            (* end case *))
-      val (SR_RES, SR_SPAN, strm') = EBNF.closure(addExp_PROD_1_SUBRULE_1_PRED, addExp_PROD_1_SUBRULE_1_NT, strm')
-      val FULL_SPAN = (#1(multExp_SPAN), #2(SR_SPAN))
-      in
-        (UserCode.addExp_PROD_1_ACT (SR_RES, env_RES, multExp_RES, SR_SPAN : (Lex.pos * Lex.pos), multExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
-          FULL_SPAN, strm')
-      end
-and multExp_NT (env_RES) (strm) = let
-      val (prefixExp_RES, prefixExp_SPAN, strm') = (prefixExp_NT (UserCode.ARGS_18 (env_RES)))(strm)
-      fun multExp_PROD_1_SUBRULE_1_NT (strm) = let
-            val (TIMES_RES, TIMES_SPAN, strm') = matchTIMES(strm)
-            val (prefixExp_RES, prefixExp_SPAN, strm') = (prefixExp_NT (UserCode.ARGS_19 (env_RES, TIMES_RES, prefixExp_RES)))(strm')
-            val FULL_SPAN = (#1(TIMES_SPAN), #2(prefixExp_SPAN))
-            in
-              ((prefixExp_RES), FULL_SPAN, strm')
-            end
-      fun multExp_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
-             of (Tok.TIMES, _, strm') => true
-              | _ => false
-            (* end case *))
-      val (SR_RES, SR_SPAN, strm') = EBNF.closure(multExp_PROD_1_SUBRULE_1_PRED, multExp_PROD_1_SUBRULE_1_NT, strm')
-      val FULL_SPAN = (#1(prefixExp_SPAN), #2(SR_SPAN))
-      in
-        (UserCode.multExp_PROD_1_ACT (SR_RES, env_RES, prefixExp_RES, SR_SPAN : (Lex.pos * Lex.pos), prefixExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
-          FULL_SPAN, strm')
-      end
-and prefixExp_NT (env_RES) (strm) = let
-      fun prefixExp_PROD_1 (strm) = let
-            val (atomicExp_RES, atomicExp_SPAN, strm') = (atomicExp_NT (UserCode.ARGS_20 (env_RES)))(strm)
-            val FULL_SPAN = (#1(atomicExp_SPAN), #2(atomicExp_SPAN))
-            in
-              ((atomicExp_RES), FULL_SPAN, strm')
-            end
-      fun prefixExp_PROD_2 (strm) = let
-            val (MINUS_RES, MINUS_SPAN, strm') = matchMINUS(strm)
-            val (prefixExp_RES, prefixExp_SPAN, strm') = (prefixExp_NT (UserCode.ARGS_22 (env_RES, MINUS_RES)))(strm')
-            val FULL_SPAN = (#1(MINUS_SPAN), #2(prefixExp_SPAN))
-            in
-              (UserCode.prefixExp_PROD_2_ACT (env_RES, MINUS_RES, prefixExp_RES, MINUS_SPAN : (Lex.pos * Lex.pos), prefixExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
-                FULL_SPAN, strm')
-            end
-      in
-        (case (lex(strm))
-         of (Tok.MINUS, _, strm') => prefixExp_PROD_2(strm)
-          | (Tok.ID(_), _, strm') => prefixExp_PROD_1(strm)
-          | (Tok.NUM(_), _, strm') => prefixExp_PROD_1(strm)
-          | (Tok.LP, _, strm') => prefixExp_PROD_1(strm)
-          | _ => fail()
-        (* end case *))
-      end
-and atomicExp_NT (env_RES) (strm) = let
-      fun atomicExp_PROD_1 (strm) = let
-            val (ID_RES, ID_SPAN, strm') = matchID(strm)
-            val FULL_SPAN = (#1(ID_SPAN), #2(ID_SPAN))
-            in
-              (UserCode.atomicExp_PROD_1_ACT (ID_RES, env_RES, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
-                FULL_SPAN, strm')
-            end
-      fun atomicExp_PROD_2 (strm) = let
-            val (NUM_RES, NUM_SPAN, strm') = matchNUM(strm)
-            val FULL_SPAN = (#1(NUM_SPAN), #2(NUM_SPAN))
-            in
-              ((NUM_RES), FULL_SPAN, strm')
-            end
-      fun atomicExp_PROD_3 (strm) = let
-            val (LP_RES, LP_SPAN, strm') = matchLP(strm)
-            val (exp_RES, exp_SPAN, strm') = (exp_NT (UserCode.ARGS_24 (LP_RES, env_RES)))(strm')
-            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
-            val FULL_SPAN = (#1(LP_SPAN), #2(RP_SPAN))
-            in
-              ((exp_RES), FULL_SPAN, strm')
-            end
-      in
-        (case (lex(strm))
-         of (Tok.LP, _, strm') => atomicExp_PROD_3(strm)
-          | (Tok.ID(_), _, strm') => atomicExp_PROD_1(strm)
-          | (Tok.NUM(_), _, strm') => atomicExp_PROD_2(strm)
-          | _ => fail()
-        (* end case *))
-      end
 fun commands_NT (v_RES, ps_RES) (strm) = let
       fun commands_PROD_1 (strm) = let
+            val (prints_RES, prints_SPAN, strm') = (prints_NT (UserCode.ARGS_6 (v_RES, ps_RES)))(strm)
+            val FULL_SPAN = (#1(prints_SPAN), #2(prints_SPAN))
+            in
+              ((prints_RES), FULL_SPAN, strm')
+            end
+      fun commands_PROD_2 (strm) = let
+            val (KW_terminate_RES, KW_terminate_SPAN, strm') = matchKW_terminate(strm)
+            val FULL_SPAN = (#1(KW_terminate_SPAN), #2(KW_terminate_SPAN))
+            in
+              (UserCode.commands_PROD_2_ACT (v_RES, ps_RES, KW_terminate_RES, KW_terminate_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
+                FULL_SPAN, strm')
+            end
+      in
+        (case (lex(strm))
+         of (Tok.KW_terminate, _, strm') => commands_PROD_2(strm)
+          | (Tok.KW_Print, _, strm') => commands_PROD_1(strm)
+          | _ => fail()
+        (* end case *))
+      end
+and prints_NT (v_RES, ps_RES) (strm) = let
+      fun prints_PROD_1 (strm) = let
             val (KW_Print_RES, KW_Print_SPAN, strm') = matchKW_Print(strm)
             val (LP_RES, LP_SPAN, strm') = matchLP(strm')
             val (STR_RES, STR_SPAN, strm') = matchSTR(strm')
             val (RP_RES, RP_SPAN, strm') = matchRP(strm')
             val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
-            val FULL_SPAN = (#1(KW_Print_SPAN), #2(SEMI_SPAN))
+            val (commands_RES, commands_SPAN, strm') = (commands_NT (UserCode.ARGS_9 (v_RES, LP_RES, RP_RES, ps_RES, STR_RES, KW_Print_RES, SEMI_RES)))(strm')
+            val FULL_SPAN = (#1(KW_Print_SPAN), #2(commands_SPAN))
             in
-              (UserCode.commands_PROD_1_ACT (v_RES, LP_RES, RP_RES, ps_RES, STR_RES, KW_Print_RES, SEMI_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), STR_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
+              (UserCode.prints_PROD_1_ACT (v_RES, LP_RES, RP_RES, ps_RES, STR_RES, KW_Print_RES, commands_RES, SEMI_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), STR_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
                 FULL_SPAN, strm')
             end
-      fun commands_PROD_2 (strm) = let
+      fun prints_PROD_2 (strm) = let
             val (KW_Print_RES, KW_Print_SPAN, strm') = matchKW_Print(strm)
             val (LP_RES, LP_SPAN, strm') = matchLP(strm')
             val (ID_RES, ID_SPAN, strm') = matchID(strm')
             val (RP_RES, RP_SPAN, strm') = matchRP(strm')
             val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
-            val FULL_SPAN = (#1(KW_Print_SPAN), #2(SEMI_SPAN))
+            val (commands_RES, commands_SPAN, strm') = (commands_NT (UserCode.ARGS_11 (v_RES, ID_RES, LP_RES, RP_RES, ps_RES, KW_Print_RES, SEMI_RES)))(strm')
+            val FULL_SPAN = (#1(KW_Print_SPAN), #2(commands_SPAN))
             in
-              (UserCode.commands_PROD_2_ACT (v_RES, ID_RES, LP_RES, RP_RES, ps_RES, KW_Print_RES, SEMI_RES, ID_SPAN : (Lex.pos * Lex.pos), LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
+              (UserCode.prints_PROD_2_ACT (v_RES, ID_RES, LP_RES, RP_RES, ps_RES, KW_Print_RES, commands_RES, SEMI_RES, ID_SPAN : (Lex.pos * Lex.pos), LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
                 FULL_SPAN, strm')
             end
       in
@@ -407,8 +320,8 @@ fun commands_NT (v_RES, ps_RES) (strm) = let
               (case (lex(strm'))
                of (Tok.LP, _, strm') =>
                     (case (lex(strm'))
-                     of (Tok.ID(_), _, strm') => commands_PROD_2(strm)
-                      | (Tok.STR(_), _, strm') => commands_PROD_1(strm)
+                     of (Tok.ID(_), _, strm') => prints_PROD_2(strm)
+                      | (Tok.STR(_), _, strm') => prints_PROD_1(strm)
                       | _ => fail()
                     (* end case *))
                 | _ => fail()
@@ -416,16 +329,9 @@ fun commands_NT (v_RES, ps_RES) (strm) = let
           | _ => fail()
         (* end case *))
       end
-fun commandsAux_NT (v_RES, ps_RES) (strm) = let
-      val (KW_comands_RES, KW_comands_SPAN, strm') = matchKW_comands(strm)
-      val (commands_RES, commands_SPAN, strm') = (commands_NT (UserCode.ARGS_7 (v_RES, ps_RES, KW_comands_RES)))(strm')
-      val FULL_SPAN = (#1(KW_comands_SPAN), #2(commands_SPAN))
-      in
-        ((commands_RES), FULL_SPAN, strm')
-      end
 fun variables_NT (v_RES) (strm) = let
       fun variables_PROD_1 (strm) = let
-            val (declaration_RES, declaration_SPAN, strm') = (declaration_NT (UserCode.ARGS_25 (v_RES)))(strm)
+            val (declaration_RES, declaration_SPAN, strm') = (declaration_NT (UserCode.ARGS_27 (v_RES)))(strm)
             val FULL_SPAN = (#1(declaration_SPAN), #2(declaration_SPAN))
             in
               ((declaration_RES), FULL_SPAN, strm')
@@ -448,7 +354,7 @@ and declaration_NT (v_RES) (strm) = let
       val (TIPO_RES, TIPO_SPAN, strm') = matchTIPO(strm)
       val (ID_RES, ID_SPAN, strm') = matchID(strm')
       val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
-      val (variables_RES, variables_SPAN, strm') = (variables_NT (UserCode.ARGS_28 (v_RES, ID_RES, SEMI_RES, TIPO_RES)))(strm')
+      val (variables_RES, variables_SPAN, strm') = (variables_NT (UserCode.ARGS_30 (v_RES, ID_RES, SEMI_RES, TIPO_RES)))(strm')
       val FULL_SPAN = (#1(TIPO_SPAN), #2(variables_SPAN))
       in
         (UserCode.declaration_PROD_1_ACT (v_RES, ID_RES, SEMI_RES, TIPO_RES, variables_RES, ID_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TIPO_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
@@ -460,11 +366,11 @@ fun program_NT (env_RES, v_RES, ps_RES) (strm) = let
       val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
       val (KW_variables_RES, KW_variables_SPAN, strm') = matchKW_variables(strm')
       val (variables_RES, variables_SPAN, strm') = (variables_NT (UserCode.ARGS_4 (v_RES, ps_RES, STR_RES, env_RES, SEMI_RES, KW_title_RES, KW_variables_RES)))(strm')
-      val (commandsAux_RES, commandsAux_SPAN, strm') = (commandsAux_NT (UserCode.ARGS_5 (v_RES, ps_RES, STR_RES, env_RES, SEMI_RES, KW_title_RES, KW_variables_RES, variables_RES)))(strm')
-      val (exp_RES, exp_SPAN, strm') = (exp_NT (UserCode.ARGS_6 (v_RES, ps_RES, STR_RES, env_RES, SEMI_RES, KW_title_RES, commandsAux_RES, KW_variables_RES, variables_RES)))(strm')
-      val FULL_SPAN = (#1(KW_title_SPAN), #2(exp_SPAN))
+      val (KW_comands_RES, KW_comands_SPAN, strm') = matchKW_comands(strm')
+      val (commands_RES, commands_SPAN, strm') = (commands_NT (UserCode.ARGS_5 (v_RES, ps_RES, STR_RES, env_RES, SEMI_RES, KW_title_RES, KW_variables_RES, variables_RES, KW_comands_RES)))(strm')
+      val FULL_SPAN = (#1(KW_title_SPAN), #2(commands_SPAN))
       in
-        (UserCode.program_PROD_1_ACT (v_RES, ps_RES, STR_RES, env_RES, exp_RES, SEMI_RES, KW_title_RES, commandsAux_RES, KW_variables_RES, variables_RES, STR_SPAN : (Lex.pos * Lex.pos), exp_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_title_SPAN : (Lex.pos * Lex.pos), commandsAux_SPAN : (Lex.pos * Lex.pos), KW_variables_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
+        (UserCode.program_PROD_1_ACT (v_RES, ps_RES, STR_RES, env_RES, commands_RES, SEMI_RES, KW_title_RES, KW_variables_RES, variables_RES, KW_comands_RES, STR_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_title_SPAN : (Lex.pos * Lex.pos), KW_variables_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), KW_comands_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
           FULL_SPAN, strm')
       end
 in
