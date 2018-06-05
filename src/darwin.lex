@@ -5,7 +5,7 @@
 %let alpha = [a-zA-Z];
 %let id = {alpha}({alpha} | {digit})*;
 %let str = ["]{id}["];
-%let tipo = [int,string,boolean];
+%let tipo = ("int"|"string"|"boolean");
 %defs (
     structure T = DarwinTokens
     type lex_result = T.token

@@ -7,23 +7,24 @@ struct
 		| tok2s (DarwinTokens.NUM n) = Int.toString n
 		| tok2s tok = DarwinTokens.toString tok
 
-	fun calc instrm = 
+	fun darwin instrm = 
 		let
 			val sm = AntlrStreamPos.mkSourcemap()
 			val lex = DarwinLexer.lex sm
 			val strm = DarwinLexer.streamifyInstream instrm
 			val (r, strm', errs) = CP.parse lex (AtomMap.empty,AtomMap.empty,nil) strm
-			val _ = List.app print (Option.valOf r)
+			fun doErr err = print ("Syntax error " ^ 
+			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
+			val _ = app doErr errs
 		in 
-			print (String.concatWith "\n"
-				(List.map (AntlrRepair.repairToString tok2s sm)
-				errs));
-			r
+			case r of
+				NONE => print "Nothing"
+				| SOME s => List.app print s
 		end
 
 	fun main (prog_name, args) =
     	let
-      		val _ = calc (TextIO.stdIn)
+      		val _ = darwin (TextIO.stdIn)
     	in
       		1
     	end

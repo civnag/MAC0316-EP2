@@ -30,8 +30,8 @@ program(env,v,ps)
       exp@(env) => (ps)
     ;
 commands(v,ps)
-   :  KW_Print STR SEMI => (STR::ps)
-   |  KW_Print ID SEMI => (
+   :  KW_Print LP STR RP SEMI => (STR::ps)
+   |  KW_Print LP ID RP SEMI => (
         let 
             val v = AtomMap.find (v, Atom.atom ID)
         in 
@@ -71,7 +71,7 @@ declaration(v)
     : TIPO ID SEMI => (let 
                            val _ = insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO))
                        in 
-                           ()
+                           1
                        end
                       )
     ;

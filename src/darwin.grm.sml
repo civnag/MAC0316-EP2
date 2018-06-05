@@ -89,9 +89,9 @@ DarwinTokens
 
 fun program_PROD_1_ACT (v, ps, STR, env, exp, commands, SEMI, KW_title, KW_variables, variables, KW_comands, STR_SPAN : (Lex.pos * Lex.pos), exp_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_title_SPAN : (Lex.pos * Lex.pos), KW_variables_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), KW_comands_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
   ( ps)
-fun commands_PROD_1_ACT (v, ps, STR, KW_Print, SEMI, STR_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
+fun commands_PROD_1_ACT (v, LP, RP, ps, STR, KW_Print, SEMI, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), STR_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
   ( STR::ps)
-fun commands_PROD_2_ACT (v, ID, ps, KW_Print, SEMI, ID_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
+fun commands_PROD_2_ACT (v, ID, LP, RP, ps, KW_Print, SEMI, ID_SPAN : (Lex.pos * Lex.pos), LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
   ( 
         let 
             val v = AtomMap.find (v, Atom.atom ID)
@@ -113,7 +113,7 @@ fun declaration_PROD_1_ACT (v, ID, SEMI, TIPO, ID_SPAN : (Lex.pos * Lex.pos), SE
   ( let 
                            val _ = insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO))
                        in 
-                           ()
+                           1
                        end
                       )
 fun ARGS_4 (v, ps, STR, env, SEMI, KW_title, KW_variables) = 
@@ -366,28 +366,36 @@ and atomicExp_NT (env_RES) (strm) = let
 fun commands_NT (v_RES, ps_RES) (strm) = let
       fun commands_PROD_1 (strm) = let
             val (KW_Print_RES, KW_Print_SPAN, strm') = matchKW_Print(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
             val (STR_RES, STR_SPAN, strm') = matchSTR(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
             val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
             val FULL_SPAN = (#1(KW_Print_SPAN), #2(SEMI_SPAN))
             in
-              (UserCode.commands_PROD_1_ACT (v_RES, ps_RES, STR_RES, KW_Print_RES, SEMI_RES, STR_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
+              (UserCode.commands_PROD_1_ACT (v_RES, LP_RES, RP_RES, ps_RES, STR_RES, KW_Print_RES, SEMI_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), STR_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
                 FULL_SPAN, strm')
             end
       fun commands_PROD_2 (strm) = let
             val (KW_Print_RES, KW_Print_SPAN, strm') = matchKW_Print(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
             val (ID_RES, ID_SPAN, strm') = matchID(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
             val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
             val FULL_SPAN = (#1(KW_Print_SPAN), #2(SEMI_SPAN))
             in
-              (UserCode.commands_PROD_2_ACT (v_RES, ID_RES, ps_RES, KW_Print_RES, SEMI_RES, ID_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
+              (UserCode.commands_PROD_2_ACT (v_RES, ID_RES, LP_RES, RP_RES, ps_RES, KW_Print_RES, SEMI_RES, ID_SPAN : (Lex.pos * Lex.pos), LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)),
                 FULL_SPAN, strm')
             end
       in
         (case (lex(strm))
          of (Tok.KW_Print, _, strm') =>
               (case (lex(strm'))
-               of (Tok.STR(_), _, strm') => commands_PROD_1(strm)
-                | (Tok.ID(_), _, strm') => commands_PROD_2(strm)
+               of (Tok.LP, _, strm') =>
+                    (case (lex(strm'))
+                     of (Tok.ID(_), _, strm') => commands_PROD_2(strm)
+                      | (Tok.STR(_), _, strm') => commands_PROD_1(strm)
+                      | _ => fail()
+                    (* end case *))
                 | _ => fail()
               (* end case *))
           | _ => fail()
