@@ -82,9 +82,9 @@ DarwinTokens
 
  
     fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Int_ 0)
-    fun insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.String_ "")
-    fun insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Float_ 0.0)
-    fun insere(hm,n,"bool") = AtomMap.insert(hm, n, Grammar.Boolean_ false)
+      | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.String_ "")
+      | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Float_ 0.0)
+      | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Boolean_ false)
 
 
 fun program_PROD_1_ACT (v, ps, STR, env, exp, commands, SEMI, KW_title, KW_variables, variables, KW_comands, STR_SPAN : (Lex.pos * Lex.pos), exp_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_title_SPAN : (Lex.pos * Lex.pos), KW_variables_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), KW_comands_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
@@ -111,6 +111,7 @@ fun atomicExp_PROD_1_ACT (ID, env, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (L
   (  valOf(AtomMap.find (env, Atom.atom ID)) )
 fun declaration_PROD_1_ACT (v, ID, SEMI, TIPO, ID_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TIPO_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos)) = 
   ( let 
+                           val _ = print (Atom.toString(Atom.atom TIPO))
                            val _ = insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO))
                        in 
                            1
@@ -411,20 +412,10 @@ fun declaration_NT (v_RES) (strm) = let
           FULL_SPAN, strm')
       end
 fun variables_NT (v_RES) (strm) = let
-      fun variables_PROD_1_SUBRULE_1_NT (strm) = let
-            val (declaration_RES, declaration_SPAN, strm') = (declaration_NT (UserCode.ARGS_24 (v_RES)))(strm)
-            val FULL_SPAN = (#1(declaration_SPAN), #2(declaration_SPAN))
-            in
-              ((declaration_RES), FULL_SPAN, strm')
-            end
-      fun variables_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
-             of (Tok.TIPO(_), _, strm') => true
-              | _ => false
-            (* end case *))
-      val (SR_RES, SR_SPAN, strm') = EBNF.closure(variables_PROD_1_SUBRULE_1_PRED, variables_PROD_1_SUBRULE_1_NT, strm)
-      val FULL_SPAN = (#1(SR_SPAN), #2(SR_SPAN))
+      val (declaration_RES, declaration_SPAN, strm') = (declaration_NT (UserCode.ARGS_24 (v_RES)))(strm)
+      val FULL_SPAN = (#1(declaration_SPAN), #2(declaration_SPAN))
       in
-        ((SR_RES), FULL_SPAN, strm')
+        ((declaration_RES), FULL_SPAN, strm')
       end
 fun program_NT (env_RES, v_RES, ps_RES) (strm) = let
       val (KW_title_RES, KW_title_SPAN, strm') = matchKW_title(strm)

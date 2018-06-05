@@ -2,9 +2,9 @@
 
 %defs (
     fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Int_ 0)
-    fun insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.String_ "")
-    fun insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Float_ 0.0)
-    fun insere(hm,n,"bool") = AtomMap.insert(hm, n, Grammar.Boolean_ false)
+      | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.String_ "")
+      | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Float_ 0.0)
+      | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Boolean_ false)
 );
 
 %tokens
@@ -65,10 +65,11 @@ atomicExp(env)
         | "(" exp@(env) ")"
     ;
 variables(v)
-    :    (declaration@(v))* 
+    : declaration@(v)
     ;
 declaration(v)
     : TIPO ID SEMI => (let 
+                           val _ = print (Atom.toString(Atom.atom TIPO))
                            val _ = insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO))
                        in 
                            1

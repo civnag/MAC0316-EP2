@@ -12,6 +12,7 @@ struct
 			val sm = AntlrStreamPos.mkSourcemap()
 			val lex = DarwinLexer.lex sm
 			val strm = DarwinLexer.streamifyInstream instrm
+			val _ = print "Interpreting Darwin..."
 			val (r, strm', errs) = CP.parse lex (AtomMap.empty,AtomMap.empty,nil) strm
 			fun doErr err = print ("Syntax error " ^ 
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
@@ -24,7 +25,7 @@ struct
 
 	fun main (prog_name, args) =
     	let
-      		val _ = darwin (TextIO.stdIn)
+      		val _ = darwin (TextIO.openIn "lol")
     	in
       		1
     	end
