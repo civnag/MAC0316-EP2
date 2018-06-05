@@ -28,9 +28,11 @@ program(env,v,ps)
     : KW_title STR SEMI
       KW_variables
       variables@(v)
-      KW_comands
-      commands@(v,ps)
-      exp@(env) => (ps)
+      commandsAux@(variables,ps)
+      exp@(env) => (commandsAux)
+    ;
+commandsAux(v,ps)
+    : KW_comands commands@(v,ps)
     ;
 commands(v,ps)
    :  KW_Print LP STR RP SEMI => (STR::ps)
@@ -69,8 +71,8 @@ atomicExp(env)
     ;
 variables(v)
     : declaration@(v)
-    | KW_endvars => (print "tchau "; v)
+    | KW_endvars => (v)
     ;
 declaration(v)
-    : TIPO ID SEMI variables@(print (Int.toString (AtomMap.numItems v)); insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO))) => (v)
+    : TIPO ID SEMI variables@(insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO))) => (variables)
     ;
