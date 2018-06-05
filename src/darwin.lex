@@ -17,6 +17,7 @@ let => ( T.KW_let );
 "title" => ( T.KW_title );
 "commands" => ( T.KW_comands );
 "print" => ( T.KW_Print );
+"end variables" => ( T.KW_endvars );
 in => ( T.KW_in );
 {tipo} => ( T.TIPO yytext );
 {id} => ( T.ID yytext );
@@ -30,6 +31,6 @@ in => ( T.KW_in );
 "(" => ( T.LP );
 ")" => ( T.RP );
 " " | \n | \t => ( continue() );
-"end"   => ( eof() ); 
+"terminate"   => ( eof() ); 
 .		=> (print (concat ["Unexpected character: '", yytext,
 			           "'\n"]); continue());

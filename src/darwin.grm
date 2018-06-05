@@ -13,13 +13,16 @@
     | EQ ("=") | PLUS ("+")
     | TIMES ("*") | MINUS ("-")
     | LP ("(") | RP (")")
+    | SPACE (" ")
     | KW_variables ("variables") | SEMI | TIPO of string
     | KW_comands ("commands") | STR of string | KW_Print ("print")
+    | KW_endvars ("end variables")
     ;
 %keywords
     KW_variables,
     KW_title,
-    KW_comands
+    KW_comands,
+    KW_endvars
     ;
 program(env,v,ps)
     : KW_title STR SEMI
@@ -66,13 +69,8 @@ atomicExp(env)
     ;
 variables(v)
     : declaration@(v)
+    | KW_endvars => (print "tchau "; v)
     ;
 declaration(v)
-    : TIPO ID SEMI => (let 
-                           val _ = print (Atom.toString(Atom.atom TIPO))
-                           val _ = insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO))
-                       in 
-                           1
-                       end
-                      )
+    : TIPO ID SEMI variables@(print (Int.toString (AtomMap.numItems v)); insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO))) => (v)
     ;
