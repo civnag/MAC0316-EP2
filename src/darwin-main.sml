@@ -12,7 +12,8 @@ struct
 			val sm = AntlrStreamPos.mkSourcemap()
 			val lex = DarwinLexer.lex sm
 			val strm = DarwinLexer.streamifyInstream instrm
-			val (r, strm', errs) = CP.parse lex (AtomMap.empty,AtomMap.empty) strm
+			val (r, strm', errs) = CP.parse lex (AtomMap.empty,AtomMap.empty,nil) strm
+			val _ = List.app print (Option.valOf r)
 		in 
 			print (String.concatWith "\n"
 				(List.map (AntlrRepair.repairToString tok2s sm)
