@@ -6,5 +6,7 @@ variables
 end variables
 commands
     print("lol");
+    y = 2;
     print("lool");
+    print(y);
 terminate

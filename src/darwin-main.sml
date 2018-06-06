@@ -13,7 +13,7 @@ struct
 			val lex = DarwinLexer.lex sm
 			val strm = DarwinLexer.streamifyInstream instrm
 			val _ = print "Interpreting Darwin..."
-			val (r, strm', errs) = CP.parse lex (AtomMap.empty,AtomMap.empty,nil) strm
+			val (r, strm', errs) = CP.parse lex (AtomMap.empty,nil) strm
 			fun doErr err = print ("Syntax error " ^ 
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs

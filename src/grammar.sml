@@ -1,6 +1,9 @@
 structure Grammar =
 struct 
 
+exception TypeMismatch
+exception VariableNotDeclared
+
 datatype tipo_primitivo = Int_ of int 
                         | String_ of string 
                         | Float_ of real
@@ -12,7 +15,22 @@ fun show (Int_ i) = Int.toString i
     | show (Float_ b) = Real.toString b 
 
 fun extractInt (Int_ i) = i
+    | extractInt _ = raise TypeMismatch
 
+fun updateHt(a: 'a,b,ht: 'a AtomRedBlackMap.map): 'a AtomRedBlackMap.map = 
+    let
+        val achou = AtomMap.find(ht,b)
+    in 
+        case achou of
+            NONE => raise VariableNotDeclared
+            | SOME _ => 
+                let 
+                    val _ = AtomRedBlackMap.remove(ht, b) 
+                    val _ = AtomRedBlackMap.insert(ht,b,a)
+                in 
+                    ht
+                end
+    end
 
 datatype tipo_tupla = tipo_tupla2 of tipo_primitivo * tipo_primitivo
                     | tipo_tupla3 of tipo_primitivo * tipo_primitivo * tipo_primitivo

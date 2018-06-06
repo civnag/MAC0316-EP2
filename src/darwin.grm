@@ -5,6 +5,8 @@
       | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.String_ "")
       | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Float_ 0.0)
       | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Boolean_ false)
+    
+    fun getInt x = (Grammar.extractInt x)
 );
 
 %tokens
@@ -25,7 +27,7 @@
     KW_endvars,
     KW_terminate
     ;
-program(env,v,ps)
+program(v,ps)
     : KW_title STR SEMI
       KW_variables
       variables@(v)
@@ -34,7 +36,19 @@ program(env,v,ps)
     ;
 commands(v,ps)
     : prints@(v,ps) 
+    | assign@(v,ps)
     | KW_terminate => (ps)
+    ;
+assign(v,ps)
+    : ID "=" expr@(v) SEMI => (
+        let 
+            val _ = Grammar.updateHt(v,Atom.atom ID,v) 
+        in 
+            ps 
+        end)
+    ;
+expr(v)
+    : exp_arit@(v) => (Grammar.Int_ exp_arit)
     ;
 prints(v,ps)
    :  KW_Print LP STR RP SEMI commands@(v,STR::ps) => ( commands )
@@ -46,11 +60,8 @@ prints(v,ps)
         end
       ) => (commands)
    ;
-exp(env)
-    : "let" ID "=" exp@(env)
-    "in" exp@(AtomMap.insert(env, Atom.atom ID, exp1))
-        => ( exp2 )
-    | addExp@(env)
+exp_arit(env)
+    : addExp@(env)
     ;
 addExp(env)
     : multExp@(env) ("+" multExp@(env))*
@@ -67,9 +78,9 @@ prefixExp(env)
     ;
 atomicExp(env)
     : ID
-        => ( valOf(AtomMap.find (env, Atom.atom ID)) )
+        => ( getInt (valOf(AtomMap.find (env, Atom.atom ID))) )
     | NUM
-        | "(" exp@(env) ")"
+        | "(" exp_arit@(env) ")"
     ;
 variables(v)
     : declaration@(v)
