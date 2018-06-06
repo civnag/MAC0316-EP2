@@ -40,10 +40,10 @@ commands(v,ps)
     | KW_terminate => (ps)
     ;
 assign(v,ps)
-    : ID "=" expr@(v) SEMI => (
+    : ID "=" expr@(v) SEMI commands@(Grammar.updateHt(v,Atom.atom ID,expr),ps)  => (
         let 
-            val _ = Grammar.updateHt(v,Atom.atom ID,v) 
-        in 
+            val _ = print (Grammar.show expr)
+        in
             ps 
         end)
     ;

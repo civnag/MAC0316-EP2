@@ -17,7 +17,7 @@ fun show (Int_ i) = Int.toString i
 fun extractInt (Int_ i) = i
     | extractInt _ = raise TypeMismatch
 
-fun updateHt(a: 'a,b,ht: 'a AtomRedBlackMap.map): 'a AtomRedBlackMap.map = 
+fun updateHt(ht: 'a AtomRedBlackMap.map,b,a: 'a): 'a AtomRedBlackMap.map = 
     let
         val achou = AtomMap.find(ht,b)
     in 
