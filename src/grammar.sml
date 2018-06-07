@@ -25,10 +25,10 @@ fun updateHt(ht: 'a AtomRedBlackMap.map,b,a: 'a): 'a AtomRedBlackMap.map =
             NONE => raise VariableNotDeclared
             | SOME _ => 
                 let 
-                    val _ = AtomRedBlackMap.remove(ht, b) 
-                    val _ = AtomRedBlackMap.insert(ht,b,a)
+                    val (ht1,_) = AtomRedBlackMap.remove(ht, b) 
+                    val ht2 = AtomRedBlackMap.insert(ht1,b,a)
                 in 
-                    ht
+                    ht2
                 end
     end
 

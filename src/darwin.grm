@@ -7,6 +7,14 @@
       | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Boolean_ false)
     
     fun getInt x = (Grammar.extractInt x)
+    
+    fun getVar v = AtomMap.appi (fn (k,w) => print (
+        let val _ = print(Atom.toString k) 
+            val _ = "oi"
+            val _ = print (Grammar.show w)
+        in 
+            ""
+        end)) v
 );
 
 %tokens
@@ -27,65 +35,66 @@
     KW_endvars,
     KW_terminate
     ;
-program(v,ps)
+
+%refcell v : (Grammar.tipo_primitivo) AtomMap.map = (AtomMap.empty);
+%refcell ps : string list = (nil);
+
+program(d)
     : KW_title STR SEMI
       KW_variables
-      variables@(v)
+      variables
       KW_comands
-      commands@(variables,ps) => (commands)
+      commands => ()
     ;
-commands(v,ps)
-    : prints@(v,ps) 
-    | assign@(v,ps)
-    | KW_terminate => (ps)
+commands
+    : (prints | assign) (commands | KW_terminate) => ()
     ;
-assign(v,ps)
-    : ID "=" expr@(v) SEMI commands@(Grammar.updateHt(v,Atom.atom ID,expr),ps)  => (
+assign
+    : ID EQ expr SEMI => (
         let 
-            val _ = print (Grammar.show expr)
+            val _ = print ("assign\n")
         in
-            ps 
+            v := Grammar.updateHt(!v,Atom.atom ID,expr)
         end)
     ;
-expr(v)
-    : exp_arit@(v) => (Grammar.Int_ exp_arit)
+expr
+    : exp_arit => (Grammar.Int_ exp_arit)
     ;
-prints(v,ps)
-   :  KW_Print LP STR RP SEMI commands@(v,STR::ps) => ( commands )
-   |  KW_Print LP ID RP SEMI commands@(
+prints
+   :  KW_Print LP STR RP SEMI => ( ps := (STR::(!ps)) )
+   |  KW_Print LP ID RP SEMI => (
         let 
-            val k = Grammar.show (valOf (AtomMap.find (v, Atom.atom ID)))
+            val _ = print "print\n"
+            val k = Grammar.show (valOf (AtomMap.find (!v, Atom.atom ID)))
         in 
-            (v,k::ps)
+            ps := k::(!ps)
         end
-      ) => (commands)
+      ) 
    ;
-exp_arit(env)
-    : addExp@(env)
+exp_arit
+    : addExp
     ;
-addExp(env)
-    : multExp@(env) ("+" multExp@(env))*
+addExp
+    : multExp ("+" multExp)*
         => ( List.foldr op+ 0 (multExp::SR) )
     ;
-multExp(env)
-    : prefixExp@(env) ("*" prefixExp@(env))*
+multExp
+    : prefixExp ("*" prefixExp)*
         => ( List.foldr op* 1 (prefixExp::SR) )
     ;
-prefixExp(env)
-    : atomicExp@(env)
-    | "-" prefixExp@(env)
+prefixExp
+    : atomicExp
+    | "-" prefixExp
         => ( ~prefixExp )
     ;
-atomicExp(env)
-    : ID
-        => ( getInt (valOf(AtomMap.find (env, Atom.atom ID))) )
+atomicExp
+    : ID => ( getInt (valOf(AtomMap.find (!v, Atom.atom ID))) )
     | NUM
-        | "(" exp_arit@(env) ")"
+    | "(" exp_arit ")"
     ;
-variables(v)
-    : declaration@(v)
-    | KW_endvars => (v)
+variables
+    : declaration (declaration | KW_endvars )
     ;
-declaration(v)
-    : TIPO ID SEMI variables@(insere(v,Atom.atom ID,Atom.toString(Atom.atom TIPO))) => (variables)
+declaration
+    : TIPO ID SEMI => (v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO)))
     ;
