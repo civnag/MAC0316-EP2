@@ -47,15 +47,10 @@ program(d)
       commands => ()
     ;
 commands
-    : (prints | assign) (commands | KW_terminate) => ()
+    : (prints | assign)* KW_terminate => ((fn(_) => ()) SR)   
     ;
 assign
-    : ID EQ expr SEMI => (
-        let 
-            val _ = print ("assign\n")
-        in
-            v := Grammar.updateHt(!v,Atom.atom ID,expr)
-        end)
+    : ID EQ expr SEMI => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
     ;
 expr
     : exp_arit => (Grammar.Int_ exp_arit)
@@ -64,7 +59,6 @@ prints
    :  KW_Print LP STR RP SEMI => ( ps := (STR::(!ps)) )
    |  KW_Print LP ID RP SEMI => (
         let 
-            val _ = print "print\n"
             val k = Grammar.show (valOf (AtomMap.find (!v, Atom.atom ID)))
         in 
             ps := k::(!ps)
@@ -93,7 +87,7 @@ atomicExp
     | "(" exp_arit ")"
     ;
 variables
-    : declaration (declaration | KW_endvars )
+    : (declaration)* KW_endvars => ((fn(_) => ()) SR)
     ;
 declaration
     : TIPO ID SEMI => (v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO)))

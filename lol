@@ -10,4 +10,5 @@ commands
     print("lool");
     p = 4;
     print(y);
+    print(p);
 terminate
