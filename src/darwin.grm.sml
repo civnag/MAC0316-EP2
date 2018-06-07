@@ -14,16 +14,18 @@ DarwinTokens = struct
       | RP
       | LP
       | MINUS
+      | DIV
       | TIMES
       | PLUS
       | EQ
+      | REAL of Real.real
       | NUM of Int.int
       | ID of string
       | KW_title
       | KW_in
       | KW_let
 
-    val allToks = [EOF, KW_terminate, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, SPACE, RP, LP, MINUS, TIMES, PLUS, EQ, KW_title, KW_in, KW_let]
+    val allToks = [EOF, KW_terminate, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, SPACE, RP, LP, MINUS, DIV, TIMES, PLUS, EQ, KW_title, KW_in, KW_let]
 
     fun toString tok =
 (case (tok)
@@ -40,9 +42,11 @@ DarwinTokens = struct
   | (RP) => ")"
   | (LP) => "("
   | (MINUS) => "-"
+  | (DIV) => "/"
   | (TIMES) => "*"
   | (PLUS) => "+"
   | (EQ) => "="
+  | (REAL(_)) => "REAL"
   | (NUM(_)) => "NUM"
   | (ID(_)) => "ID"
   | (KW_title) => "title"
@@ -64,9 +68,11 @@ DarwinTokens = struct
   | (RP) => false
   | (LP) => false
   | (MINUS) => false
+  | (DIV) => false
   | (TIMES) => false
   | (PLUS) => false
   | (EQ) => false
+  | (REAL(_)) => false
   | (NUM(_)) => false
   | (ID(_)) => false
   | (KW_title) => true
@@ -90,12 +96,13 @@ DarwinTokens
     structure UserCode = struct
 
  
-    fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Int_ 0)
-      | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.String_ "")
-      | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Float_ 0.0)
-      | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Boolean_ false)
+    fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0))
+      | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.String_ ""))
+      | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Float_ 0.0))
+      | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Boolean_ false))
     
     fun getInt x = (Grammar.extractInt x)
+    fun getFloat x = (Grammar.extractFloat x)
     
     fun getVar v = AtomMap.appi (fn (k,w) => print (
         let val _ = print(Atom.toString k) 
@@ -113,7 +120,7 @@ fun commands_PROD_1_ACT (SR, KW_terminate, SR_SPAN : (Lex.pos * Lex.pos), KW_ter
 fun assign_PROD_1_ACT (EQ, ID, SEMI, expr, EQ_SPAN : (Lex.pos * Lex.pos), ID_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( v := Grammar.updateHt(!v,Atom.atom ID,expr))
 fun expr_PROD_1_ACT (exp_arit, exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
-  ( Grammar.Int_ exp_arit)
+  ( Grammar.Primitivo (Grammar.Int_ exp_arit))
 fun prints_PROD_1_ACT (LP, RP, STR, KW_Print, SEMI, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), STR_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   (  ps := (STR::(!ps)) )
 fun prints_PROD_2_ACT (ID, LP, RP, KW_Print, SEMI, ID_SPAN : (Lex.pos * Lex.pos), LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
@@ -137,7 +144,7 @@ fun variables_PROD_1_ACT (SR, KW_endvars, SR_SPAN : (Lex.pos * Lex.pos), KW_endv
 fun declaration_PROD_1_ACT (ID, SEMI, TIPO, ID_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TIPO_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO)))
 fun mkps_REFC() : (string list) ref = ref ( nil)
-fun mkv_REFC() : ((Grammar.tipo_primitivo) AtomMap.map) ref = ref ( AtomMap.empty)
+fun mkv_REFC() : ((Grammar.tipo) AtomMap.map) ref = ref ( AtomMap.empty)
 
     end
 
@@ -215,6 +222,10 @@ fun matchMINUS strm = (case (lex(strm))
  of (Tok.MINUS, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
+fun matchDIV strm = (case (lex(strm))
+ of (Tok.DIV, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
 fun matchTIMES strm = (case (lex(strm))
  of (Tok.TIMES, span, strm') => ((), span, strm')
   | _ => fail()
@@ -225,6 +236,10 @@ fun matchPLUS strm = (case (lex(strm))
 (* end case *))
 fun matchEQ strm = (case (lex(strm))
  of (Tok.EQ, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchREAL strm = (case (lex(strm))
+ of (Tok.REAL(x), span, strm') => (x, span, strm')
   | _ => fail()
 (* end case *))
 fun matchNUM strm = (case (lex(strm))

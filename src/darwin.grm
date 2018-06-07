@@ -1,12 +1,13 @@
 %name Darwin;
 
 %defs (
-    fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Int_ 0)
-      | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.String_ "")
-      | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Float_ 0.0)
-      | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Boolean_ false)
+    fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0))
+      | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.String_ ""))
+      | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Float_ 0.0))
+      | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Boolean_ false))
     
     fun getInt x = (Grammar.extractInt x)
+    fun getFloat x = (Grammar.extractFloat x)
     
     fun getVar v = AtomMap.appi (fn (k,w) => print (
         let val _ = print(Atom.toString k) 
@@ -19,9 +20,9 @@
 
 %tokens
     : KW_let ("let") | KW_in ("in") | KW_title ("title") 
-    | ID of string | NUM of Int.int
+    | ID of string | NUM of Int.int | REAL of Real.real
     | EQ ("=") | PLUS ("+")
-    | TIMES ("*") | MINUS ("-")
+    | TIMES ("*") | DIV("/") | MINUS ("-")
     | LP ("(") | RP (")")
     | SPACE (" ")
     | KW_variables ("variables") | SEMI | TIPO of string
@@ -36,7 +37,7 @@
     KW_terminate
     ;
 
-%refcell v : (Grammar.tipo_primitivo) AtomMap.map = (AtomMap.empty);
+%refcell v : (Grammar.tipo) AtomMap.map = (AtomMap.empty);
 %refcell ps : string list = (nil);
 
 program(d)
@@ -53,7 +54,7 @@ assign
     : ID EQ expr SEMI => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
     ;
 expr
-    : exp_arit => (Grammar.Int_ exp_arit)
+    : exp_arit => (Grammar.Primitivo (Grammar.Int_ exp_arit))
     ;
 prints
    :  KW_Print LP STR RP SEMI => ( ps := (STR::(!ps)) )

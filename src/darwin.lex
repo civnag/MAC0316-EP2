@@ -2,6 +2,7 @@
 
 %let digit = [0-9];
 %let int = {digit}+;
+%let float = {int}["."]{digit}+[("e"|"E"){int}]
 %let alpha = [a-zA-Z];
 %let id = {alpha}({alpha} | {digit})*;
 %let str = ["]{id}["];
@@ -23,11 +24,13 @@ in => ( T.KW_in );
 {id} => ( T.ID yytext );
 {str} => (T.STR yytext);
 {int} => ( T.NUM (valOf (Int.fromString yytext)) );
+{float} => ( T.REAL (valOf (Real.fromString yytext)) )
 "=" => ( T.EQ );
 ";" => ( T.SEMI);
 "+" => ( T.PLUS );
 "-" => ( T.MINUS );
 "*" => ( T.TIMES );
+"/" => ( T.DIV );
 "(" => ( T.LP );
 ")" => ( T.RP );
 " " | \n | \t => ( continue() );

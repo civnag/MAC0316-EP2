@@ -9,14 +9,6 @@ datatype tipo_primitivo = Int_ of int
                         | Float_ of real
                         | Boolean_ of bool
 
-fun show (Int_ i) = Int.toString i
-    | show (String_ s) = s
-    | show (Boolean_ b) = Bool.toString b 
-    | show (Float_ b) = Real.toString b 
-
-fun extractInt (Int_ i) = i
-    | extractInt _ = raise TypeMismatch
-
 fun updateHt(ht: 'a AtomRedBlackMap.map,b,a: 'a): 'a AtomRedBlackMap.map = 
     let
         val achou = AtomMap.find(ht,b)
@@ -51,29 +43,24 @@ datatype tipo = Tupla of tipo_tupla
               | Sample of sample_of
               | Primitivo of tipo_primitivo;
 
-type Var = string
+fun show (Primitivo(Int_ i)) = Int.toString i
+    | show (Primitivo(String_ s)) = s
+    | show (Primitivo(Boolean_ b)) = Bool.toString b 
+    | show (Primitivo(Float_ b)) = Real.toString b 
+    | show (Sample(sample_of ((TP x)::nil))) = show (Primitivo x) 
+    | show (Sample(sample_of ((TP x)::xs))) = show (Primitivo x) ^ "," ^ show (Sample (sample_of xs))
+    | show _ = ""
 
-datatype Exp = Const of tipo                                                         
-             | Variable of Var
-             | ToString of Exp
-             | Print of Exp
-             | Add of Exp * Exp                                                      
-             | Sub of Exp * Exp                                                  
-             | Mul of Exp * Exp                                                 
-             | Div of Exp * Exp;  
+fun extractInt (Primitivo(Int_ i)) = i
+    | extractInt _ = raise TypeMismatch
 
+fun extractFloat (Primitivo(Float_ i)) = i
+    | extractFloat _ = raise TypeMismatch
 
-infix :=
-
-datatype Cmd = Seq of Cmd list | := of Var *  Exp | Action of Exp
-
-type Memory = (Var, tipo) HashTable.hash_table;
-
-type Decl = (Var * tipo) list;
-
-type Program = string * Decl * Cmd;
-
-
-
+fun typeof (Primitivo(Float_ _)) = "float"
+    | typeof (Primitivo(Int_ _)) = "int"
+    | typeof (Primitivo(Boolean_ _)) = "bool"
+    | typeof (Primitivo(String_ _)) = "string"
+    | typeof _ = ""
 
 end
