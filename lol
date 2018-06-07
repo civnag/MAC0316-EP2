@@ -5,7 +5,7 @@ variables
     int p;
 end variables
 commands
-    y = 1-4;
+    y = 10*4+1;
     print("lol");
     print("lool");
     p = 4;

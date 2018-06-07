@@ -75,6 +75,7 @@ exp_arit
 addExp
     : %try multExp PLUS multExp %where (exprTypes multExp1 multExp2) => (Grammar.oper("+",multExp1,multExp2))
     | %try multExp MINUS multExp %where (exprTypes multExp1 multExp2) => (Grammar.oper("-",multExp1,multExp2))
+    | %try multExp
     ;
 multExp
     : %try prefixExp TIMES prefixExp %where (exprTypes prefixExp1 prefixExp2) 

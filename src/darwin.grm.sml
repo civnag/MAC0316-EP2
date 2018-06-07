@@ -381,18 +381,24 @@ and addExp_NT (strm) = let
                   end
                 else fail()
             end
+      fun addExp_PROD_3 (strm) = let
+            val (multExp_RES, multExp_SPAN, strm') = multExp_NT(strm)
+            val FULL_SPAN = (#1(multExp_SPAN), #2(multExp_SPAN))
+            in
+              ((multExp_RES), FULL_SPAN, strm')
+            end
       in
         (case (lex(strm))
          of (Tok.ID(_), _, strm') =>
-              tryProds(strm, [addExp_PROD_1, addExp_PROD_2])
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2, addExp_PROD_3])
           | (Tok.NUM(_), _, strm') =>
-              tryProds(strm, [addExp_PROD_1, addExp_PROD_2])
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2, addExp_PROD_3])
           | (Tok.REAL(_), _, strm') =>
-              tryProds(strm, [addExp_PROD_1, addExp_PROD_2])
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2, addExp_PROD_3])
           | (Tok.MINUS, _, strm') =>
-              tryProds(strm, [addExp_PROD_1, addExp_PROD_2])
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2, addExp_PROD_3])
           | (Tok.LP, _, strm') =>
-              tryProds(strm, [addExp_PROD_1, addExp_PROD_2])
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2, addExp_PROD_3])
           | _ => fail()
         (* end case *))
       end
