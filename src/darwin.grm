@@ -9,6 +9,8 @@
     fun getInt x = (Grammar.extractInt x)
     fun getFloat x = (Grammar.extractFloat x)
     
+    fun exprTypes e1 e2 = (Grammar.typeof e1) = (Grammar.typeof e2)
+    
     fun getVar v = AtomMap.appi (fn (k,w) => print (
         let val _ = print(Atom.toString k) 
             val _ = "oi"
@@ -54,7 +56,7 @@ assign
     : ID EQ expr SEMI => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
     ;
 expr
-    : exp_arit => (Grammar.Primitivo (Grammar.Int_ exp_arit))
+    : exp_arit => (exp_arit)
     ;
 prints
    :  KW_Print LP STR RP SEMI => ( ps := (STR::(!ps)) )
@@ -67,24 +69,24 @@ prints
       ) 
    ;
 exp_arit
-    : addExp
+    : addExp => (addExp)
     ;
 addExp
-    : multExp ("+" multExp)*
-        => ( List.foldr op+ 0 (multExp::SR) )
+    : multExp PLUS multExp %where (exprTypes multExp1 multExp2) => (Grammar.oper("+",multExp1,multExp2))
     ;
 multExp
-    : prefixExp ("*" prefixExp)*
-        => ( List.foldr op* 1 (prefixExp::SR) )
+    : prefixExp TIMES prefixExp %where (exprTypes prefixExp1 prefixExp2) 
+        => ( Grammar.oper("*",prefixExp1,prefixExp2) )
     ;
 prefixExp
     : atomicExp
     | "-" prefixExp
-        => ( ~prefixExp )
+        => ( Grammar.oper("neg",prefixExp,prefixExp) )
     ;
 atomicExp
-    : ID => ( getInt (valOf(AtomMap.find (!v, Atom.atom ID))) )
-    | NUM
+    : ID => (valOf(AtomMap.find (!v, Atom.atom ID))) 
+    | NUM => (Grammar.Primitivo (Grammar.Int_ NUM))
+    | REAL => (Grammar.Primitivo (Grammar.Float_ REAL))
     | "(" exp_arit ")"
     ;
 variables

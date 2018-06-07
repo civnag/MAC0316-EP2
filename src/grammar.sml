@@ -60,6 +60,18 @@ fun show (Primitivo(Int_ i)) = Int.toString i
     | show (Sample nil) = "[]"
     | show (Sample (x::xs)) = (show x) ^ "," ^ String.concat(List.map show xs)
 
+fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
+   | oper("+", Primitivo(Float_ i),Primitivo(Float_ j)) = Primitivo (Float_ (i+j))
+   | oper("-", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i-j))
+   | oper("-", Primitivo(Float_ i),Primitivo(Float_ j)) = Primitivo (Float_ (i-j))
+   | oper("*", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i*j))
+   | oper("*", Primitivo(Float_ i),Primitivo(Float_ j)) = Primitivo (Float_ (i*j))
+   | oper("/", Primitivo(Float_ i),Primitivo(Float_ j)) = Primitivo (Float_ (i/j))
+   | oper("neg",_,Primitivo(Int_ i)) = Primitivo(Int_ (0-i))
+   | oper("neg",_,Primitivo(Float_ i)) = Primitivo(Float_ (0.0-i)) 
+   | oper(_,_,_) = raise TypeMismatch
+
+
 fun extractInt (Primitivo(Int_ i)) = i
     | extractInt _ = raise TypeMismatch
 
