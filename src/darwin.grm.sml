@@ -138,6 +138,8 @@ fun prints_PROD_2_ACT (ID, LP, RP, KW_Print, SEMI, ID_SPAN : (Lex.pos * Lex.pos)
       )
 fun addExp_PROD_1_ACT (PLUS, multExp1, multExp2, PLUS_SPAN : (Lex.pos * Lex.pos), multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( Grammar.oper("+",multExp1,multExp2))
+fun addExp_PROD_2_ACT (multExp1, multExp2, MINUS, multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), MINUS_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+  ( Grammar.oper("-",multExp1,multExp2))
 fun multExp_PROD_1_ACT (TIMES, prefixExp1, prefixExp2, TIMES_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   (  Grammar.oper("*",prefixExp1,prefixExp2) )
 fun prefixExp_PROD_2_ACT (MINUS, prefixExp, MINUS_SPAN : (Lex.pos * Lex.pos), prefixExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
@@ -153,6 +155,8 @@ fun variables_PROD_1_ACT (SR, KW_endvars, SR_SPAN : (Lex.pos * Lex.pos), KW_endv
 fun declaration_PROD_1_ACT (ID, SEMI, TIPO, ID_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TIPO_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO)))
 fun addExp_PROD_1_PRED (PLUS, multExp1, multExp2, ps, v) = 
+  ( exprTypes multExp1 multExp2)
+fun addExp_PROD_2_PRED (multExp1, multExp2, MINUS, ps, v) = 
   ( exprTypes multExp1 multExp2)
 fun multExp_PROD_1_PRED (TIMES, prefixExp1, prefixExp2, ps, v) = 
   ( exprTypes prefixExp1 prefixExp2)
@@ -349,18 +353,48 @@ and atomicExp_NT (strm) = let
         (* end case *))
       end
 and addExp_NT (strm) = let
-      val (multExp1_RES, multExp1_SPAN, strm') = multExp_NT(strm)
-      val (PLUS_RES, PLUS_SPAN, strm') = matchPLUS(strm')
-      val (multExp2_RES, multExp2_SPAN, strm') = multExp_NT(strm')
-      in
-        if (UserCode.addExp_PROD_1_PRED (PLUS_RES, multExp1_RES, multExp2_RES, ps_REFC, v_REFC))
-          then let
-            val FULL_SPAN = (#1(multExp1_SPAN), #2(multExp2_SPAN))
+      fun addExp_PROD_1 (strm) = let
+            val (multExp1_RES, multExp1_SPAN, strm') = multExp_NT(strm)
+            val (PLUS_RES, PLUS_SPAN, strm') = matchPLUS(strm')
+            val (multExp2_RES, multExp2_SPAN, strm') = multExp_NT(strm')
             in
-              (UserCode.addExp_PROD_1_ACT (PLUS_RES, multExp1_RES, multExp2_RES, PLUS_SPAN : (Lex.pos * Lex.pos), multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
-                FULL_SPAN, strm')
+              if (UserCode.addExp_PROD_1_PRED (PLUS_RES, multExp1_RES, multExp2_RES, ps_REFC, v_REFC))
+                then let
+                  val FULL_SPAN = (#1(multExp1_SPAN), #2(multExp2_SPAN))
+                  in
+                    (UserCode.addExp_PROD_1_ACT (PLUS_RES, multExp1_RES, multExp2_RES, PLUS_SPAN : (Lex.pos * Lex.pos), multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+                      FULL_SPAN, strm')
+                  end
+                else fail()
             end
-          else fail()
+      fun addExp_PROD_2 (strm) = let
+            val (multExp1_RES, multExp1_SPAN, strm') = multExp_NT(strm)
+            val (MINUS_RES, MINUS_SPAN, strm') = matchMINUS(strm')
+            val (multExp2_RES, multExp2_SPAN, strm') = multExp_NT(strm')
+            in
+              if (UserCode.addExp_PROD_2_PRED (multExp1_RES, multExp2_RES, MINUS_RES, ps_REFC, v_REFC))
+                then let
+                  val FULL_SPAN = (#1(multExp1_SPAN), #2(multExp2_SPAN))
+                  in
+                    (UserCode.addExp_PROD_2_ACT (multExp1_RES, multExp2_RES, MINUS_RES, multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), MINUS_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+                      FULL_SPAN, strm')
+                  end
+                else fail()
+            end
+      in
+        (case (lex(strm))
+         of (Tok.ID(_), _, strm') =>
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2])
+          | (Tok.NUM(_), _, strm') =>
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2])
+          | (Tok.REAL(_), _, strm') =>
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2])
+          | (Tok.MINUS, _, strm') =>
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2])
+          | (Tok.LP, _, strm') =>
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2])
+          | _ => fail()
+        (* end case *))
       end
 and multExp_NT (strm) = let
       fun multExp_PROD_1 (strm) = let
