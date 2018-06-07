@@ -111,6 +111,7 @@ DarwinTokens
     fun getFloat x = (Grammar.extractFloat x)
     
     fun exprTypes e1 e2 = (Grammar.typeof e1) = (Grammar.typeof e2)
+    fun isFloat e1 = (Grammar.typeof e1) = "float"
     
     fun getVar v = AtomMap.appi (fn (k,w) => print (
         let val _ = print(Atom.toString k) 
@@ -143,7 +144,9 @@ fun addExp_PROD_1_ACT (PLUS, multExp1, multExp2, PLUS_SPAN : (Lex.pos * Lex.pos)
   ( Grammar.oper("+",multExp1,multExp2))
 fun addExp_PROD_2_ACT (multExp1, multExp2, MINUS, multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), MINUS_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( Grammar.oper("-",multExp1,multExp2))
-fun multExp_PROD_1_ACT (TIMES, prefixExp1, prefixExp2, TIMES_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+fun multExp_PROD_1_ACT (DIV, prefixExp1, prefixExp2, DIV_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+  (  Grammar.oper("/",prefixExp1,prefixExp2) )
+fun multExp_PROD_2_ACT (TIMES, prefixExp1, prefixExp2, TIMES_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   (  Grammar.oper("*",prefixExp1,prefixExp2) )
 fun prefixExp_PROD_2_ACT (MINUS, prefixExp, MINUS_SPAN : (Lex.pos * Lex.pos), prefixExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   (  Grammar.oper("neg",prefixExp,prefixExp) )
@@ -161,7 +164,9 @@ fun addExp_PROD_1_PRED (PLUS, multExp1, multExp2, ps, v) =
   ( exprTypes multExp1 multExp2)
 fun addExp_PROD_2_PRED (multExp1, multExp2, MINUS, ps, v) = 
   ( exprTypes multExp1 multExp2)
-fun multExp_PROD_1_PRED (TIMES, prefixExp1, prefixExp2, ps, v) = 
+fun multExp_PROD_1_PRED (DIV, prefixExp1, prefixExp2, ps, v) = 
+  ( (isFloat prefixExp1) andalso (isFloat prefixExp2) andalso (exprTypes prefixExp1 prefixExp2))
+fun multExp_PROD_2_PRED (TIMES, prefixExp1, prefixExp2, ps, v) = 
   ( exprTypes prefixExp1 prefixExp2)
 fun mkps_REFC() : (string list) ref = ref ( nil)
 fun mkv_REFC() : ((Grammar.tipo) AtomMap.map) ref = ref ( AtomMap.empty)
@@ -412,19 +417,33 @@ and addExp_NT (strm) = let
 and multExp_NT (strm) = let
       fun multExp_PROD_1 (strm) = let
             val (prefixExp1_RES, prefixExp1_SPAN, strm') = prefixExp_NT(strm)
-            val (TIMES_RES, TIMES_SPAN, strm') = matchTIMES(strm')
+            val (DIV_RES, DIV_SPAN, strm') = matchDIV(strm')
             val (prefixExp2_RES, prefixExp2_SPAN, strm') = prefixExp_NT(strm')
             in
-              if (UserCode.multExp_PROD_1_PRED (TIMES_RES, prefixExp1_RES, prefixExp2_RES, ps_REFC, v_REFC))
+              if (UserCode.multExp_PROD_1_PRED (DIV_RES, prefixExp1_RES, prefixExp2_RES, ps_REFC, v_REFC))
                 then let
                   val FULL_SPAN = (#1(prefixExp1_SPAN), #2(prefixExp2_SPAN))
                   in
-                    (UserCode.multExp_PROD_1_ACT (TIMES_RES, prefixExp1_RES, prefixExp2_RES, TIMES_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+                    (UserCode.multExp_PROD_1_ACT (DIV_RES, prefixExp1_RES, prefixExp2_RES, DIV_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
                       FULL_SPAN, strm')
                   end
                 else fail()
             end
       fun multExp_PROD_2 (strm) = let
+            val (prefixExp1_RES, prefixExp1_SPAN, strm') = prefixExp_NT(strm)
+            val (TIMES_RES, TIMES_SPAN, strm') = matchTIMES(strm')
+            val (prefixExp2_RES, prefixExp2_SPAN, strm') = prefixExp_NT(strm')
+            in
+              if (UserCode.multExp_PROD_2_PRED (TIMES_RES, prefixExp1_RES, prefixExp2_RES, ps_REFC, v_REFC))
+                then let
+                  val FULL_SPAN = (#1(prefixExp1_SPAN), #2(prefixExp2_SPAN))
+                  in
+                    (UserCode.multExp_PROD_2_ACT (TIMES_RES, prefixExp1_RES, prefixExp2_RES, TIMES_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+                      FULL_SPAN, strm')
+                  end
+                else fail()
+            end
+      fun multExp_PROD_3 (strm) = let
             val (atomicExp_RES, atomicExp_SPAN, strm') = atomicExp_NT(strm)
             val FULL_SPAN = (#1(atomicExp_SPAN), #2(atomicExp_SPAN))
             in
@@ -433,14 +452,15 @@ and multExp_NT (strm) = let
       in
         (case (lex(strm))
          of (Tok.ID(_), _, strm') =>
-              tryProds(strm, [multExp_PROD_1, multExp_PROD_2])
+              tryProds(strm, [multExp_PROD_1, multExp_PROD_2, multExp_PROD_3])
           | (Tok.NUM(_), _, strm') =>
-              tryProds(strm, [multExp_PROD_1, multExp_PROD_2])
+              tryProds(strm, [multExp_PROD_1, multExp_PROD_2, multExp_PROD_3])
           | (Tok.REAL(_), _, strm') =>
-              tryProds(strm, [multExp_PROD_1, multExp_PROD_2])
+              tryProds(strm, [multExp_PROD_1, multExp_PROD_2, multExp_PROD_3])
           | (Tok.LP, _, strm') =>
+              tryProds(strm, [multExp_PROD_1, multExp_PROD_2, multExp_PROD_3])
+          | (Tok.MINUS, _, strm') =>
               tryProds(strm, [multExp_PROD_1, multExp_PROD_2])
-          | (Tok.MINUS, _, strm') => multExp_PROD_1(strm)
           | _ => fail()
         (* end case *))
       end
