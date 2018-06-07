@@ -33,6 +33,7 @@ in => ( T.KW_in );
 "/" => ( T.DIV );
 "(" => ( T.LP );
 ")" => ( T.RP );
+"." => ( T.DOT );
 " " | \n | \t => ( continue() );
 "terminate"   => ( T.KW_terminate ); 
 .		=> (print (concat ["Unexpected character: '", yytext,

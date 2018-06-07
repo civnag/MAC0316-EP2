@@ -23,7 +23,7 @@
 %tokens
     : KW_let ("let") | KW_in ("in") | KW_title ("title") 
     | ID of string | NUM of Int.int | REAL of Real.real
-    | EQ ("=") | PLUS ("+")
+    | EQ ("=") | PLUS ("+") | DOT (".")
     | TIMES ("*") | DIV("/") | MINUS ("-")
     | LP ("(") | RP (")")
     | SPACE (" ")
@@ -69,14 +69,16 @@ prints
       ) 
    ;
 exp_arit
-    : addExp => (addExp)
+    : %try addExp 
+    | %try atomicExp
     ;
 addExp
     : multExp PLUS multExp %where (exprTypes multExp1 multExp2) => (Grammar.oper("+",multExp1,multExp2))
     ;
 multExp
-    : prefixExp TIMES prefixExp %where (exprTypes prefixExp1 prefixExp2) 
+    : %try prefixExp TIMES prefixExp %where (exprTypes prefixExp1 prefixExp2) 
         => ( Grammar.oper("*",prefixExp1,prefixExp2) )
+    | %try atomicExp
     ;
 prefixExp
     : atomicExp
