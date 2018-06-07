@@ -25,7 +25,7 @@
     | ID of string | NUM of Int.int | REAL of Real.real
     | EQ ("=") | PLUS ("+") | DOT (".")
     | TIMES ("*") | DIV("/") | MINUS ("-")
-    | LP ("(") | RP (")")
+    | LP ("(") | RP (")") | BOOL of bool
     | SPACE (" ")
     | KW_variables ("variables") | SEMI | TIPO of string
     | KW_comands ("commands") | STR of string | KW_Print ("print")

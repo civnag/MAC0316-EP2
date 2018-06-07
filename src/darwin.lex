@@ -2,11 +2,12 @@
 
 %let digit = [0-9];
 %let int = {digit}+;
-%let float = {int}["."]{digit}+[("e"|"E"){int}]
 %let alpha = [a-zA-Z];
 %let id = {alpha}({alpha} | {digit})*;
 %let str = ["]{id}["];
 %let tipo = ("int"|"string"|"boolean");
+%let bool = ("true"|"false")
+%let float = {int}["."]({int}+|{digit}("e"|"E"){int});
 %defs (
     structure T = DarwinTokens
     type lex_result = T.token
@@ -25,6 +26,7 @@ in => ( T.KW_in );
 {str} => (T.STR yytext);
 {int} => ( T.NUM (valOf (Int.fromString yytext)) );
 {float} => ( T.REAL (valOf (Real.fromString yytext)) )
+{bool} => ( T.BOOL (valOf (Bool.fromString yytext)) )
 "=" => ( T.EQ );
 ";" => ( T.SEMI);
 "+" => ( T.PLUS );

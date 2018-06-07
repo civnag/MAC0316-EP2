@@ -11,6 +11,7 @@ DarwinTokens = struct
       | SEMI
       | KW_variables
       | SPACE
+      | BOOL of bool
       | RP
       | LP
       | MINUS
@@ -40,6 +41,7 @@ DarwinTokens = struct
   | (SEMI) => "SEMI"
   | (KW_variables) => "variables"
   | (SPACE) => " "
+  | (BOOL(_)) => "BOOL"
   | (RP) => ")"
   | (LP) => "("
   | (MINUS) => "-"
@@ -67,6 +69,7 @@ DarwinTokens = struct
   | (SEMI) => false
   | (KW_variables) => true
   | (SPACE) => false
+  | (BOOL(_)) => false
   | (RP) => false
   | (LP) => false
   | (MINUS) => false
@@ -225,6 +228,10 @@ fun matchKW_variables strm = (case (lex(strm))
 (* end case *))
 fun matchSPACE strm = (case (lex(strm))
  of (Tok.SPACE, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchBOOL strm = (case (lex(strm))
+ of (Tok.BOOL(x), span, strm') => (x, span, strm')
   | _ => fail()
 (* end case *))
 fun matchRP strm = (case (lex(strm))
