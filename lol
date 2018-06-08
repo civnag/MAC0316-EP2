@@ -9,7 +9,7 @@ commands
     print("lol");
     print("lool");
     p = 4;
-    z = false;
+    z = (3 >= 3);
     print(y);
     print(p);
     print(z);

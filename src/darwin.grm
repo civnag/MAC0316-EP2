@@ -25,7 +25,7 @@
 %tokens
     : KW_let ("let") | KW_in ("in") | KW_title ("title") 
     | ID of string | NUM of Int.int | REAL of Real.real
-    | EQ ("=") | PLUS ("+") | DOT (".")
+    | EQ ("=") | PLUS ("+") | DOT (".") | EEQ ("==")
     | TIMES ("*") | DIV("/") | MINUS ("-")
     | LP ("(") | RP (")") | BOOL of bool | AND ("&&") | OR ("||") | NOT("!")
     | SPACE (" ") | GT(">") | LT("<") | LEQ("<=") | GEQ(">=") | NEQ("!=")
@@ -73,6 +73,12 @@ prints
    ;
 exp_bool
     : %try atom_bool
+    | %try exp_arit EEQ exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper("==",exp_arit1,exp_arit2))
+    | %try exp_arit NEQ exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper("!=",exp_arit1,exp_arit2))
+    | %try exp_arit LEQ exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper("<=",exp_arit1,exp_arit2))
+    | %try exp_arit GEQ exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper(">=",exp_arit1,exp_arit2))
+    | %try exp_arit LT exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper("<",exp_arit1,exp_arit2))
+    | %try exp_arit GT exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper(">",exp_arit1,exp_arit2))
     | %try atom_bool AND atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
     | %try atom_bool OR atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
     | %try NOT atom_bool %where (isType atom_bool "bool") => ((Grammar.Primitivo(Grammar.Boolean_(not ((getBool atom_bool))))) )

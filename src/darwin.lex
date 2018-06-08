@@ -25,9 +25,10 @@ in => ( T.KW_in );
 {id} => ( T.ID yytext );
 {str} => (T.STR yytext);
 {int} => ( T.NUM (valOf (Int.fromString yytext)) );
-{float} => ( T.REAL (valOf (Real.fromString yytext)) )
-{bool} => ( T.BOOL (valOf (Bool.fromString yytext)) )
+{float} => ( T.REAL (valOf (Real.fromString yytext)) );
+{bool} => ( T.BOOL (valOf (Bool.fromString yytext)) );
 "=" => ( T.EQ );
+"==" => ( T.EEQ );
 ";" => ( T.SEMI);
 "+" => ( T.PLUS );
 "-" => ( T.MINUS );
