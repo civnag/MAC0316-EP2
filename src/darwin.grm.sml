@@ -149,7 +149,7 @@ DarwinTokens
 
 fun program_PROD_1_ACT (d, STR, commands, SEMI, KW_title, KW_variables, variables, KW_comands, STR_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_title_SPAN : (Lex.pos * Lex.pos), KW_variables_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), KW_comands_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( )
-fun commands_PROD_1_ACT (SR, KW_terminate, SR_SPAN : (Lex.pos * Lex.pos), KW_terminate_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+fun commands_PROD_1_ACT (SR, SR_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( (fn(_) => ()) SR)
 fun assign_PROD_1_ACT (EQ, ID, SEMI, expr, EQ_SPAN : (Lex.pos * Lex.pos), ID_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( v := Grammar.updateHt(!v,Atom.atom ID,expr))
@@ -167,11 +167,11 @@ fun prints_PROD_2_ACT (ID, LP, RP, KW_Print, SEMI, ID_SPAN : (Lex.pos * Lex.pos)
             ps := k::(!ps)
         end
       )
-fun exp_bool_PROD_1_ACT (AND, atom_bool1, atom_bool2, AND_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+fun exp_bool_PROD_2_ACT (AND, atom_bool1, atom_bool2, AND_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( (Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
-fun exp_bool_PROD_2_ACT (OR, atom_bool1, atom_bool2, OR_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+fun exp_bool_PROD_3_ACT (OR, atom_bool1, atom_bool2, OR_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( (Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
-fun exp_bool_PROD_3_ACT (NOT, atom_bool, NOT_SPAN : (Lex.pos * Lex.pos), atom_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+fun exp_bool_PROD_4_ACT (NOT, atom_bool, NOT_SPAN : (Lex.pos * Lex.pos), atom_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( (Grammar.Primitivo(Grammar.Boolean_(not ((getBool atom_bool))))) )
 fun atom_bool_PROD_1_ACT (BOOL, BOOL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( Grammar.Primitivo (Grammar.Boolean_ BOOL))
@@ -197,11 +197,11 @@ fun variables_PROD_1_ACT (SR, KW_endvars, SR_SPAN : (Lex.pos * Lex.pos), KW_endv
   ( (fn(_) => ()) SR)
 fun declaration_PROD_1_ACT (ID, SEMI, TIPO, ID_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TIPO_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO)))
-fun exp_bool_PROD_1_PRED (AND, atom_bool1, atom_bool2, ps, v) = 
+fun exp_bool_PROD_2_PRED (AND, atom_bool1, atom_bool2, ps, v) = 
   ( exprTypes atom_bool1 atom_bool2)
-fun exp_bool_PROD_2_PRED (OR, atom_bool1, atom_bool2, ps, v) = 
+fun exp_bool_PROD_3_PRED (OR, atom_bool1, atom_bool2, ps, v) = 
   ( exprTypes atom_bool1 atom_bool2)
-fun exp_bool_PROD_3_PRED (NOT, atom_bool, ps, v) = 
+fun exp_bool_PROD_4_PRED (NOT, atom_bool, ps, v) = 
   ( isType atom_bool "bool")
 fun addExp_PROD_1_PRED (PLUS, multExp1, multExp2, ps, v) = 
   ( exprTypes multExp1 multExp2)
@@ -375,55 +375,64 @@ val (program_NT) =
 let
 fun exp_bool_NT (strm) = let
       fun exp_bool_PROD_1 (strm) = let
+            val (atom_bool_RES, atom_bool_SPAN, strm') = atom_bool_NT(strm)
+            val FULL_SPAN = (#1(atom_bool_SPAN), #2(atom_bool_SPAN))
+            in
+              ((atom_bool_RES), FULL_SPAN, strm')
+            end
+      fun exp_bool_PROD_2 (strm) = let
             val (atom_bool1_RES, atom_bool1_SPAN, strm') = atom_bool_NT(strm)
             val (AND_RES, AND_SPAN, strm') = matchAND(strm')
             val (atom_bool2_RES, atom_bool2_SPAN, strm') = atom_bool_NT(strm')
             in
-              if (UserCode.exp_bool_PROD_1_PRED (AND_RES, atom_bool1_RES, atom_bool2_RES, ps_REFC, v_REFC))
+              if (UserCode.exp_bool_PROD_2_PRED (AND_RES, atom_bool1_RES, atom_bool2_RES, ps_REFC, v_REFC))
                 then let
                   val FULL_SPAN = (#1(atom_bool1_SPAN), #2(atom_bool2_SPAN))
                   in
-                    (UserCode.exp_bool_PROD_1_ACT (AND_RES, atom_bool1_RES, atom_bool2_RES, AND_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
-                      FULL_SPAN, strm')
-                  end
-                else fail()
-            end
-      fun exp_bool_PROD_2 (strm) = let
-            val (atom_bool1_RES, atom_bool1_SPAN, strm') = atom_bool_NT(strm)
-            val (OR_RES, OR_SPAN, strm') = matchOR(strm')
-            val (atom_bool2_RES, atom_bool2_SPAN, strm') = atom_bool_NT(strm')
-            in
-              if (UserCode.exp_bool_PROD_2_PRED (OR_RES, atom_bool1_RES, atom_bool2_RES, ps_REFC, v_REFC))
-                then let
-                  val FULL_SPAN = (#1(atom_bool1_SPAN), #2(atom_bool2_SPAN))
-                  in
-                    (UserCode.exp_bool_PROD_2_ACT (OR_RES, atom_bool1_RES, atom_bool2_RES, OR_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+                    (UserCode.exp_bool_PROD_2_ACT (AND_RES, atom_bool1_RES, atom_bool2_RES, AND_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
                       FULL_SPAN, strm')
                   end
                 else fail()
             end
       fun exp_bool_PROD_3 (strm) = let
+            val (atom_bool1_RES, atom_bool1_SPAN, strm') = atom_bool_NT(strm)
+            val (OR_RES, OR_SPAN, strm') = matchOR(strm')
+            val (atom_bool2_RES, atom_bool2_SPAN, strm') = atom_bool_NT(strm')
+            in
+              if (UserCode.exp_bool_PROD_3_PRED (OR_RES, atom_bool1_RES, atom_bool2_RES, ps_REFC, v_REFC))
+                then let
+                  val FULL_SPAN = (#1(atom_bool1_SPAN), #2(atom_bool2_SPAN))
+                  in
+                    (UserCode.exp_bool_PROD_3_ACT (OR_RES, atom_bool1_RES, atom_bool2_RES, OR_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+                      FULL_SPAN, strm')
+                  end
+                else fail()
+            end
+      fun exp_bool_PROD_4 (strm) = let
             val (NOT_RES, NOT_SPAN, strm') = matchNOT(strm)
             val (atom_bool_RES, atom_bool_SPAN, strm') = atom_bool_NT(strm')
             in
-              if (UserCode.exp_bool_PROD_3_PRED (NOT_RES, atom_bool_RES, ps_REFC, v_REFC))
+              if (UserCode.exp_bool_PROD_4_PRED (NOT_RES, atom_bool_RES, ps_REFC, v_REFC))
                 then let
                   val FULL_SPAN = (#1(NOT_SPAN), #2(atom_bool_SPAN))
                   in
-                    (UserCode.exp_bool_PROD_3_ACT (NOT_RES, atom_bool_RES, NOT_SPAN : (Lex.pos * Lex.pos), atom_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+                    (UserCode.exp_bool_PROD_4_ACT (NOT_RES, atom_bool_RES, NOT_SPAN : (Lex.pos * Lex.pos), atom_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
                       FULL_SPAN, strm')
                   end
                 else fail()
             end
       in
         (case (lex(strm))
-         of (Tok.NOT, _, strm') => exp_bool_PROD_3(strm)
+         of (Tok.NOT, _, strm') => exp_bool_PROD_4(strm)
           | (Tok.ID(_), _, strm') =>
-              tryProds(strm, [exp_bool_PROD_1, exp_bool_PROD_2])
+              tryProds(strm, [exp_bool_PROD_1, exp_bool_PROD_2,
+                exp_bool_PROD_3])
           | (Tok.LP, _, strm') =>
-              tryProds(strm, [exp_bool_PROD_1, exp_bool_PROD_2])
+              tryProds(strm, [exp_bool_PROD_1, exp_bool_PROD_2,
+                exp_bool_PROD_3])
           | (Tok.BOOL(_), _, strm') =>
-              tryProds(strm, [exp_bool_PROD_1, exp_bool_PROD_2])
+              tryProds(strm, [exp_bool_PROD_1, exp_bool_PROD_2,
+                exp_bool_PROD_3])
           | _ => fail()
         (* end case *))
       end
@@ -753,10 +762,9 @@ fun commands_NT (strm) = let
               | _ => false
             (* end case *))
       val (SR_RES, SR_SPAN, strm') = EBNF.closure(commands_PROD_1_SUBRULE_1_PRED, commands_PROD_1_SUBRULE_1_NT, strm)
-      val (KW_terminate_RES, KW_terminate_SPAN, strm') = matchKW_terminate(strm')
-      val FULL_SPAN = (#1(SR_SPAN), #2(KW_terminate_SPAN))
+      val FULL_SPAN = (#1(SR_SPAN), #2(SR_SPAN))
       in
-        (UserCode.commands_PROD_1_ACT (SR_RES, KW_terminate_RES, SR_SPAN : (Lex.pos * Lex.pos), KW_terminate_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+        (UserCode.commands_PROD_1_ACT (SR_RES, SR_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
           FULL_SPAN, strm')
       end
 fun declaration_NT (strm) = let

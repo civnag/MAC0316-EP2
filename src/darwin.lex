@@ -5,8 +5,8 @@
 %let alpha = [a-zA-Z];
 %let id = {alpha}({alpha} | {digit})*;
 %let str = ["]{id}["];
-%let tipo = ("int"|"string"|"boolean");
-%let bool = ("true"|"false")
+%let tipo = ("int"|"string"|"boolean"|"float");
+%let bool = ("true"|"false");
 %let float = {int}["."]({int}+|{digit}("e"|"E"){int});
 %defs (
     structure T = DarwinTokens

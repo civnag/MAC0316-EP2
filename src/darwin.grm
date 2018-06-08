@@ -52,7 +52,7 @@ program(d)
       commands => ()
     ;
 commands
-    : (prints | assign)* KW_terminate => ((fn(_) => ()) SR)   
+    : (prints | assign)*  => ((fn(_) => ()) SR)   
     ;
 assign
     : ID EQ expr SEMI => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
@@ -72,7 +72,8 @@ prints
       ) 
    ;
 exp_bool
-    : %try atom_bool AND atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
+    : %try atom_bool
+    | %try atom_bool AND atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
     | %try atom_bool OR atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
     | %try NOT atom_bool %where (isType atom_bool "bool") => ((Grammar.Primitivo(Grammar.Boolean_(not ((getBool atom_bool))))) )
     ;    

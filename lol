@@ -1,7 +1,7 @@
 title "lol";
 variables
-    int y;
-    string z;
+    float y;
+    boolean z;
     int p;
 end variables
 commands
@@ -9,6 +9,7 @@ commands
     print("lol");
     print("lool");
     p = 4;
+    z = false;
     print(y);
     print(p);
-terminate
+    print(z);
