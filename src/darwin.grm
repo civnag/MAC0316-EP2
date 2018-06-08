@@ -8,9 +8,10 @@
     
     fun getInt x = (Grammar.extractInt x)
     fun getFloat x = (Grammar.extractFloat x)
+    fun getBool x = (Grammar.extractBool x)
     
     fun exprTypes e1 e2 = (Grammar.typeof e1) = (Grammar.typeof e2)
-    fun isFloat e1 = (Grammar.typeof e1) = "float"
+    fun isType e1 t = (Grammar.typeof e1) = t
     
     fun getVar v = AtomMap.appi (fn (k,w) => print (
         let val _ = print(Atom.toString k) 
@@ -26,8 +27,8 @@
     | ID of string | NUM of Int.int | REAL of Real.real
     | EQ ("=") | PLUS ("+") | DOT (".")
     | TIMES ("*") | DIV("/") | MINUS ("-")
-    | LP ("(") | RP (")") | BOOL of bool
-    | SPACE (" ")
+    | LP ("(") | RP (")") | BOOL of bool | AND ("&&") | OR ("||") | NOT("!")
+    | SPACE (" ") | GT(">") | LT("<") | LEQ("<=") | GEQ(">=") | NEQ("!=")
     | KW_variables ("variables") | SEMI | TIPO of string
     | KW_comands ("commands") | STR of string | KW_Print ("print")
     | KW_endvars ("end variables") | KW_terminate ("terminate")
@@ -57,7 +58,8 @@ assign
     : ID EQ expr SEMI => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
     ;
 expr
-    : exp_arit => (exp_arit)
+    : %try exp_arit => (exp_arit)
+    | %try exp_bool => (exp_bool)
     ;
 prints
    :  KW_Print LP STR RP SEMI => ( ps := (STR::(!ps)) )
@@ -69,6 +71,16 @@ prints
         end
       ) 
    ;
+exp_bool
+    : %try atom_bool AND atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
+    | %try atom_bool OR atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
+    | %try NOT atom_bool %where (isType atom_bool "bool") => ((Grammar.Primitivo(Grammar.Boolean_(not ((getBool atom_bool))))) )
+    ;    
+atom_bool
+    : BOOL => (Grammar.Primitivo (Grammar.Boolean_ BOOL))
+    | LP exp_bool RP
+    | ID => (valOf(AtomMap.find (!v, Atom.atom ID))) 
+    ;
 exp_arit
     : %try addExp 
     | %try atomicExp
@@ -79,7 +91,7 @@ addExp
     | %try multExp
     ;
 multExp
-    : %try prefixExp DIV prefixExp %where ((isFloat prefixExp1) andalso (isFloat prefixExp2) andalso (exprTypes prefixExp1 prefixExp2)) 
+    : %try prefixExp DIV prefixExp %where ((isType prefixExp1 "float") andalso (isType prefixExp2 "float") andalso (exprTypes prefixExp1 prefixExp2)) 
         => ( Grammar.oper("/",prefixExp1,prefixExp2) )
     | %try prefixExp TIMES prefixExp %where (exprTypes prefixExp1 prefixExp2) 
         => ( Grammar.oper("*",prefixExp1,prefixExp2) )

@@ -36,6 +36,14 @@ in => ( T.KW_in );
 "(" => ( T.LP );
 ")" => ( T.RP );
 "." => ( T.DOT );
+"&&" => ( T.AND );
+"||" => ( T.OR );
+"!" => ( T.NOT );
+">=" => ( T.GEQ );
+"<=" => ( T.LEQ );
+">=" => ( T.GT );
+"<=" => ( T.LT );
+"!=" => ( T.NEQ );
 " " | \n | \t => ( continue() );
 "terminate"   => ( T.KW_terminate ); 
 .		=> (print (concat ["Unexpected character: '", yytext,
