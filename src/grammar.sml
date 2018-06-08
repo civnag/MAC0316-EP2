@@ -100,30 +100,30 @@ fun typeof (Primitivo(Float_ _)) = "float"
     | typeof (Primitivo(Int_ _)) = "int"
     | typeof (Primitivo(Boolean_ _)) = "bool"
     | typeof (Primitivo(String_ _)) = "string"
-    | typeof (Tupla2 (a,b)) = "(" ^ typeof a ^ "," ^ typeof b ^ ")"
-    | typeof (Tupla3 (a,b,c)) = "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ ")"
+    | typeof (Tupla2 (a,b)) = "tuple(" ^ typeof a ^ "," ^ typeof b ^ ")"
+    | typeof (Tupla3 (a,b,c)) = "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ ")"
     | typeof (Tupla4 (a,b,c,d)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ ")"
+        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ ")"
     | typeof (Tupla5 (a,b,c,d,e)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^")"
+        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^")"
     | typeof (Tupla6 (a,b,c,d,e,f)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," 
+        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," 
             ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," ^ typeof f ^")"
     | typeof (Tupla7 (a,b,c,d,e,f,g)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," 
+        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," 
             ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," ^ typeof f ^"," ^ typeof g ^")"
     | typeof (Tupla8 (a,b,c,d,e,f,g,h)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," 
+        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," 
             ^ typeof f ^"," ^ typeof g ^"," ^ typeof h ^")"
     | typeof (Tupla9 (a,b,c,d,e,f,g,h,i)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c 
+        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c 
             ^ "," ^ typeof d ^ "," ^ typeof e ^","
             ^ typeof f ^"," ^ typeof g ^"," 
             ^ typeof h ^"," ^ typeof i ^")"
     | typeof (Tupla0 (a,b,c,d,e,f,g,h,i,j)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^ "," 
+        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^ "," 
             ^ typeof f ^ "," ^ typeof g ^"," ^ typeof h ^"," 
             ^ typeof i ^"," ^ typeof j ^")"
     | typeof (Sample nil) = "[]"
-    | typeof (Sample (x::_)) = "[" ^ (typeof x) ^ "]"
+    | typeof (Sample (x::_)) = "sample of" ^ (typeof x)
 end

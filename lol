@@ -1,6 +1,6 @@
 title "lol";
 variables
-    float y;
+    tuple(int,int) y;
     boolean z;
     int p;
 end variables

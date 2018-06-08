@@ -6,6 +6,7 @@
 %let id = {alpha}({alpha} | {digit})*;
 %let str = ["]{id}["];
 %let tipo = ("int"|"string"|"boolean"|"float");
+%let composto = ("sample of "{tipo} | tuple "(" ({tipo}|({tipo}","))+ ")" )
 %let bool = ("true"|"false");
 %let float = {int}["."]({int}+|{digit}("e"|"E"){int});
 %defs (
@@ -22,6 +23,7 @@ let => ( T.KW_let );
 "end variables" => ( T.KW_endvars );
 in => ( T.KW_in );
 {tipo} => ( T.TIPO yytext );
+{composto} => ( T.TIPO yytext );
 {id} => ( T.ID yytext );
 {str} => (T.STR yytext);
 {int} => ( T.NUM (valOf (Int.fromString yytext)) );
