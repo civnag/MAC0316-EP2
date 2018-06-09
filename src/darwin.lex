@@ -15,11 +15,12 @@
 %let float = {int}["."]({int}+|{digit}("e"|"E"){int});
 %let valPrim = ({int} | {str} | {boolean} | {float});
 %let tupleVal = ( "(" {valPrim} ("," {valPrim}){1,9} ")" );
-%let intList = ("{}" | "{" {int} ("," {int})* "}" );
-%let floatList = ("{}" | "{" {float} ("," {float})* "}" );
-%let booleanList = ("{}" | "{" {boolean} ("," {boolean})* "}" );
-%let strList = ("{}" | "{" {str} ("," {str})* "}" );
-%let tupleList = ("{}" | "{" {tupleVal} ("," {tupleVal})* "}" );
+%let empty = "{}"
+%let intList = ({empty} | "{" {int} ("," {int})* "}" );
+%let floatList = ({empty} | "{" {float} ("," {float})* "}" );
+%let booleanList = ({empty} | "{" {boolean} ("," {boolean})* "}" );
+%let strList = ({empty} | "{" {str} ("," {str})* "}" );
+%let tupleList = ({empty} | "{" {tupleVal} ("," {tupleVal})* "}" );
 %defs (
     structure T = DarwinTokens
     type lex_result = T.token
@@ -64,6 +65,7 @@ in => ( T.KW_in );
 ">=" => ( T.GT );
 "<=" => ( T.LT );
 "!=" => ( T.NEQ );
+"{}" => ( T.EMPTY );
 "," => ( T.COMMA );
 " " | \n | \t => ( continue() );
 "terminate"   => ( T.KW_terminate ); 
