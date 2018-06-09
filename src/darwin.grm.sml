@@ -22,6 +22,7 @@ DarwinTokens = struct
       | BOOL of bool
       | RP
       | LP
+      | COMMA
       | MINUS
       | DIV
       | TIMES
@@ -36,7 +37,7 @@ DarwinTokens = struct
       | KW_in
       | KW_let
 
-    val allToks = [EOF, KW_terminate, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, NEQ, GEQ, LEQ, LT, GT, SPACE, NOT, OR, AND, RP, LP, MINUS, DIV, TIMES, EEQ, DOT, PLUS, EQ, KW_title, KW_in, KW_let]
+    val allToks = [EOF, KW_terminate, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, NEQ, GEQ, LEQ, LT, GT, SPACE, NOT, OR, AND, RP, LP, COMMA, MINUS, DIV, TIMES, EEQ, DOT, PLUS, EQ, KW_title, KW_in, KW_let]
 
     fun toString tok =
 (case (tok)
@@ -61,6 +62,7 @@ DarwinTokens = struct
   | (BOOL(_)) => "BOOL"
   | (RP) => ")"
   | (LP) => "("
+  | (COMMA) => ","
   | (MINUS) => "-"
   | (DIV) => "/"
   | (TIMES) => "*"
@@ -98,6 +100,7 @@ DarwinTokens = struct
   | (BOOL(_)) => false
   | (RP) => false
   | (LP) => false
+  | (COMMA) => false
   | (MINUS) => false
   | (DIV) => false
   | (TIMES) => false
@@ -347,6 +350,10 @@ fun matchRP strm = (case (lex(strm))
 (* end case *))
 fun matchLP strm = (case (lex(strm))
  of (Tok.LP, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchCOMMA strm = (case (lex(strm))
+ of (Tok.COMMA, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
 fun matchMINUS strm = (case (lex(strm))

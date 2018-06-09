@@ -5,10 +5,20 @@
 %let alpha = [a-zA-Z];
 %let id = {alpha}({alpha} | {digit})*;
 %let str = ["]{id}["];
-%let tipo = ("int"|"string"|"boolean"|"float");
-%let composto = ("sample of "{tipo} | tuple "(" ({tipo}|({tipo}","))+ ")" )
-%let bool = ("true"|"false");
+%let primitivo = ("int"|"string"|"boolean"|"float");
+%let tuple = "tuple" "(" ({primitivo} ("," {primitivo}){1,9} ")" );
+%let composto = ("sample of "({primitivo}|{tuple}));  
+%let tipo = ({primitivo}|{tuple}|{composto});
+%let true = "true";
+%let false = "false";
+%let boolean = ({true}|{false});
 %let float = {int}["."]({int}+|{digit}("e"|"E"){int});
+%let valPrim = ({int} | {str} | {boolean} | {float});
+%let tupleVal = ( "(" {valPrim} ("," {valPrim}){1,9} ")" );
+%let intList = ("{}" | "{" {int} ("," {int})* "}" );
+%let floatList = ("{}" | "{" {float} ("," {float})* "}" );
+%let strList = ("{}" | "{" {str} ("," {str})* "}" );
+%let tupleList = ("{}" | "{" {tupleVal} ("," {tupleVal})* "}" );
 %defs (
     structure T = DarwinTokens
     type lex_result = T.token
@@ -22,13 +32,14 @@ let => ( T.KW_let );
 "print" => ( T.KW_Print );
 "end variables" => ( T.KW_endvars );
 in => ( T.KW_in );
-{tipo} => ( T.TIPO yytext );
-{composto} => ( T.TIPO yytext );
+{tipo} => ( print yytext; T.TIPO yytext );
 {id} => ( T.ID yytext );
 {str} => (T.STR yytext);
 {int} => ( T.NUM (valOf (Int.fromString yytext)) );
 {float} => ( T.REAL (valOf (Real.fromString yytext)) );
-{bool} => ( T.BOOL (valOf (Bool.fromString yytext)) );
+{boolean} => ( T.BOOL (valOf (Bool.fromString yytext)) );
+{tupleVal} => (print yytext; T.STR yytext);
+{intList} | {floatList} => (print yytext; T.STR yytext);
 "=" => ( T.EQ );
 "==" => ( T.EEQ );
 ";" => ( T.SEMI);
@@ -47,6 +58,7 @@ in => ( T.KW_in );
 ">=" => ( T.GT );
 "<=" => ( T.LT );
 "!=" => ( T.NEQ );
+"," => ( T.COMMA );
 " " | \n | \t => ( continue() );
 "terminate"   => ( T.KW_terminate ); 
 .		=> (print (concat ["Unexpected character: '", yytext,
