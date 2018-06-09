@@ -476,7 +476,7 @@ fun yyAction7 (strm, lastMatch : yymatch) = let
 fun yyAction8 (strm, lastMatch : yymatch) = let
       val yytext = yymktext(strm)
       in
-        yystrm := strm;   print yytext; T.TIPO yytext 
+        yystrm := strm;   T.TIPO yytext 
       end
 fun yyAction9 (strm, lastMatch : yymatch) = let
       val yytext = yymktext(strm)
