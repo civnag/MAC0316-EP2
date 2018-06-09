@@ -77,11 +77,11 @@ prints
       ) 
    ;
 funcs_float
-    : KW_SUM EMPTY RP SEMI => ( 0.0)
-    | KW_SUM LP float_list RP SEMI 
+    : KW_SUM LP EMPTY RP  => ( 0.0)
+    | KW_SUM LP float_list RP  
         => (List.foldl op+ 0.0 float_list)
-    | KW_PROD EMPTY RP SEMI => (0.0)
-    | KW_PROD LP float_list RP SEMI
+    | KW_PROD LP EMPTY RP  => (0.0)
+    | KW_PROD LP float_list RP 
         => (List.foldl op* 1.0 float_list)
     ;
 float_list

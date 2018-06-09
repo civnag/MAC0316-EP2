@@ -15,7 +15,7 @@
 %let float = {int}["."]({int}+|{digit}("e"|"E"){int});
 %let valPrim = ({int} | {str} | {boolean} | {float});
 %let tupleVal = ( "(" {valPrim} ("," {valPrim}){1,9} ")" );
-%let empty = "{}"
+%let empty = "{}";
 %let intList = ({empty} | "{" {int} ("," {int})* "}" );
 %let floatList = ({empty} | "{" {float} ("," {float})* "}" );
 %let booleanList = ({empty} | "{" {boolean} ("," {boolean})* "}" );
@@ -45,7 +45,7 @@ in => ( T.KW_in );
 {tupleVal} => (T.STR yytext);
 {intList} => (print yytext; T.SINT (Grammar.toIntList (Grammar.tokenize yytext)));
 {floatList} => (print yytext; T.SFLOAT (Grammar.toFloatList (Grammar.tokenize yytext)));
-{booList} => (print yytext; T.SBOOL (Grammar.toBoolList (Grammar.tokenize yytext)));
+{booleanList} => (print yytext; T.SBOOL (Grammar.toBoolList (Grammar.tokenize yytext)));
 {strList} => (print yytext; T.SSTRING (Grammar.tokenize yytext));
 "=" => ( T.EQ );
 "==" => ( T.EEQ );

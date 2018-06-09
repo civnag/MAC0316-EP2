@@ -197,13 +197,13 @@ fun prints_PROD_2_ACT (ID, LP, RP, KW_Print, SEMI, ID_SPAN : (Lex.pos * Lex.pos)
             ps := k::(!ps)
         end
       )
-fun funcs_float_PROD_1_ACT (RP, SEMI, EMPTY, KW_SUM, RP_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+fun funcs_float_PROD_1_ACT (LP, RP, EMPTY, KW_SUM, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   (  0.0)
-fun funcs_float_PROD_2_ACT (LP, RP, SEMI, float_list, KW_SUM, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+fun funcs_float_PROD_2_ACT (LP, RP, float_list, KW_SUM, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( List.foldl op+ 0.0 float_list)
-fun funcs_float_PROD_3_ACT (RP, SEMI, KW_PROD, EMPTY, RP_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+fun funcs_float_PROD_3_ACT (LP, RP, KW_PROD, EMPTY, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( 0.0)
-fun funcs_float_PROD_4_ACT (LP, RP, SEMI, KW_PROD, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
+fun funcs_float_PROD_4_ACT (LP, RP, KW_PROD, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( List.foldl op* 1.0 float_list)
 fun float_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v) = 
   ( List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
@@ -500,12 +500,12 @@ fun float_list_NT (strm) = let
 fun funcs_float_NT (strm) = let
       fun funcs_float_PROD_1 (strm) = let
             val (KW_SUM_RES, KW_SUM_SPAN, strm') = matchKW_SUM(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
             val (EMPTY_RES, EMPTY_SPAN, strm') = matchEMPTY(strm')
             val (RP_RES, RP_SPAN, strm') = matchRP(strm')
-            val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
-            val FULL_SPAN = (#1(KW_SUM_SPAN), #2(SEMI_SPAN))
+            val FULL_SPAN = (#1(KW_SUM_SPAN), #2(RP_SPAN))
             in
-              (UserCode.funcs_float_PROD_1_ACT (RP_RES, SEMI_RES, EMPTY_RES, KW_SUM_RES, RP_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+              (UserCode.funcs_float_PROD_1_ACT (LP_RES, RP_RES, EMPTY_RES, KW_SUM_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
                 FULL_SPAN, strm')
             end
       fun funcs_float_PROD_2 (strm) = let
@@ -513,20 +513,19 @@ fun funcs_float_NT (strm) = let
             val (LP_RES, LP_SPAN, strm') = matchLP(strm')
             val (float_list_RES, float_list_SPAN, strm') = float_list_NT(strm')
             val (RP_RES, RP_SPAN, strm') = matchRP(strm')
-            val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
-            val FULL_SPAN = (#1(KW_SUM_SPAN), #2(SEMI_SPAN))
+            val FULL_SPAN = (#1(KW_SUM_SPAN), #2(RP_SPAN))
             in
-              (UserCode.funcs_float_PROD_2_ACT (LP_RES, RP_RES, SEMI_RES, float_list_RES, KW_SUM_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+              (UserCode.funcs_float_PROD_2_ACT (LP_RES, RP_RES, float_list_RES, KW_SUM_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
                 FULL_SPAN, strm')
             end
       fun funcs_float_PROD_3 (strm) = let
             val (KW_PROD_RES, KW_PROD_SPAN, strm') = matchKW_PROD(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
             val (EMPTY_RES, EMPTY_SPAN, strm') = matchEMPTY(strm')
             val (RP_RES, RP_SPAN, strm') = matchRP(strm')
-            val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
-            val FULL_SPAN = (#1(KW_PROD_SPAN), #2(SEMI_SPAN))
+            val FULL_SPAN = (#1(KW_PROD_SPAN), #2(RP_SPAN))
             in
-              (UserCode.funcs_float_PROD_3_ACT (RP_RES, SEMI_RES, KW_PROD_RES, EMPTY_RES, RP_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+              (UserCode.funcs_float_PROD_3_ACT (LP_RES, RP_RES, KW_PROD_RES, EMPTY_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
                 FULL_SPAN, strm')
             end
       fun funcs_float_PROD_4 (strm) = let
@@ -534,24 +533,33 @@ fun funcs_float_NT (strm) = let
             val (LP_RES, LP_SPAN, strm') = matchLP(strm')
             val (float_list_RES, float_list_SPAN, strm') = float_list_NT(strm')
             val (RP_RES, RP_SPAN, strm') = matchRP(strm')
-            val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
-            val FULL_SPAN = (#1(KW_PROD_SPAN), #2(SEMI_SPAN))
+            val FULL_SPAN = (#1(KW_PROD_SPAN), #2(RP_SPAN))
             in
-              (UserCode.funcs_float_PROD_4_ACT (LP_RES, RP_RES, SEMI_RES, KW_PROD_RES, float_list_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
+              (UserCode.funcs_float_PROD_4_ACT (LP_RES, RP_RES, KW_PROD_RES, float_list_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC),
                 FULL_SPAN, strm')
             end
       in
         (case (lex(strm))
          of (Tok.KW_SUM, _, strm') =>
               (case (lex(strm'))
-               of (Tok.EMPTY, _, strm') => funcs_float_PROD_1(strm)
-                | (Tok.LP, _, strm') => funcs_float_PROD_2(strm)
+               of (Tok.LP, _, strm') =>
+                    (case (lex(strm'))
+                     of (Tok.ID(_), _, strm') => funcs_float_PROD_2(strm)
+                      | (Tok.SFLOAT(_), _, strm') => funcs_float_PROD_2(strm)
+                      | (Tok.EMPTY, _, strm') => funcs_float_PROD_1(strm)
+                      | _ => fail()
+                    (* end case *))
                 | _ => fail()
               (* end case *))
           | (Tok.KW_PROD, _, strm') =>
               (case (lex(strm'))
-               of (Tok.EMPTY, _, strm') => funcs_float_PROD_3(strm)
-                | (Tok.LP, _, strm') => funcs_float_PROD_4(strm)
+               of (Tok.LP, _, strm') =>
+                    (case (lex(strm'))
+                     of (Tok.ID(_), _, strm') => funcs_float_PROD_4(strm)
+                      | (Tok.SFLOAT(_), _, strm') => funcs_float_PROD_4(strm)
+                      | (Tok.EMPTY, _, strm') => funcs_float_PROD_3(strm)
+                      | _ => fail()
+                    (* end case *))
                 | _ => fail()
               (* end case *))
           | _ => fail()
