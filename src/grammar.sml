@@ -9,6 +9,18 @@ datatype tipo_primitivo = Int_ of int
                         | Float_ of real
                         | Boolean_ of bool
 
+datatype tipo = Tupla2 of tipo * tipo
+              | Tupla3 of tipo * tipo * tipo
+              | Tupla4 of tipo * tipo * tipo * tipo
+              | Tupla5 of tipo * tipo * tipo * tipo * tipo 
+              | Tupla6 of tipo * tipo * tipo * tipo * tipo * tipo
+              | Tupla7 of tipo * tipo * tipo * tipo * tipo * tipo * tipo
+              | Tupla8 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo 
+              | Tupla9 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
+              | Tupla0 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
+              | Sample of (tipo list)
+              | Primitivo of tipo_primitivo;
+
 fun tokenize s = String.tokens (fn(c) => c = #",") (String.substring(s,1,(String.size s)-2))
 
 fun toIntList nil = nil 
@@ -35,18 +47,6 @@ fun updateHt(ht: 'a AtomRedBlackMap.map,b,a: 'a): 'a AtomRedBlackMap.map =
                     ht2
                 end
     end
-
-datatype tipo = Tupla2 of tipo * tipo
-              | Tupla3 of tipo * tipo * tipo
-              | Tupla4 of tipo * tipo * tipo * tipo
-              | Tupla5 of tipo * tipo * tipo * tipo * tipo 
-              | Tupla6 of tipo * tipo * tipo * tipo * tipo * tipo
-              | Tupla7 of tipo * tipo * tipo * tipo * tipo * tipo * tipo
-              | Tupla8 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo 
-              | Tupla9 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
-              | Tupla0 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
-              | Sample of (tipo list)
-              | Primitivo of tipo_primitivo;
 
 fun show (Primitivo(Int_ i)) = Int.toString i
     | show (Primitivo(String_ s)) = s
@@ -99,6 +99,9 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
    | oper("neg",_,Primitivo(Float_ i)) = Primitivo(Float_ (0.0-i)) 
    | oper(_,_,_) = raise TypeMismatch
 
+fun extractList (Sample x) = x 
+    | extractList _ = raise TypeMismatch
+
 fun extractBool (Primitivo(Boolean_ i)) = i
     | extractBool _ = raise TypeMismatch
 
@@ -137,5 +140,5 @@ fun typeof (Primitivo(Float_ _)) = "float"
             ^ typeof f ^ "," ^ typeof g ^"," ^ typeof h ^"," 
             ^ typeof i ^"," ^ typeof j ^")"
     | typeof (Sample nil) = "[]"
-    | typeof (Sample (x::_)) = "sample of" ^ (typeof x)
+    | typeof (Sample (x::_)) = "sample of " ^ (typeof x)
 end
