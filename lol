@@ -8,7 +8,7 @@ commands
     y = (32.1e1/5.0) + (1.2*2.0);
     print("lol");
     print("lool");
-    p = (true,false);
+    p = {2,0};
     z = (3 >= 3) && (3>=5);
     print(y);
     print(p);

@@ -9,6 +9,18 @@ datatype tipo_primitivo = Int_ of int
                         | Float_ of real
                         | Boolean_ of bool
 
+fun tokenize s = String.tokens (fn(c) => c = #",") (String.substring(s,1,(String.size s)-2))
+
+fun toIntList nil = nil 
+   | toIntList is = List.map (fn(x) => Option.valOf (Int.fromString x)) is 
+
+fun toFloatList nil = nil 
+   | toFloatList is = List.map (fn(x) => Option.valOf (Real.fromString x)) is 
+
+fun toBoolList nil = nil 
+   | toBoolList is = List.map (fn(x) => Option.valOf (Bool.fromString x)) is 
+
+
 fun updateHt(ht: 'a AtomRedBlackMap.map,b,a: 'a): 'a AtomRedBlackMap.map = 
     let
         val achou = AtomMap.find(ht,b)

@@ -6,6 +6,17 @@ is
     $/basis.cm
     $/smlnj-lib.cm
     $/ml-lpt-lib.cm
+    src/statistics/correlation.sml
+    src/statistics/linearRegression.sml
+    src/statistics/maximum.sml
+    src/statistics/mean.sml
+    src/statistics/medium.sml
+    src/statistics/minimum.sml
+    src/statistics/range.sml
+    src/statistics/standardDeviation.sml
+    src/statistics/student.sml
+    src/statistics/variance.sml
+    src/statistics/utils.sml
     src/grammar.sml
     src/darwin.grm : ml-antlr
     src/darwin.lex : ml-ulex

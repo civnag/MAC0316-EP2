@@ -7,8 +7,8 @@
 %let str = ["]{id}["];
 %let primitivo = ("int"|"string"|"boolean"|"float");
 %let tuple = "tuple" "(" ({primitivo} ("," {primitivo}){1,9} ")" );
-%let composto = ("sample of "({primitivo}|{tuple}));  
-%let tipo = ({primitivo}|{tuple}|{composto});
+%let lista = ("sample of "({primitivo}|{tuple}));  
+%let tipo = ({primitivo}|{tuple}|{lista});
 %let true = "true";
 %let false = "false";
 %let boolean = ({true}|{false});
@@ -17,6 +17,7 @@
 %let tupleVal = ( "(" {valPrim} ("," {valPrim}){1,9} ")" );
 %let intList = ("{}" | "{" {int} ("," {int})* "}" );
 %let floatList = ("{}" | "{" {float} ("," {float})* "}" );
+%let booleanList = ("{}" | "{" {boolean} ("," {boolean})* "}" );
 %let strList = ("{}" | "{" {str} ("," {str})* "}" );
 %let tupleList = ("{}" | "{" {tupleVal} ("," {tupleVal})* "}" );
 %defs (
@@ -38,8 +39,11 @@ in => ( T.KW_in );
 {int} => ( T.NUM (valOf (Int.fromString yytext)) );
 {float} => ( T.REAL (valOf (Real.fromString yytext)) );
 {boolean} => ( T.BOOL (valOf (Bool.fromString yytext)) );
-{tupleVal} => (print yytext; T.STR yytext);
-{intList} | {floatList} => (print yytext; T.STR yytext);
+{tupleVal} => (T.STR yytext);
+{intList} => (print yytext; T.SINT (Grammar.toIntList (Grammar.tokenize yytext)));
+{floatList} => (print yytext; T.SFLOAT (Grammar.toFloatList (Grammar.tokenize yytext)));
+{booList} => (print yytext; T.SBOOL (Grammar.toBoolList (Grammar.tokenize yytext)));
+{strList} => (print yytext; T.SSTRING (Grammar.tokenize yytext));
 "=" => ( T.EQ );
 "==" => ( T.EEQ );
 ";" => ( T.SEMI);

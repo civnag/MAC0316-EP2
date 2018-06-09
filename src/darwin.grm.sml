@@ -22,17 +22,21 @@ DarwinTokens = struct
       | BOOL of bool
       | RP
       | LP
+      | SBOOL of (Bool.bool list)
       | COMMA
       | MINUS
       | DIV
       | TIMES
+      | SFLOAT of (Real.real list)
       | EEQ
       | DOT
       | PLUS
       | EQ
+      | SINT of (Int.int list)
       | REAL of Real.real
       | NUM of Int.int
       | ID of string
+      | SSTRING of (string list)
       | KW_title
       | KW_in
       | KW_let
@@ -62,17 +66,21 @@ DarwinTokens = struct
   | (BOOL(_)) => "BOOL"
   | (RP) => ")"
   | (LP) => "("
+  | (SBOOL(_)) => "SBOOL"
   | (COMMA) => ","
   | (MINUS) => "-"
   | (DIV) => "/"
   | (TIMES) => "*"
+  | (SFLOAT(_)) => "SFLOAT"
   | (EEQ) => "=="
   | (DOT) => "."
   | (PLUS) => "+"
   | (EQ) => "="
+  | (SINT(_)) => "SINT"
   | (REAL(_)) => "REAL"
   | (NUM(_)) => "NUM"
   | (ID(_)) => "ID"
+  | (SSTRING(_)) => "SSTRING"
   | (KW_title) => "title"
   | (KW_in) => "in"
   | (KW_let) => "let"
@@ -100,17 +108,21 @@ DarwinTokens = struct
   | (BOOL(_)) => false
   | (RP) => false
   | (LP) => false
+  | (SBOOL(_)) => false
   | (COMMA) => false
   | (MINUS) => false
   | (DIV) => false
   | (TIMES) => false
+  | (SFLOAT(_)) => false
   | (EEQ) => false
   | (DOT) => false
   | (PLUS) => false
   | (EQ) => false
+  | (SINT(_)) => false
   | (REAL(_)) => false
   | (NUM(_)) => false
   | (ID(_)) => false
+  | (SSTRING(_)) => false
   | (KW_title) => true
   | (KW_in) => false
   | (KW_let) => false
@@ -352,6 +364,10 @@ fun matchLP strm = (case (lex(strm))
  of (Tok.LP, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
+fun matchSBOOL strm = (case (lex(strm))
+ of (Tok.SBOOL(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
 fun matchCOMMA strm = (case (lex(strm))
  of (Tok.COMMA, span, strm') => ((), span, strm')
   | _ => fail()
@@ -366,6 +382,10 @@ fun matchDIV strm = (case (lex(strm))
 (* end case *))
 fun matchTIMES strm = (case (lex(strm))
  of (Tok.TIMES, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchSFLOAT strm = (case (lex(strm))
+ of (Tok.SFLOAT(x), span, strm') => (x, span, strm')
   | _ => fail()
 (* end case *))
 fun matchEEQ strm = (case (lex(strm))
@@ -384,6 +404,10 @@ fun matchEQ strm = (case (lex(strm))
  of (Tok.EQ, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
+fun matchSINT strm = (case (lex(strm))
+ of (Tok.SINT(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
 fun matchREAL strm = (case (lex(strm))
  of (Tok.REAL(x), span, strm') => (x, span, strm')
   | _ => fail()
@@ -394,6 +418,10 @@ fun matchNUM strm = (case (lex(strm))
 (* end case *))
 fun matchID strm = (case (lex(strm))
  of (Tok.ID(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchSSTRING strm = (case (lex(strm))
+ of (Tok.SSTRING(x), span, strm') => (x, span, strm')
   | _ => fail()
 (* end case *))
 fun matchKW_title strm = (case (lex(strm))
