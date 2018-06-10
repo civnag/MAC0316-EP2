@@ -10,7 +10,7 @@ commands
     print("lool");
     p = sum({2.0,7.0});
     z = 1;
-    
     print(y);
     print(p);
     print(z);
+    print("lololokokoskso");

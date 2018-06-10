@@ -75,12 +75,13 @@ expr
     | %try funcs_float => (Grammar.Primitivo (Grammar.Float_ funcs_float))
     ;
 prints
-   :  KW_Print LP STR RP SEMI => ( ps := (STR::(!ps)) )
+   :  KW_Print LP STR RP SEMI => ( ps := (STR::(!ps)); print STR )
    |  KW_Print LP ID RP SEMI => (
         let 
             val k = Grammar.show (valOf (AtomMap.find (!v, Atom.atom ID)))
         in 
-            ps := k::(!ps)
+            ps := k::(!ps);
+            print k
         end
       ) 
    ;
