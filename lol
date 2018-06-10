@@ -5,7 +5,6 @@ variables
     float p;
 end variables
 commands
-    y = (32.1e1/5.0) + (1.2*2.0);
     print("lol");
     print("lool");
     p = sum({2.0,7.0});
