@@ -27,7 +27,6 @@
     fun eof() = T.EOF
 );
 
-let => ( T.KW_let );
 "variables" => ( T.KW_variables );
 "title" => ( T.KW_title );
 "commands" => ( T.KW_comands );
@@ -35,7 +34,6 @@ let => ( T.KW_let );
 "sum" => ( T.KW_SUM );
 "prod" => ( T.KW_PROD );
 "end variables" => ( T.KW_endvars );
-in => ( T.KW_in );
 {tipo} => ( print yytext; T.TIPO yytext );
 {id} => ( T.ID yytext );
 {str} => (T.STR yytext);
