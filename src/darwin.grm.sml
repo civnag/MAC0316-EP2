@@ -2,6 +2,12 @@ structure
 DarwinTokens = struct
 
     datatype token = EOF
+      | KW_END
+      | KW_DO
+      | KW_WHILE
+      | KW_ELSE
+      | KW_THEN
+      | KW_IF
       | EMPTY
       | KW_PROD
       | KW_SUM
@@ -44,11 +50,17 @@ DarwinTokens = struct
       | KW_in
       | KW_let
 
-    val allToks = [EOF, EMPTY, KW_PROD, KW_SUM, KW_terminate, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, NEQ, GEQ, LEQ, LT, GT, SPACE, NOT, OR, AND, RP, LP, COMMA, MINUS, DIV, TIMES, EEQ, DOT, PLUS, EQ, KW_title, KW_in, KW_let]
+    val allToks = [EOF, KW_END, KW_DO, KW_WHILE, KW_ELSE, KW_THEN, KW_IF, EMPTY, KW_PROD, KW_SUM, KW_terminate, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, NEQ, GEQ, LEQ, LT, GT, SPACE, NOT, OR, AND, RP, LP, COMMA, MINUS, DIV, TIMES, EEQ, DOT, PLUS, EQ, KW_title, KW_in, KW_let]
 
     fun toString tok =
 (case (tok)
  of (EOF) => "EOF"
+  | (KW_END) => "end"
+  | (KW_DO) => "do"
+  | (KW_WHILE) => "while"
+  | (KW_ELSE) => "else"
+  | (KW_THEN) => "then"
+  | (KW_IF) => "if"
   | (EMPTY) => "{}"
   | (KW_PROD) => "prod"
   | (KW_SUM) => "sum"
@@ -94,6 +106,12 @@ DarwinTokens = struct
     fun isKW tok =
 (case (tok)
  of (EOF) => false
+  | (KW_END) => true
+  | (KW_DO) => true
+  | (KW_WHILE) => true
+  | (KW_ELSE) => true
+  | (KW_THEN) => true
+  | (KW_IF) => true
   | (EMPTY) => false
   | (KW_PROD) => true
   | (KW_SUM) => true
@@ -306,6 +324,30 @@ fun unwrap (ret, strm, repairs) = (ret, strm, repairs, getS())
           in try prods end
 fun matchEOF strm = (case (lex(strm))
  of (Tok.EOF, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_END strm = (case (lex(strm))
+ of (Tok.KW_END, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_DO strm = (case (lex(strm))
+ of (Tok.KW_DO, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_WHILE strm = (case (lex(strm))
+ of (Tok.KW_WHILE, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_ELSE strm = (case (lex(strm))
+ of (Tok.KW_ELSE, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_THEN strm = (case (lex(strm))
+ of (Tok.KW_THEN, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_IF strm = (case (lex(strm))
+ of (Tok.KW_IF, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
 fun matchEMPTY strm = (case (lex(strm))

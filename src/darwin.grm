@@ -34,6 +34,8 @@
     | KW_comands ("commands") | STR of string | KW_Print ("print")
     | KW_endvars ("end variables") | KW_terminate ("terminate")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") 
+    | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
+    | KW_DO("do") | KW_END("end")
     ;
 %keywords
     KW_variables,
@@ -41,6 +43,12 @@
     KW_comands,
     KW_endvars,
     KW_terminate,
+    KW_IF,
+    KW_THEN,
+    KW_ELSE,
+    KW_WHILE,
+    KW_DO,
+    KW_END,
     KW_PROD,
     KW_SUM
     ;
@@ -56,7 +64,7 @@ program(d)
       commands => ()
     ;
 commands
-    : (prints | assign)*  => ((fn(_) => ()) SR)   
+    : (prints | assign )*  => ((fn(_) => ()) SR)   
     ;
 assign
     : ID EQ expr SEMI => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
