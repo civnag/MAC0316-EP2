@@ -40,7 +40,11 @@
 "median" => ( T.KW_MEDIAN );
 "stdDeviation" => ( T.KW_STDEV );
 "variance" => ( T.KW_VAR );
-"get" => ( T.KW_GET );
+"getFloat" => ( T.KW_GETF );
+"getInt" => ( T.KW_GETI );
+"toFloat" => (T.KW_TOFLOAT);
+"toInt" => (T.KW_TOINT);
+"subSample" => ( T.KW_SUBS );
 "linearRegression" => (T.KW_LINREG);
 "covariance" => (T.KW_COV);
 "void" => ( T.VOID );

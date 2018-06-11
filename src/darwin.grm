@@ -38,8 +38,9 @@
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
-    | KW_VAR("variance") | KW_GET("get") | KW_COV("covariance")
+    | KW_VAR("variance") | KW_GETF("getFloat") | KW_COV("covariance") | KW_SUBS("subSample")
     | KW_LINREG("linearRegression") | TUPLE of Grammar.tipo | VOID("void")
+    | KW_GETI("getInt") | KW_TOFLOAT("toFloat") | KW_TOINT("toInt")
     ;
 %keywords
     KW_variables,
@@ -61,9 +62,13 @@
     KW_MEDIAN,
     KW_STDEV,
     KW_VAR,
-    KW_GET,
+    KW_GETF,
     KW_COV,
-    KW_LINREG
+    KW_LINREG,
+    KW_SUBS,
+    KW_GETI,
+    KW_TOFLOAT,
+    KW_TOINT
     ;
 
 %refcell v : (Grammar.tipo) AtomMap.map = (AtomMap.empty);
@@ -93,7 +98,9 @@ expr
     | %try exp_bool => (exp_bool)
     | %try exp_string => (exp_string)
     | %try funcs_float => (Grammar.Primitivo (Grammar.Float_ funcs_float))
+    | %try funcs_int => (Grammar.Primitivo (Grammar.Int_ funcs_int))
     | %try funcs_string => (Grammar.Primitivo (Grammar.String_ funcs_string))
+    | %try funcs_list => (funcs_list) 
     | %try val_list => (val_list)
     ;
 val_list
@@ -101,6 +108,7 @@ val_list
     | SFLOAT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Float_ x)) SFLOAT) )
     | SBOOL => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Boolean_ x)) SBOOL) )
     | SSTRING => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
+    | ID => (valOf(AtomMap.find (!v, Atom.atom ID))) 
     ;
 prints
    :  KW_Print LP STR RP => ( ps := (STR::(!ps)))
@@ -117,6 +125,12 @@ funcs_string
     : KW_TOSTRING LP expr RP => (Grammar.show expr)
     | KW_LINREG LP float_list COMMA float_list RP => (Statistics.linearRegression(float_list1,float_list2))
     ;
+funcs_int
+    : KW_GETI LP int_list COMMA exp_arit RP %where (isType exp_arit "int") 
+        => (List.nth(int_list,getInt exp_arit)) 
+    | KW_TOINT LP exp_arit RP %where (isType exp_arit "float")
+        => (Real.round(getFloat exp_arit))
+    ;
 funcs_float
     : KW_SUM LP EMPTY RP  => ( 0.0)
     | KW_SUM LP float_list RP  
@@ -129,13 +143,22 @@ funcs_float
     | KW_STDEV LP float_list RP => (Statistics.standardDeviation(float_list))
     | KW_MEDIAN LP float_list RP => (Statistics.median(float_list))
     | KW_COV LP float_list COMMA float_list RP => (Statistics.covariance(float_list1, float_list2))
+    | KW_GETF LP float_list COMMA exp_arit RP %where (isType exp_arit "int") 
+        => (List.nth(float_list,getInt exp_arit))
+    | KW_TOFLOAT LP exp_arit RP %where (isType exp_arit "int")
+        => (valOf (Real.fromString((Int.toString (getInt exp_arit))^".0")))
     ;
 funcs_list
-    : KW_GET LP val_list COMMA exp_arit COMMA exp_arit RP %where ((isType exp_arit1 "int") andalso (isType exp_arit2 "int")) => (Grammar.Sample (List.take((List.drop(val_list,getInt(exp_arit2))),getInt(exp_arit1))))
+    : KW_SUBS LP val_list COMMA exp_arit COMMA exp_arit RP %where ((isType exp_arit1 "int") andalso (isType exp_arit2 "int")) 
+        => (Grammar.Sample (List.take((List.drop(getList val_list,getInt(exp_arit2))),getInt(exp_arit1))))
     ;
 float_list
     : ID => (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
     | SFLOAT => (SFLOAT)
+    ;
+int_list
+    : ID => (List.map getInt (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
+    | SINT => (SINT)
     ;
 exp_bool
     : %try exp_arit rel_op exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper(rel_op,exp_arit1,exp_arit2))
