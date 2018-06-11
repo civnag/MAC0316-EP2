@@ -105,6 +105,9 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
 fun extractList (Sample x) = x
     | extractList _ = raise TypeMismatch
 
+fun extractString (Primitivo(String_ x)) = x
+    | extractString _ = raise TypeMismatch
+
 fun extractBool (Primitivo(Boolean_ i)) = i
     | extractBool _ = raise TypeMismatch
 

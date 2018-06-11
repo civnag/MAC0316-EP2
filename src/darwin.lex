@@ -42,6 +42,7 @@
 "variance" => ( T.KW_VAR );
 "getFloat" => ( T.KW_GETF );
 "getInt" => ( T.KW_GETI );
+"getString" => ( T.KW_GETS );
 "toFloat" => (T.KW_TOFLOAT);
 "toInt" => (T.KW_TOINT);
 "subSample" => ( T.KW_SUBS );

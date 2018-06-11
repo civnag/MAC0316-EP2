@@ -9,6 +9,7 @@
     
     fun getInt x = (Grammar.extractInt x)
     fun getFloat x = (Grammar.extractFloat x)
+    fun getString x = (Grammar.extractString x)
     fun getBool x = (Grammar.extractBool x)
     fun getList x = (Grammar.extractList x)
     
@@ -34,7 +35,7 @@
     | KW_variables ("variables") | SEMI | TIPO of string
     | KW_comands ("commands") | STR of string | KW_Print ("print")
     | KW_endvars ("end variables") | KW_terminate ("terminate")
-    | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") 
+    | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") | KW_GETS("getString")
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
@@ -67,6 +68,7 @@
     KW_LINREG,
     KW_SUBS,
     KW_GETI,
+    KW_GETS,
     KW_TOFLOAT,
     KW_TOINT
     ;
@@ -124,6 +126,8 @@ prints
 funcs_string
     : KW_TOSTRING LP expr RP => (Grammar.show expr)
     | KW_LINREG LP float_list COMMA float_list RP => (Statistics.linearRegression(float_list1,float_list2))
+    | KW_GETS LP string_list COMMA exp_arit RP %where (isType exp_arit "int") 
+        => (List.nth(string_list,getInt exp_arit)) 
     ;
 funcs_int
     : KW_GETI LP int_list COMMA exp_arit RP %where (isType exp_arit "int") 
@@ -155,6 +159,10 @@ funcs_list
 float_list
     : ID => (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
     | SFLOAT => (SFLOAT)
+    ;
+string_list
+    : ID => (List.map getString (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
+    | SSTRING => (SSTRING)
     ;
 int_list
     : ID => (List.map getInt (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
