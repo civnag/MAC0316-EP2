@@ -2,6 +2,7 @@ structure
 DarwinTokens = struct
 
     datatype token = EOF
+      | TUPLE of Grammar.tipo
       | KW_LINREG
       | KW_COV
       | KW_GET
@@ -64,6 +65,7 @@ DarwinTokens = struct
     fun toString tok =
 (case (tok)
  of (EOF) => "EOF"
+  | (TUPLE(_)) => "TUPLE"
   | (KW_LINREG) => "linearRegression"
   | (KW_COV) => "covariance"
   | (KW_GET) => "get"
@@ -124,6 +126,7 @@ DarwinTokens = struct
     fun isKW tok =
 (case (tok)
  of (EOF) => false
+  | (TUPLE(_)) => false
   | (KW_LINREG) => true
   | (KW_COV) => true
   | (KW_GET) => true
@@ -385,6 +388,10 @@ fun unwrap (ret, strm, repairs) = (ret, strm, repairs, getS())
           in try prods end
 fun matchEOF strm = (case (lex(strm))
  of (Tok.EOF, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchTUPLE strm = (case (lex(strm))
+ of (Tok.TUPLE(x), span, strm') => (x, span, strm')
   | _ => fail()
 (* end case *))
 fun matchKW_LINREG strm = (case (lex(strm))

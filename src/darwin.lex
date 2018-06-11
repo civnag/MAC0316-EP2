@@ -49,7 +49,6 @@
 {int} => ( T.NUM (valOf (Int.fromString yytext)) );
 {float} => ( T.REAL (valOf (Real.fromString yytext)) );
 {boolean} => ( T.BOOL (valOf (Bool.fromString yytext)) );
-{tupleVal} => (T.STR yytext);
 {intList} => (T.SINT (Grammar.toIntList (Grammar.tokenize yytext)));
 {floatList} => (T.SFLOAT (Grammar.toFloatList (Grammar.tokenize yytext)));
 {booleanList} => (T.SBOOL (Grammar.toBoolList (Grammar.tokenize yytext)));

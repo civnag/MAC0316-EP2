@@ -38,7 +38,7 @@
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
     | KW_VAR("variance") | KW_GET("get") | KW_COV("covariance")
-    | KW_LINREG("linearRegression")
+    | KW_LINREG("linearRegression") | TUPLE of Grammar.tipo
     ;
 %keywords
     KW_variables,

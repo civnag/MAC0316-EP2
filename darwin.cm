@@ -8,6 +8,7 @@ is
     $/ml-lpt-lib.cm
     src/grammar.sml
     src/statistics.sml
+    src/helper.sml
     src/darwin.grm : ml-antlr
     src/darwin.lex : ml-ulex
     src/darwin-main.sml
