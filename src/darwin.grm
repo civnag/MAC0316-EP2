@@ -54,6 +54,7 @@
     ;
 
 %refcell v : (Grammar.tipo) AtomMap.map = (AtomMap.empty);
+%refcell ts : string AtomMap.map = (AtomMap.empty);
 %refcell ps : string list = (nil);
 
 program(d)
@@ -69,12 +70,18 @@ commands
     | conditional => ()
     ;
 assign
-    : ID EQ expr SEMI => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
+    : ID EQ expr SEMI %where (AtomMap.inDomain(!v,Atom.atom ID)
+                        andalso (isType expr (valOf (AtomMap.find (!ts, Atom.atom ID))))) 
+                        => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
     ;
 expr
     : %try exp_arit => (exp_arit)
     | %try exp_bool => (exp_bool)
     | %try funcs_float => (Grammar.Primitivo (Grammar.Float_ funcs_float))
+    | %try SINT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Int_ x)) SINT) )
+    | %try SFLOAT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Float_ x)) SFLOAT) )
+    | %try SBOOL => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Boolean_ x)) SBOOL) )
+    | %try SSTRING => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
     ;
 prints
    :  KW_Print LP STR RP SEMI => ( ps := (STR::(!ps)))
@@ -156,5 +163,6 @@ variables
     : (declaration)* KW_endvars => ((fn(_) => ()) SR)
     ;
 declaration
-    : TIPO ID SEMI => (v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO)))
+    : TIPO ID SEMI => (v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO));
+                       ts:=AtomMap.insert(!ts,Atom.atom ID,TIPO))
     ;

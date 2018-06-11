@@ -5,6 +5,9 @@ struct
 
 	fun tok2s (DarwinTokens.ID s) = s
 		| tok2s (DarwinTokens.NUM n) = Int.toString n
+		| tok2s (DarwinTokens.REAL f) = Real.toString f
+		| tok2s (DarwinTokens.SINT _) = "Sample of int error"
+		| tok2s (DarwinTokens.BOOL _) = "boolean error"
 		| tok2s tok = DarwinTokens.toString tok
 
 	fun darwin instrm =
@@ -21,7 +24,7 @@ struct
 			val _ = print "        Interpreting code...        \n"
 			val _ = print "                                    \n"
 
-			val (r, strm', errs,{ps=prints,v=vars}) = CP.parse lex nil strm
+			val (r, strm', errs,{ps=prints,v=vars,ts=tps}) = CP.parse lex nil strm
 			fun doErr err = print ("Syntax error " ^
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs
