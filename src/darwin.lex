@@ -69,6 +69,7 @@
 "==" => ( T.EEQ );
 ";" => ( T.SEMI);
 "+" => ( T.PLUS );
+"++" => (T.CONCAT);
 "-" => ( T.MINUS );
 "*" => ( T.TIMES );
 "/" => ( T.DIV );

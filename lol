@@ -17,7 +17,7 @@ commands
     p = correlation({2.0,7.0},{4.0,5.5});
     h = 2;
     h = (h + 11);
-    s = "odkfod";
+    s = "ksoskos" ++ "wals";
     j = toInt(t);
     print(s);
     print(p);

@@ -41,7 +41,7 @@
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
     | KW_VAR("variance") | KW_GETF("getFloat") | KW_COV("covariance") | KW_SUBS("subSample")
     | KW_LINREG("linearRegression") | TUPLE of Grammar.tipo | VOID("void")
-    | KW_GETI("getInt") | KW_TOFLOAT("toFloat") | KW_TOINT("toInt")
+    | KW_GETI("getInt") | KW_TOFLOAT("toFloat") | KW_TOINT("toInt") | CONCAT("++")
     ;
 %keywords
     KW_variables,
@@ -175,7 +175,9 @@ exp_bool
     | %try atom_bool
     ;
 exp_string
-    : STR => (Grammar.Primitivo (Grammar.String_ STR))
+    : STR CONCAT STR => (Grammar.Primitivo (Grammar.String_ ("\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(STR1 ^ STR2)))) ^ "\"")))
+    | STR => (Grammar.Primitivo (Grammar.String_ STR))
+    | LP exp_string RP
     ;
 rel_op
     : EEQ => ("==")

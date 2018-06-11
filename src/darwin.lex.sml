@@ -69,63 +69,63 @@ INITIAL
 (0w118,0w118,32),
 (0w119,0w119,33),
 (0w123,0w123,34),
-(0w124,0w124,35)], []), ([], [60]), ([], [58, 60]), ([(0w61,0w61,462)], [50, 60]), ([(0w65,0w90,460),
-(0w97,0w122,460)], [60]), ([(0w38,0w38,459)], [60]), ([], [45, 60]), ([], [46, 60]), ([], [43, 60]), ([], [41, 60]), ([], [57, 60]), ([], [42, 60]), ([], [47, 60]), ([], [44, 60]), ([(0w34,0w34,453),
+(0w124,0w124,35)], []), ([], [61]), ([], [59, 61]), ([(0w61,0w61,463)], [51, 61]), ([(0w65,0w90,461),
+(0w97,0w122,461)], [61]), ([(0w38,0w38,460)], [61]), ([], [46, 61]), ([], [47, 61]), ([], [44, 61]), ([(0w43,0w43,459)], [41, 61]), ([], [58, 61]), ([], [43, 61]), ([], [48, 61]), ([], [45, 61]), ([(0w34,0w34,453),
 (0w46,0w46,453),
-(0w48,0w57,454)], [25, 60]), ([], [40, 60]), ([(0w61,0w61,452)], [54, 60]), ([(0w61,0w61,451)], [38, 60]), ([(0w61,0w61,450)], [53, 60]), ([(0w48,0w57,64),
+(0w48,0w57,454)], [25, 61]), ([], [40, 61]), ([(0w61,0w61,452)], [55, 61]), ([(0w61,0w61,451)], [38, 61]), ([(0w61,0w61,450)], [54, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
-(0w97,0w122,64)], [23, 60]), ([(0w48,0w57,64),
-(0w65,0w90,64),
-(0w97,0w110,64),
-(0w112,0w122,64),
-(0w111,0w111,445)], [23, 60]), ([(0w48,0w57,64),
+(0w97,0w122,64)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w110,64),
 (0w112,0w122,64),
-(0w111,0w111,421)], [23, 60]), ([(0w48,0w57,64),
+(0w111,0w111,445)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w110,64),
 (0w112,0w122,64),
-(0w111,0w111,420)], [23, 60]), ([(0w48,0w57,64),
+(0w111,0w111,421)], [23, 61]), ([(0w48,0w57,64),
+(0w65,0w90,64),
+(0w97,0w110,64),
+(0w112,0w122,64),
+(0w111,0w111,420)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w107,64),
 (0w109,0w109,64),
 (0w111,0w122,64),
 (0w108,0w108,405),
-(0w110,0w110,406)], [23, 60]), ([(0w48,0w57,64),
+(0w110,0w110,406)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w98,0w107,64),
 (0w109,0w122,64),
 (0w97,0w97,401),
-(0w108,0w108,402)], [23, 60]), ([(0w48,0w57,64),
+(0w108,0w108,402)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w100,64),
 (0w102,0w122,64),
-(0w101,0w101,385)], [23, 60]), ([(0w48,0w57,64),
+(0w101,0w101,385)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w101,64),
 (0w103,0w109,64),
 (0w111,0w122,64),
 (0w102,0w102,383),
-(0w110,0w110,384)], [23, 60]), ([(0w48,0w57,64),
+(0w110,0w110,384)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w104,64),
 (0w106,0w122,64),
-(0w105,0w105,368)], [23, 60]), ([(0w48,0w57,64),
+(0w105,0w105,368)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w100,64),
 (0w102,0w122,64),
-(0w101,0w101,361)], [23, 60]), ([(0w48,0w57,64),
+(0w101,0w101,361)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w113,64),
 (0w115,0w122,64),
-(0w114,0w114,355)], [23, 60]), ([(0w48,0w57,64),
+(0w114,0w114,355)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w98,0w115,64),
 (0w118,0w122,64),
 (0w97,0w97,301),
 (0w116,0w116,302),
-(0w117,0w117,303)], [23, 60]), ([(0w48,0w57,64),
+(0w117,0w117,303)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w100,64),
 (0w102,0w103,64),
@@ -138,25 +138,25 @@ INITIAL
 (0w105,0w105,85),
 (0w111,0w111,86),
 (0w114,0w114,87),
-(0w117,0w117,88)], [23, 60]), ([(0w48,0w57,64),
+(0w117,0w117,88)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w98,0w110,64),
 (0w112,0w122,64),
 (0w97,0w97,69),
-(0w111,0w111,70)], [23, 60]), ([(0w48,0w57,64),
+(0w111,0w111,70)], [23, 61]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w103,64),
 (0w105,0w122,64),
-(0w104,0w104,65)], [23, 60]), ([(0w34,0w34,37),
+(0w104,0w104,65)], [23, 61]), ([(0w34,0w34,37),
 (0w48,0w57,38),
 (0w102,0w102,39),
 (0w116,0w116,40),
-(0w125,0w125,41)], [60]), ([(0w124,0w124,36)], [60]), ([], [49]), ([(0w65,0w90,60),
+(0w125,0w125,41)], [61]), ([(0w124,0w124,36)], [61]), ([], [50]), ([(0w65,0w90,60),
 (0w97,0w122,60)], []), ([(0w34,0w34,49),
 (0w46,0w46,49),
 (0w44,0w44,50),
 (0w48,0w57,38),
-(0w125,0w125,51)], []), ([(0w97,0w97,47)], []), ([(0w114,0w114,42)], []), ([], [28, 29, 30, 31, 56]), ([(0w117,0w117,43)], []), ([(0w101,0w101,44)], []), ([(0w44,0w44,45),
+(0w125,0w125,51)], []), ([(0w97,0w97,47)], []), ([(0w114,0w114,42)], []), ([], [28, 29, 30, 31, 57]), ([(0w117,0w117,43)], []), ([(0w101,0w101,44)], []), ([(0w44,0w44,45),
 (0w125,0w125,46)], []), ([(0w102,0w102,39),
 (0w116,0w116,40)], []), ([], [30]), ([(0w108,0w108,48)], []), ([(0w115,0w115,43)], []), ([(0w48,0w57,53)], []), ([(0w48,0w57,52)], []), ([], [28]), ([(0w44,0w44,50),
 (0w48,0w57,52),
@@ -414,7 +414,7 @@ INITIAL
 (0w102,0w122,64),
 (0w101,0w101,300)], [23]), ([(0w48,0w57,64),
 (0w65,0w90,64),
-(0w97,0w122,64)], [23, 59]), ([(0w48,0w57,64),
+(0w97,0w122,64)], [23, 60]), ([(0w48,0w57,64),
 (0w65,0w90,64),
 (0w97,0w108,64),
 (0w110,0w122,64),
@@ -840,14 +840,14 @@ INITIAL
 (0w65,0w90,64),
 (0w97,0w109,64),
 (0w111,0w122,64),
-(0w110,0w110,316)], [23]), ([], [51]), ([], [39]), ([], [52]), ([(0w48,0w57,455)], []), ([(0w34,0w34,453),
+(0w110,0w110,316)], [23]), ([], [52]), ([], [39]), ([], [53]), ([(0w48,0w57,455)], []), ([(0w34,0w34,453),
 (0w46,0w46,453),
 (0w48,0w57,454)], [25]), ([(0w48,0w57,456),
 (0w69,0w69,457),
-(0w101,0w101,457)], [26]), ([(0w48,0w57,456)], [26]), ([(0w48,0w57,458)], []), ([(0w48,0w57,458)], [26]), ([], [48]), ([(0w34,0w34,461),
-(0w48,0w57,460),
-(0w65,0w90,460),
-(0w97,0w122,460)], []), ([], [24]), ([], [55])]
+(0w101,0w101,457)], [26]), ([(0w48,0w57,456)], [26]), ([(0w48,0w57,458)], []), ([(0w48,0w57,458)], [26]), ([], [42]), ([], [49]), ([(0w34,0w34,462),
+(0w48,0w57,461),
+(0w65,0w90,461),
+(0w97,0w122,461)], []), ([], [24]), ([], [56])]
     fun yystreamify' p input = ULexBuffer.mkStream (p, input)
 
     fun yystreamifyReader' p readFn strm = let
@@ -1021,26 +1021,27 @@ fun yyAction38 (strm, lastMatch : yymatch) = (yystrm := strm;   T.EQ )
 fun yyAction39 (strm, lastMatch : yymatch) = (yystrm := strm;   T.EEQ )
 fun yyAction40 (strm, lastMatch : yymatch) = (yystrm := strm;   T.SEMI)
 fun yyAction41 (strm, lastMatch : yymatch) = (yystrm := strm;   T.PLUS )
-fun yyAction42 (strm, lastMatch : yymatch) = (yystrm := strm;   T.MINUS )
-fun yyAction43 (strm, lastMatch : yymatch) = (yystrm := strm;   T.TIMES )
-fun yyAction44 (strm, lastMatch : yymatch) = (yystrm := strm;   T.DIV )
-fun yyAction45 (strm, lastMatch : yymatch) = (yystrm := strm;   T.LP )
-fun yyAction46 (strm, lastMatch : yymatch) = (yystrm := strm;   T.RP )
-fun yyAction47 (strm, lastMatch : yymatch) = (yystrm := strm;   T.DOT )
-fun yyAction48 (strm, lastMatch : yymatch) = (yystrm := strm;   T.AND )
-fun yyAction49 (strm, lastMatch : yymatch) = (yystrm := strm;   T.OR )
-fun yyAction50 (strm, lastMatch : yymatch) = (yystrm := strm;   T.NOT )
-fun yyAction51 (strm, lastMatch : yymatch) = (yystrm := strm;   T.GEQ )
-fun yyAction52 (strm, lastMatch : yymatch) = (yystrm := strm;   T.LEQ )
-fun yyAction53 (strm, lastMatch : yymatch) = (yystrm := strm;   T.GT )
-fun yyAction54 (strm, lastMatch : yymatch) = (yystrm := strm;   T.LT )
-fun yyAction55 (strm, lastMatch : yymatch) = (yystrm := strm;   T.NEQ )
-fun yyAction56 (strm, lastMatch : yymatch) = (yystrm := strm;   T.EMPTY )
-fun yyAction57 (strm, lastMatch : yymatch) = (yystrm := strm;   T.COMMA )
-fun yyAction58 (strm, lastMatch : yymatch) = (yystrm := strm;   continue() )
-fun yyAction59 (strm, lastMatch : yymatch) = (yystrm := strm;
+fun yyAction42 (strm, lastMatch : yymatch) = (yystrm := strm;  T.CONCAT)
+fun yyAction43 (strm, lastMatch : yymatch) = (yystrm := strm;   T.MINUS )
+fun yyAction44 (strm, lastMatch : yymatch) = (yystrm := strm;   T.TIMES )
+fun yyAction45 (strm, lastMatch : yymatch) = (yystrm := strm;   T.DIV )
+fun yyAction46 (strm, lastMatch : yymatch) = (yystrm := strm;   T.LP )
+fun yyAction47 (strm, lastMatch : yymatch) = (yystrm := strm;   T.RP )
+fun yyAction48 (strm, lastMatch : yymatch) = (yystrm := strm;   T.DOT )
+fun yyAction49 (strm, lastMatch : yymatch) = (yystrm := strm;   T.AND )
+fun yyAction50 (strm, lastMatch : yymatch) = (yystrm := strm;   T.OR )
+fun yyAction51 (strm, lastMatch : yymatch) = (yystrm := strm;   T.NOT )
+fun yyAction52 (strm, lastMatch : yymatch) = (yystrm := strm;   T.GEQ )
+fun yyAction53 (strm, lastMatch : yymatch) = (yystrm := strm;   T.LEQ )
+fun yyAction54 (strm, lastMatch : yymatch) = (yystrm := strm;   T.GT )
+fun yyAction55 (strm, lastMatch : yymatch) = (yystrm := strm;   T.LT )
+fun yyAction56 (strm, lastMatch : yymatch) = (yystrm := strm;   T.NEQ )
+fun yyAction57 (strm, lastMatch : yymatch) = (yystrm := strm;   T.EMPTY )
+fun yyAction58 (strm, lastMatch : yymatch) = (yystrm := strm;   T.COMMA )
+fun yyAction59 (strm, lastMatch : yymatch) = (yystrm := strm;   continue() )
+fun yyAction60 (strm, lastMatch : yymatch) = (yystrm := strm;
         T.KW_terminate )
-fun yyAction60 (strm, lastMatch : yymatch) = let
+fun yyAction61 (strm, lastMatch : yymatch) = let
       val yytext = yymktext(strm)
       in
         yystrm := strm;
@@ -1057,7 +1058,7 @@ val yyactTable = Vector.fromList([yyAction0, yyAction1, yyAction2, yyAction3,
   yyAction41, yyAction42, yyAction43, yyAction44, yyAction45, yyAction46,
   yyAction47, yyAction48, yyAction49, yyAction50, yyAction51, yyAction52,
   yyAction53, yyAction54, yyAction55, yyAction56, yyAction57, yyAction58,
-  yyAction59, yyAction60])
+  yyAction59, yyAction60, yyAction61])
 in
   if ULexBuffer.eof(!(yystrm))
     then let
