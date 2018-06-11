@@ -365,8 +365,8 @@ fun atom_bool_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.po
   ( valOf(AtomMap.find (!v, Atom.atom ID)))
 fun atom_bool_PROD_2_ACT (BOOL, BOOL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
   (  Grammar.Primitivo (Grammar.Boolean_ BOOL))
-fun loop_PROD_1_ACT (commands, KW_WHILE, exp_bool, KW_DO, KW_END, commands_SPAN : (Lex.pos * Lex.pos), KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
-  ( if (not(getBool exp_bool)) then (print "aqui") else (print "lok"))
+fun loop_PROD_1_ACT (KW_WHILE, exp_bool, KW_DO, loop_aux, KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), loop_aux_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
+  ( )
 fun conditional_PROD_1_ACT (exp_bool, KW_IF, block, exp_bool_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), block_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
   ( )
 fun block_PROD_1_ACT (b, commands, KW_THEN, commands_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
@@ -427,9 +427,11 @@ fun multExp_PROD_1_PRED (DIV, prefixExp1, prefixExp2, ps, v, ts) =
   ( (isType prefixExp1 "float") andalso (isType prefixExp2 "float") andalso (exprTypes prefixExp1 prefixExp2))
 fun multExp_PROD_2_PRED (TIMES, prefixExp1, prefixExp2, ps, v, ts) = 
   ( exprTypes prefixExp1 prefixExp2)
-fun ARGS_77 (exp_bool, KW_IF, ps, v, ts) = 
+fun ARGS_76 (KW_WHILE, exp_bool, KW_DO, ps, v, ts) = 
   (getBool exp_bool)
-fun ARGS_80 (b, commands, KW_THEN, ps, v, ts) = 
+fun ARGS_78 (exp_bool, KW_IF, ps, v, ts) = 
+  (getBool exp_bool)
+fun ARGS_81 (b, commands, KW_THEN, ps, v, ts) = 
   (b)
 fun mkps_REFC() : (string list) ref = ref ( nil)
 fun mkv_REFC() : ((Grammar.tipo) AtomMap.map) ref = ref ( AtomMap.empty)
@@ -1743,17 +1745,22 @@ and loop_NT (strm) = let
       val (KW_WHILE_RES, KW_WHILE_SPAN, strm') = matchKW_WHILE(strm)
       val (exp_bool_RES, exp_bool_SPAN, strm') = exp_bool_NT(strm')
       val (KW_DO_RES, KW_DO_SPAN, strm') = matchKW_DO(strm')
-      val (commands_RES, commands_SPAN, strm') = commands_NT(strm')
-      val (KW_END_RES, KW_END_SPAN, strm') = matchKW_END(strm')
-      val FULL_SPAN = (#1(KW_WHILE_SPAN), #2(KW_END_SPAN))
+      val (loop_aux_RES, loop_aux_SPAN, strm') = (loop_aux_NT (UserCode.ARGS_76 (KW_WHILE_RES, exp_bool_RES, KW_DO_RES, ps_REFC, v_REFC, ts_REFC)))(strm')
+      val FULL_SPAN = (#1(KW_WHILE_SPAN), #2(loop_aux_SPAN))
       in
-        (UserCode.loop_PROD_1_ACT (commands_RES, KW_WHILE_RES, exp_bool_RES, KW_DO_RES, KW_END_RES, commands_SPAN : (Lex.pos * Lex.pos), KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC),
+        (UserCode.loop_PROD_1_ACT (KW_WHILE_RES, exp_bool_RES, KW_DO_RES, loop_aux_RES, KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), loop_aux_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC),
           FULL_SPAN, strm')
+      end
+and loop_aux_NT (true_RES) (strm) = let
+      val (commands_RES, commands_SPAN, strm') = commands_NT(strm)
+      val FULL_SPAN = (#1(commands_SPAN), #2(commands_SPAN))
+      in
+        ((commands_RES), FULL_SPAN, strm')
       end
 and conditional_NT (strm) = let
       val (KW_IF_RES, KW_IF_SPAN, strm') = matchKW_IF(strm)
       val (exp_bool_RES, exp_bool_SPAN, strm') = exp_bool_NT(strm')
-      val (block_RES, block_SPAN, strm') = (block_NT (UserCode.ARGS_77 (exp_bool_RES, KW_IF_RES, ps_REFC, v_REFC, ts_REFC)))(strm')
+      val (block_RES, block_SPAN, strm') = (block_NT (UserCode.ARGS_78 (exp_bool_RES, KW_IF_RES, ps_REFC, v_REFC, ts_REFC)))(strm')
       val FULL_SPAN = (#1(KW_IF_SPAN), #2(block_SPAN))
       in
         (UserCode.conditional_PROD_1_ACT (exp_bool_RES, KW_IF_RES, block_RES, exp_bool_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), block_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC),
@@ -1771,7 +1778,7 @@ and block_NT (b_RES) (strm) = let
       fun block_PROD_2 (strm) = let
             val (KW_THEN_RES, KW_THEN_SPAN, strm') = matchKW_THEN(strm)
             val (commands_RES, commands_SPAN, strm') = commands_NT(strm')
-            val (else_block_RES, else_block_SPAN, strm') = (else_block_NT (UserCode.ARGS_80 (b_RES, commands_RES, KW_THEN_RES, ps_REFC, v_REFC, ts_REFC)))(strm')
+            val (else_block_RES, else_block_SPAN, strm') = (else_block_NT (UserCode.ARGS_81 (b_RES, commands_RES, KW_THEN_RES, ps_REFC, v_REFC, ts_REFC)))(strm')
             val FULL_SPAN = (#1(KW_THEN_SPAN), #2(else_block_SPAN))
             in
               (UserCode.block_PROD_2_ACT (b_RES, commands_RES, KW_THEN_RES, else_block_RES, commands_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), else_block_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC),
