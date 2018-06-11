@@ -9,8 +9,9 @@ end variables
 commands
     print("lol");
     print("lool");
-    p = mean({2.0,7.0});
+    p = correlation({2.0,7.0},{4.0,5.5});
     h = 2;
+    s = toString(8);
     print(s);
     print(p);
     print(z);
