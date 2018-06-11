@@ -15,8 +15,7 @@ commands
     h = 2;
     z = {"true","false"};
     h = (h + 11);
-    s = linearRegression({1.0,2.0,3.0},{2.0,4.2,6.0});
-    y = get({1.0,2.0,3.0,4.0,5.0,6.0,7.0},1,3);
+    s = "odkfod";
     print(s);
     print(p);
     print(z);
@@ -24,3 +23,4 @@ commands
     print(h);
     print(y);
     print(s);
+    print(linearRegression({1.0,2.0,3.0},{2.0,4.2,6.0}));

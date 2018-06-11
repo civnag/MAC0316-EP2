@@ -91,6 +91,7 @@ assign
 expr
     : %try exp_arit => (exp_arit)
     | %try exp_bool => (exp_bool)
+    | %try exp_string => (exp_string)
     | %try funcs_float => (Grammar.Primitivo (Grammar.Float_ funcs_float))
     | %try funcs_string => (Grammar.Primitivo (Grammar.String_ funcs_string))
     | %try val_list => (val_list)
@@ -109,7 +110,8 @@ prints
         in 
             ps := k::(!ps)
         end
-      ) 
+      )
+   | KW_Print LP funcs_string RP => (ps := (funcs_string)::(!ps))
    ;
 funcs_string
     : KW_TOSTRING LP expr RP => (Grammar.show expr)
@@ -140,6 +142,9 @@ exp_bool
     | %try atom_bool AND atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
     | %try atom_bool OR atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
     | %try atom_bool
+    ;
+exp_string
+    : STR => (Grammar.Primitivo (Grammar.String_ STR))
     ;
 rel_op
     : EEQ => ("==")
