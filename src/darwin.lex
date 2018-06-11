@@ -43,6 +43,7 @@
 "get" => ( T.KW_GET );
 "linearRegression" => (T.KW_LINREG);
 "covariance" => (T.KW_COV);
+"void" => ( T.VOID );
 {tipo} => ( T.TIPO yytext );
 {id} => ( T.ID yytext );
 {str} => (T.STR yytext);

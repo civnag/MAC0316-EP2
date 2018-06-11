@@ -20,7 +20,8 @@ datatype tipo = Tupla2 of tipo * tipo
               | Tupla9 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
               | Tupla0 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
               | Sample of (tipo list)
-              | Primitivo of tipo_primitivo;
+              | Primitivo of tipo_primitivo
+              | Void
 
 fun tokenize s = String.tokens (fn(c) => c = #",") (String.substring(s,1,(String.size s)-2))
 
@@ -72,6 +73,7 @@ fun show (Primitivo(Int_ i)) = Int.toString i
         "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ "," ^ show g ^ "," ^ show h ^ "," ^ show i ^ "," ^ show j ^")"
     | show (Sample nil) = "[]"
     | show (Sample (x::xs)) = (show x) ^ "," ^ String.concat(List.map show xs)
+    | show _ = "null"
 
 fun != (x: real, y:real):bool = Real.!=(x,y)
 
@@ -142,4 +144,5 @@ fun typeof (Primitivo(Float_ _)) = "float"
             ^ typeof i ^"," ^ typeof j ^")"
     | typeof (Sample nil) = "[]"
     | typeof (Sample (x::_)) = "sample of " ^ (typeof x)
+    | typeof _ = "null"
 end

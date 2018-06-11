@@ -4,7 +4,8 @@
     fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0))
       | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.String_ ""))
       | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Float_ 0.0))
-      | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Boolean_ false))
+      | insere(hm,n,"boolean") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Boolean_ false))
+      | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Void)
     
     fun getInt x = (Grammar.extractInt x)
     fun getFloat x = (Grammar.extractFloat x)
@@ -38,7 +39,7 @@
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
     | KW_VAR("variance") | KW_GET("get") | KW_COV("covariance")
-    | KW_LINREG("linearRegression") | TUPLE of Grammar.tipo
+    | KW_LINREG("linearRegression") | TUPLE of Grammar.tipo | VOID("void")
     ;
 %keywords
     KW_variables,
@@ -106,6 +107,7 @@ prints
             ps := k::(!ps)
         end
       ) 
+   | KW_Print LP VOID RP => ( print "null" )
    ;
 funcs_string
     : KW_TOSTRING LP expr RP => (Grammar.show expr)
