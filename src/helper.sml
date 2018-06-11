@@ -97,4 +97,16 @@ fun boolFromString s =
         SOME i => i
       | NONE => raise Fail ("Could not get boolean value")
 
+fun readFile filename =
+    let val fd = TextIO.openIn filename
+        val content = TextIO.inputAll fd handle e => (TextIO.closeIn fd; raise e)
+        val _ = TextIO.closeIn fd
+    in content end
+
+fun writeFile filename content =
+    let val fd = TextIO.openOut filename
+        val _ = TextIO.output (fd, content) handle e => (TextIO.closeOut fd; raise e)
+        val _ = TextIO.closeOut fd
+    in () end
+
 end
