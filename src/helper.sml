@@ -77,4 +77,24 @@ fun getTupla (x: string) = listToTupla(getCleanList x)
 
 fun getSample (x: string) = getListFrom x
 
+fun isValueCorretType x "int" = Primitivo (Int_ intFromString(x))
+  | isValueCorretType x "boolean"  = Primitivo(Boolean_ boolFromString(x))
+  | isValueCorretType x "float" = Primitivo(Float_ floatFromString(x))
+  | _ = Primitivo (String_ x)
+
+fun intFromString s =
+    case Int.fromString s of
+         SOME i => i
+       | NONE => raise Fail ("Could not get int value")
+
+fun floatFromString s =
+   case Real.fromString s of
+        SOME i => i
+      | NONE => raise Fail ("Could not get float vlaue")
+
+fun boolFromString s =
+   case Bool.fromString s of
+        SOME i => i
+      | NONE => raise Fail ("Could not get boolean value")
+
 end
