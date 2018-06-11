@@ -1,10 +1,18 @@
-use "utils.sml";
+(* use "utils.sml"; *)
 
 structure Statistics  = struct
 open Math;
 
 exception ListasComTamanhosDiferentes
 
+(* Retorna a soma de valores de uma lista *)
+fun sum (head::tail) = head + sum(tail) | sum(nil)=0.0;
+
+(* Retorna a quantidade de elementos em uma lista *)
+fun length(head::tail) = 1.0 + length(tail) | length(nil) = 0.0;
+
+
+fun mean(amostra) = sum(amostra) / length(amostra);
 
 (* Somatório Simples *)
 fun sigma_summation_s(head::tail, mean) = pow(head - mean, 2.0) + sigma_summation_s(tail, mean) | sigma_summation_s(nil, mean) = 0.0;
@@ -27,8 +35,6 @@ fun linearRegression(amostra_x, amostra_y) = concat[Int.toString(Real.round(A(am
 
 fun median(amostra) = List.nth(amostra, Real.round(length(amostra) / 2.0));
 
-fun mean(amostra) = sum(amostra) / length(amostra);
-
 fun maximum(amostra: real list) =
  case amostra of [] => NONE
    | (head::[]) => SOME head
@@ -47,13 +53,13 @@ case amostra of [] => NONE
 fun range(amostra) = Option.valOf(maximum(amostra)) - Option.valOf(minimum(amostra));
 
 (* standardDeviation *)
+fun sigma_summation(head::tail, mean) = pow(head - mean, 2.0) + sigma_summation(tail, mean) | sigma_summation(nil, mean) = 0.0;
 fun standardDeviation(amostra) = sqrt(1.0 / (length(amostra) - 1.0) * sigma_summation(amostra, mean(amostra)));
 
 (* Variance *)
-fun sigma_summation_pop(head::tail, mean, length) = pow(head - mean, 2.0) / length + sigma_summation_p(tail, mean, length) | sigma_summation_p(nil, mean, length) = 0.0;
-fun variance_pop(amostra) = sigma_summation_p(amostra, mean(amostra), length(amostra));
+fun sigma_summation_pop(head::tail, mean, length) = pow(head - mean, 2.0) / length + sigma_summation_pop(tail, mean, length) | sigma_summation_pop(nil, mean, length) = 0.0;
+fun variance_pop(amostra) = sigma_summation_pop(amostra, mean(amostra), length(amostra));
 
-fun sigma_summation(head::tail, mean) = pow(head - mean, 2.0) + sigma_summation(tail, mean) | sigma_summation(nil, mean) = 0.0;
 fun variance(amostra) = 1.0 / (length(amostra) - 1.0) * sigma_summation(amostra, mean(amostra));
 
 end
