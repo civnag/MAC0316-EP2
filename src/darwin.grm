@@ -93,10 +93,13 @@ expr
     | %try exp_bool => (exp_bool)
     | %try funcs_float => (Grammar.Primitivo (Grammar.Float_ funcs_float))
     | %try funcs_string => (Grammar.Primitivo (Grammar.String_ funcs_string))
-    | %try SINT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Int_ x)) SINT) )
-    | %try SFLOAT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Float_ x)) SFLOAT) )
-    | %try SBOOL => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Boolean_ x)) SBOOL) )
-    | %try SSTRING => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
+    | %try val_list => (val_list)
+    ;
+val_list
+    : SINT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Int_ x)) SINT) )
+    | SFLOAT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Float_ x)) SFLOAT) )
+    | SBOOL => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Boolean_ x)) SBOOL) )
+    | SSTRING => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
     ;
 prints
    :  KW_Print LP STR RP => ( ps := (STR::(!ps)))
@@ -107,10 +110,10 @@ prints
             ps := k::(!ps)
         end
       ) 
-   | KW_Print LP VOID RP => ( print "null" )
    ;
 funcs_string
     : KW_TOSTRING LP expr RP => (Grammar.show expr)
+    | KW_LINREG LP float_list COMMA float_list RP => (Statistics.linearRegression(float_list1,float_list2))
     ;
 funcs_float
     : KW_SUM LP EMPTY RP  => ( 0.0)
@@ -121,6 +124,12 @@ funcs_float
         => (List.foldl op* 1.0 float_list)
     | KW_MEAN LP float_list RP => (Statistics.mean float_list)
     | KW_CORR LP float_list COMMA float_list RP => (Statistics.correlation(float_list1, float_list2))
+    | KW_STDEV LP float_list RP => (Statistics.standardDeviation(float_list))
+    | KW_MEDIAN LP float_list RP => (Statistics.median(float_list))
+    | KW_COV LP float_list COMMA float_list RP => (Statistics.covariance(float_list1, float_list2))
+    ;
+funcs_list
+    : KW_GET LP val_list COMMA NUM COMMA NUM RP => (Grammar.Sample (List.take((List.drop(val_list,NUM2)),NUM1)))
     ;
 float_list
     : ID => (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 

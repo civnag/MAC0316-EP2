@@ -10,14 +10,16 @@ end variables
 commands
     print("lol");
     print("lool");
-    q = (3 <= 5) && (3 <= 3);
+    q = (4 <= 5) && (4 <= 3);
     p = correlation({2.0,7.0},{4.0,5.5});
     h = 2;
-    s = toString(2);
     z = {"true","false"};
     h = (h + 11);
+    s = linearRegression({1.0,2.0,3.0},{2.0,4.2,6.0});
     print(s);
     print(p);
     print(z);
     print("lololokokoskso");
     print(h);
+    print(y);
+    print(s);
