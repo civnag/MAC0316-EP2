@@ -5,7 +5,7 @@
 %let alpha = [a-zA-Z];
 %let alphaChars = [a-zA-Z:\" !@#$%*&0-9]*;
 %let booleano = ("true"|"false");
-%let id = {alpha}({alpha} | {digit})*;
+%let id = {alpha}({alpha} | {digit} | "_")*;
 %let str = ["]{alphaChars}["];
 %let primitivo = ("int"|"string"|"boolean"|"float");
 %let tuple = "tuple" "(" ({primitivo} ("," {primitivo}){1,9} ")" );
