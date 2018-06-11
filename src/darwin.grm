@@ -129,7 +129,7 @@ funcs_float
     | KW_COV LP float_list COMMA float_list RP => (Statistics.covariance(float_list1, float_list2))
     ;
 funcs_list
-    : KW_GET LP val_list COMMA NUM COMMA NUM RP => (Grammar.Sample (List.take((List.drop(val_list,NUM2)),NUM1)))
+    : KW_GET LP val_list COMMA exp_arit COMMA exp_arit RP %where ((isType exp_arit1 "int") andalso (isType exp_arit2 "int")) => (Grammar.Sample (List.take((List.drop(val_list,getInt(exp_arit2))),getInt(exp_arit1))))
     ;
 float_list
     : ID => (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
