@@ -35,6 +35,7 @@
 "prod" => ( T.KW_PROD );
 "toString" => ( T.KW_TOSTRING );
 "end variables" => ( T.KW_endvars );
+"mean" => ( T.KW_MEAN );
 {tipo} => ( T.TIPO yytext );
 {id} => ( T.ID yytext );
 {str} => (T.STR yytext);

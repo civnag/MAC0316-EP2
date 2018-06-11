@@ -1,7 +1,7 @@
 use "utils.sml";
-open Math;
 
 structure Statistics  = struct
+open Math;
 
 exception ListasComTamanhosDiferentes
 

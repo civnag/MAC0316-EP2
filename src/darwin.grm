@@ -35,7 +35,7 @@
     | KW_endvars ("end variables") | KW_terminate ("terminate")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") 
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
-    | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString")
+    | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     ;
 %keywords
     KW_variables,
@@ -51,7 +51,8 @@
     KW_END,
     KW_PROD,
     KW_SUM,
-    KW_TOSTRING
+    KW_TOSTRING,
+    KW_MEAN
     ;
 
 %refcell v : (Grammar.tipo) AtomMap.map = (AtomMap.empty);
@@ -105,6 +106,7 @@ funcs_float
     | KW_PROD LP EMPTY RP  => (0.0)
     | KW_PROD LP float_list RP 
         => (List.foldl op* 1.0 float_list)
+    | KW_MEAN LP float_list RP => (Statistics.mean float_list)
     ;
 float_list
     : ID => (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
