@@ -98,7 +98,7 @@ assign
 expr
     : %try exp_arit => (exp_arit)
     | %try exp_bool => (exp_bool)
-    | %try exp_string => (exp_string)
+    | %try exp_string => (Grammar.Primitivo (Grammar.String_ exp_string))
     | %try funcs_float => (Grammar.Primitivo (Grammar.Float_ funcs_float))
     | %try funcs_int => (Grammar.Primitivo (Grammar.Int_ funcs_int))
     | %try funcs_string => (Grammar.Primitivo (Grammar.String_ funcs_string))
@@ -175,8 +175,11 @@ exp_bool
     | %try atom_bool
     ;
 exp_string
-    : STR CONCAT STR => (Grammar.Primitivo (Grammar.String_ ("\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(STR1 ^ STR2)))) ^ "\"")))
-    | STR => (Grammar.Primitivo (Grammar.String_ STR))
+    : atom_string CONCAT atom_string => ("\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(atom_string1 ^ atom_string2)))) ^ "\"")
+    ;    
+atom_string
+    : ID => (getString(valOf(AtomMap.find (!v, Atom.atom ID))) )
+    | STR => (STR)
     | LP exp_string RP
     ;
 rel_op
