@@ -161,10 +161,13 @@ int_list
     | SINT => (SINT)
     ;
 exp_bool
-    : %try exp_arit rel_op exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper(rel_op,exp_arit1,exp_arit2))
-    | %try atom_bool AND atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
-    | %try atom_bool OR atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
+    : %try op_bool
     | %try atom_bool
+    | %try addExp rel_op addExp %where (exprTypes addExp1 addExp2) => (Grammar.oper(rel_op,addExp1,addExp2))
+    ;
+op_bool
+    : %try atom_bool AND atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
+    | %try atom_bool OR atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
     ;
 exp_string
     : %try op_str 

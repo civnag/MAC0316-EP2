@@ -20,6 +20,8 @@ commands
     h := 2;
     h := h + 11;
     j := toInt(t);
+    print("lkko");
+    q := (9 > 8);
     print(s);
     print(toString(p));
     print("lololokokoskso");

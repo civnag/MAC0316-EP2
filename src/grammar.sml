@@ -119,7 +119,7 @@ fun extractFloat (Primitivo(Float_ i)) = i
 
 fun typeof (Primitivo(Float_ _)) = "float"
     | typeof (Primitivo(Int_ _)) = "int"
-    | typeof (Primitivo(Boolean_ _)) = "bool"
+    | typeof (Primitivo(Boolean_ _)) = "boolean"
     | typeof (Primitivo(String_ _)) = "string"
     | typeof (Tupla2 (a,b)) = "tuple(" ^ typeof a ^ "," ^ typeof b ^ ")"
     | typeof (Tupla3 (a,b,c)) = "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ ")"

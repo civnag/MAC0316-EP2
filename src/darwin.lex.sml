@@ -1011,7 +1011,8 @@ fun yyAction26 (strm, lastMatch : yymatch) = let
 fun yyAction27 (strm, lastMatch : yymatch) = let
       val yytext = yymktext(strm)
       in
-        yystrm := strm;   T.BOOL (valOf (Bool.fromString yytext)) 
+        yystrm := strm;
+          print "kork" ;T.BOOL (valOf (Bool.fromString yytext)) 
       end
 fun yyAction28 (strm, lastMatch : yymatch) = let
       val yytext = yymktext(strm)

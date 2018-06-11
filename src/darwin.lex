@@ -3,10 +3,8 @@
 %let digit = [0-9];
 %let int = {digit}+;
 %let alpha = [a-zA-Z];
-%let alphaChars = [a-zA-Z:\" !@#$%^*&0-9]*;
-%let true = "true";
-%let false = "false";
-%let boolean = ({true}|{false});
+%let alphaChars = [a-zA-Z:\" !@#$%*&0-9]*;
+%let booleano = ("true"|"false");
 %let id = {alpha}({alpha} | {digit})*;
 %let str = ["]{alphaChars}["];
 %let primitivo = ("int"|"string"|"boolean"|"float");
@@ -14,12 +12,12 @@
 %let lista = ("sample of "({primitivo}|{tuple}));  
 %let tipo = ({primitivo}|{tuple}|{lista});
 %let float = {int}["."]({int}+|{digit}("e"|"E"){int});
-%let valPrim = ({int} | {str} | {boolean} | {float});
+%let valPrim = ({int} | {str} | {booleano} | {float});
 %let tupleVal = ( "(" {valPrim} ("," {valPrim}){1,9} ")" );
 %let empty = "{}";
 %let intList = ({empty} | "{" {int} ("," {int})* "}" );
 %let floatList = ({empty} | "{" {float} ("," {float})* "}" );
-%let booleanList = ({empty} | "{" {boolean} ("," {boolean})* "}" );
+%let booleanList = ({empty} | "{" {booleano} ("," {booleano})* "}" );
 %let strList = ({empty} | "{" {str} ("," {str})* "}" );
 %let tupleList = ({empty} | "{" {tupleVal} ("," {tupleVal})* "}" );
 %defs (
@@ -55,7 +53,7 @@
 {str} => (T.STR yytext);
 {int} => ( T.NUM (valOf (Int.fromString yytext)) );
 {float} => ( T.REAL (valOf (Real.fromString yytext)) );
-{boolean} => ( T.BOOL (valOf (Bool.fromString yytext)) );
+{booleano} => ( print "kork" ;T.BOOL (valOf (Bool.fromString yytext)) );
 {intList} => (T.SINT (Grammar.toIntList (Grammar.tokenize yytext)));
 {floatList} => (T.SFLOAT (Grammar.toFloatList (Grammar.tokenize yytext)));
 {booleanList} => (T.SBOOL (Grammar.toBoolList (Grammar.tokenize yytext)));
