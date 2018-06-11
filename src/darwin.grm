@@ -116,7 +116,7 @@ funcs_float
     | KW_PROD LP EMPTY RP  => (0.0)
     | KW_PROD LP float_list RP 
         => (List.foldl op* 1.0 float_list)
-    | KW_MEAN LP float_list RP => (0.0)
+    | KW_MEAN LP float_list RP => (Statistics.mean float_list)
     ;
 float_list
     : ID => (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
