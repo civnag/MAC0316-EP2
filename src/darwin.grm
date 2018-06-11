@@ -32,7 +32,7 @@
     | TIMES ("*") | DIV("/") | MINUS ("-") | COMMA(",") | SBOOL of (Bool.bool list)
     | LP ("(") | RP (")") | BOOL of bool | AND ("&&") | OR ("||") | NOT("!")
     | SPACE (" ") | GT(">") | LT("<") | LEQ("<=") | GEQ(">=") | NEQ("!=")
-    | KW_variables ("variables") | SEMI | TIPO of string
+    | KW_variables ("variables") | SEMI | TIPO of string | DOTDOT(":=")
     | KW_comands ("commands") | STR of string | KW_Print ("print")
     | KW_endvars ("end variables") | KW_terminate ("terminate")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") | KW_GETS("getString")
@@ -91,7 +91,7 @@ commands
     | loop => ()
     ;
 assign
-    : ID EQ expr %where (AtomMap.inDomain(!v,Atom.atom ID)
+    : ID DOTDOT expr %where (AtomMap.inDomain(!v,Atom.atom ID)
                         andalso (isType expr (valOf (AtomMap.find (!ts, Atom.atom ID))))) 
                         => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
     ;

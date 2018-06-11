@@ -33,6 +33,7 @@ DarwinTokens = struct
       | KW_Print
       | STR of string
       | KW_comands
+      | DOTDOT
       | TIPO of string
       | SEMI
       | KW_variables
@@ -67,7 +68,7 @@ DarwinTokens = struct
       | KW_in
       | KW_let
 
-    val allToks = [EOF, CONCAT, KW_TOINT, KW_TOFLOAT, KW_GETI, VOID, KW_LINREG, KW_SUBS, KW_COV, KW_GETF, KW_VAR, KW_STDEV, KW_MEDIAN, KW_CORR, KW_MEAN, KW_TOSTRING, KW_END, KW_DO, KW_WHILE, KW_ELSE, KW_THEN, KW_IF, KW_GETS, EMPTY, KW_PROD, KW_SUM, KW_terminate, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, NEQ, GEQ, LEQ, LT, GT, SPACE, NOT, OR, AND, RP, LP, COMMA, MINUS, DIV, TIMES, EEQ, DOT, PLUS, EQ, KW_title, KW_in, KW_let]
+    val allToks = [EOF, CONCAT, KW_TOINT, KW_TOFLOAT, KW_GETI, VOID, KW_LINREG, KW_SUBS, KW_COV, KW_GETF, KW_VAR, KW_STDEV, KW_MEDIAN, KW_CORR, KW_MEAN, KW_TOSTRING, KW_END, KW_DO, KW_WHILE, KW_ELSE, KW_THEN, KW_IF, KW_GETS, EMPTY, KW_PROD, KW_SUM, KW_terminate, KW_endvars, KW_Print, KW_comands, DOTDOT, SEMI, KW_variables, NEQ, GEQ, LEQ, LT, GT, SPACE, NOT, OR, AND, RP, LP, COMMA, MINUS, DIV, TIMES, EEQ, DOT, PLUS, EQ, KW_title, KW_in, KW_let]
 
     fun toString tok =
 (case (tok)
@@ -103,6 +104,7 @@ DarwinTokens = struct
   | (KW_Print) => "print"
   | (STR(_)) => "STR"
   | (KW_comands) => "commands"
+  | (DOTDOT) => ":="
   | (TIPO(_)) => "TIPO"
   | (SEMI) => "SEMI"
   | (KW_variables) => "variables"
@@ -171,6 +173,7 @@ DarwinTokens = struct
   | (KW_Print) => false
   | (STR(_)) => false
   | (KW_comands) => true
+  | (DOTDOT) => false
   | (TIPO(_)) => false
   | (SEMI) => false
   | (KW_variables) => true
@@ -256,7 +259,7 @@ fun commands_PROD_3_ACT (conditional, conditional_SPAN : (Lex.pos * Lex.pos), FU
   ( )
 fun commands_PROD_4_ACT (loop, loop_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
   ( )
-fun assign_PROD_1_ACT (EQ, ID, expr, EQ_SPAN : (Lex.pos * Lex.pos), ID_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
+fun assign_PROD_1_ACT (ID, expr, DOTDOT, ID_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), DOTDOT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
   ( v := Grammar.updateHt(!v,Atom.atom ID,expr))
 fun expr_PROD_1_ACT (exp_arit, exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
   ( exp_arit)
@@ -391,7 +394,7 @@ fun variables_PROD_1_ACT (SR, KW_endvars, SR_SPAN : (Lex.pos * Lex.pos), KW_endv
 fun declaration_PROD_1_ACT (ID, SEMI, TIPO, ID_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TIPO_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
   ( v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO));
                        ts:=AtomMap.insert(!ts,Atom.atom ID,TIPO))
-fun assign_PROD_1_PRED (EQ, ID, expr, ps, v, ts) = 
+fun assign_PROD_1_PRED (ID, expr, DOTDOT, ps, v, ts) = 
   ( AtomMap.inDomain(!v,Atom.atom ID)
                         andalso (isType expr (valOf (AtomMap.find (!ts, Atom.atom ID)))))
 fun funcs_string_PROD_3_PRED (LP, RP, exp_arit, KW_GETS, COMMA, string_list, ps, v, ts) = 
@@ -583,6 +586,10 @@ fun matchSTR strm = (case (lex(strm))
 (* end case *))
 fun matchKW_comands strm = (case (lex(strm))
  of (Tok.KW_comands, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchDOTDOT strm = (case (lex(strm))
+ of (Tok.DOTDOT, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
 fun matchTIPO strm = (case (lex(strm))
@@ -1625,14 +1632,14 @@ and op_str_NT (strm) = let
       end
 fun assign_NT (strm) = let
       val (ID_RES, ID_SPAN, strm') = matchID(strm)
-      val (EQ_RES, EQ_SPAN, strm') = matchEQ(strm')
+      val (DOTDOT_RES, DOTDOT_SPAN, strm') = matchDOTDOT(strm')
       val (expr_RES, expr_SPAN, strm') = expr_NT(strm')
       in
-        if (UserCode.assign_PROD_1_PRED (EQ_RES, ID_RES, expr_RES, ps_REFC, v_REFC, ts_REFC))
+        if (UserCode.assign_PROD_1_PRED (ID_RES, expr_RES, DOTDOT_RES, ps_REFC, v_REFC, ts_REFC))
           then let
             val FULL_SPAN = (#1(ID_SPAN), #2(expr_SPAN))
             in
-              (UserCode.assign_PROD_1_ACT (EQ_RES, ID_RES, expr_RES, EQ_SPAN : (Lex.pos * Lex.pos), ID_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC),
+              (UserCode.assign_PROD_1_ACT (ID_RES, expr_RES, DOTDOT_RES, ID_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), DOTDOT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC),
                 FULL_SPAN, strm')
             end
           else fail()
