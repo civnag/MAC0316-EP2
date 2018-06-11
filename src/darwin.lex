@@ -36,6 +36,13 @@
 "toString" => ( T.KW_TOSTRING );
 "end variables" => ( T.KW_endvars );
 "mean" => ( T.KW_MEAN );
+"correlation" => ( T.KW_CORR );
+"median" => ( T.KW_MEDIAN );
+"stdDeviation" => ( T.KW_STDEV );
+"variance" => ( T.KW_VAR );
+"get" => ( T.KW_GET );
+"linearRegression" => (T.KW_LINREG);
+"covariance" => (T.KW_COV);
 {tipo} => ( T.TIPO yytext );
 {id} => ( T.ID yytext );
 {str} => (T.STR yytext);
