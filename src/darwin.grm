@@ -77,12 +77,13 @@ program(d)
       commands => ()
     ;
 commands
-    : prints commands? => ()
-    | assign commands?  => ()   
+    : prints SEMI commands? => ()
+    | assign SEMI commands?  => ()   
     | conditional => ()
+    | loop => ()
     ;
 assign
-    : ID EQ expr SEMI %where (AtomMap.inDomain(!v,Atom.atom ID)
+    : ID EQ expr %where (AtomMap.inDomain(!v,Atom.atom ID)
                         andalso (isType expr (valOf (AtomMap.find (!ts, Atom.atom ID))))) 
                         => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
     ;
@@ -97,8 +98,8 @@ expr
     | %try SSTRING => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
     ;
 prints
-   :  KW_Print LP STR RP SEMI => ( ps := (STR::(!ps)))
-   |  KW_Print LP ID RP SEMI => (
+   :  KW_Print LP STR RP => ( ps := (STR::(!ps)))
+   |  KW_Print LP ID RP => (
         let 
             val k = Grammar.show (valOf (AtomMap.find (!v, Atom.atom ID)))
         in 
@@ -124,21 +125,26 @@ float_list
     | SFLOAT => (SFLOAT)
     ;
 exp_bool
-    : %try exp_arit EEQ exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper("==",exp_arit1,exp_arit2))
-    | %try exp_arit NEQ exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper("!=",exp_arit1,exp_arit2))
-    | %try exp_arit LEQ exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper("<=",exp_arit1,exp_arit2))
-    | %try exp_arit GEQ exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper(">=",exp_arit1,exp_arit2))
-    | %try exp_arit LT exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper("<",exp_arit1,exp_arit2))
-    | %try exp_arit GT exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper(">",exp_arit1,exp_arit2))
+    : %try exp_arit rel_op exp_arit %where (exprTypes exp_arit1 exp_arit2) => (Grammar.oper(rel_op,exp_arit1,exp_arit2))
     | %try atom_bool AND atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
     | %try atom_bool OR atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
-    | %try NOT atom_bool %where (isType atom_bool "bool") => ((Grammar.Primitivo(Grammar.Boolean_(not ((getBool atom_bool))))) )
     | %try atom_bool
-    ;    
+    ;
+rel_op
+    : EEQ => ("==")
+    | NEQ => ("!=")
+    | GEQ => (">=")
+    | LEQ => ("<=")
+    | LT => ("<")
+    | GT => (">")
+    ;
 atom_bool
-    : BOOL => (Grammar.Primitivo (Grammar.Boolean_ BOOL))
+    : ID => (valOf(AtomMap.find (!v, Atom.atom ID)))
+    | BOOL => (print "kork"; Grammar.Primitivo (Grammar.Boolean_ BOOL))
     | LP exp_bool RP
-    | ID => (valOf(AtomMap.find (!v, Atom.atom ID))) 
+    ;
+loop
+    : KW_WHILE exp_bool KW_DO commands KW_END => (if (getBool exp_bool) then commands else ())
     ;
 conditional
     : KW_IF exp_bool block@(getBool exp_bool) => ()
@@ -148,7 +154,7 @@ block(b)
     | %try KW_THEN commands else_block@(b) => (if b then commands else else_block)
     ;
 else_block(b)
-    : KW_ELSE commands 
+    : KW_ELSE commands KW_END
     ;
 exp_arit
     : %try addExp 

@@ -3,13 +3,6 @@ struct
 	open Grammar
 	structure CP = DarwinParseFn(DarwinLexer)
 
-	fun tok2s (DarwinTokens.ID s) = s
-		| tok2s (DarwinTokens.NUM n) = Int.toString n
-		| tok2s (DarwinTokens.REAL f) = Real.toString f
-		| tok2s (DarwinTokens.SINT _) = "Sample of int error"
-		| tok2s (DarwinTokens.BOOL _) = "boolean error"
-		| tok2s tok = DarwinTokens.toString tok
-
 	fun darwin instrm =
 		let
 			val sm = AntlrStreamPos.mkSourcemap()
