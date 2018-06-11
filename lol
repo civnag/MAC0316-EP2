@@ -20,8 +20,11 @@ commands
     h := 2;
     h := h + 11;
     j := toInt(t);
+    q := true;
     print("lkko");
-    q := (9 > 8);
+    while (9 < 8) do 
+        print("kork butchek1");
+    end
     print(s);
     print(toString(p));
     print("lololokokoskso");

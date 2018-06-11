@@ -195,7 +195,7 @@ rel_op
     ;
 atom_bool
     : ID => (valOf(AtomMap.find (!v, Atom.atom ID)))
-    | BOOL => (print "kork"; Grammar.Primitivo (Grammar.Boolean_ BOOL))
+    | BOOL => ( Grammar.Primitivo (Grammar.Boolean_ BOOL))
     | LP exp_bool RP
     ;
 loop
