@@ -35,7 +35,7 @@
     | KW_endvars ("end variables") | KW_terminate ("terminate")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") 
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
-    | KW_DO("do") | KW_END("end")
+    | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString")
     ;
 %keywords
     KW_variables,
@@ -50,7 +50,8 @@
     KW_DO,
     KW_END,
     KW_PROD,
-    KW_SUM
+    KW_SUM,
+    KW_TOSTRING
     ;
 
 %refcell v : (Grammar.tipo) AtomMap.map = (AtomMap.empty);
@@ -78,6 +79,7 @@ expr
     : %try exp_arit => (exp_arit)
     | %try exp_bool => (exp_bool)
     | %try funcs_float => (Grammar.Primitivo (Grammar.Float_ funcs_float))
+    | %try funcs_string => (Grammar.Primitivo (Grammar.String_ funcs_string))
     | %try SINT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Int_ x)) SINT) )
     | %try SFLOAT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Float_ x)) SFLOAT) )
     | %try SBOOL => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Boolean_ x)) SBOOL) )
@@ -93,6 +95,9 @@ prints
         end
       ) 
    ;
+funcs_string
+    : KW_TOSTRING LP expr RP => (Grammar.show expr)
+    ;
 funcs_float
     : KW_SUM LP EMPTY RP  => ( 0.0)
     | KW_SUM LP float_list RP  

@@ -33,6 +33,7 @@
 "print" => ( T.KW_Print );
 "sum" => ( T.KW_SUM );
 "prod" => ( T.KW_PROD );
+"toString" => ( T.KW_TOSTRING );
 "end variables" => ( T.KW_endvars );
 {tipo} => ( T.TIPO yytext );
 {id} => ( T.ID yytext );

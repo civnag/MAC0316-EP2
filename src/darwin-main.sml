@@ -29,7 +29,7 @@ struct
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs
 		in
-			List.app print (List.rev prints); print "\n"
+			List.app (fn(x) => print (x ^ "\n") ) (List.rev prints); print "\n"
 		end
 
 	fun main (prog_name, args) =
