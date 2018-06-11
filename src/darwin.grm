@@ -167,7 +167,7 @@ exp_bool
     | %try atom_bool
     ;
 exp_string
-    : %try op_str
+    : %try op_str 
     | %try atom_string
     ;
 op_str
