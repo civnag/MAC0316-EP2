@@ -14,20 +14,18 @@ commands
     t = getFloat({1.0,2.0},0);
     print("lol");
     print("lool");
+    print(linearRegression({1.0,2.0,3.0},{2.0,4.2,6.0}));
     p = correlation({2.0,7.0},{4.0,5.5});
     h = 2;
     h = (h + 11);
     s = "ksoskos" ++ "wals";
     j = toInt(t);
     print(s);
-    print(p);
-    print(z);
+    print(toString(p));
     print("lololokokoskso");
-    print(h);
-    print(y);
+    print(toString(h));
     print(s);
-    print(linearRegression({1.0,2.0,3.0},{2.0,4.2,6.0}));
-    print(j);
-    print(t);
-    print(q);
+    print(toString(j));
+    print(toString(t));
+    print(toString(q));
     
