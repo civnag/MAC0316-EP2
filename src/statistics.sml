@@ -31,7 +31,7 @@ fun B(amostra_x, amostra_y) = (sigma_summation_d(amostra_x, amostra_y, mean(amos
 
 fun A(amostra_x, amostra_y) = mean(amostra_y) - B(amostra_x, amostra_y) * mean(amostra_x);
 
-fun linearRegression(amostra_x, amostra_y) = concat[Int.toString(Real.round(A(amostra_x, amostra_y))), " + ", Int.toString(Real.round(B(amostra_x, amostra_y))), "x"];
+fun linearRegression(amostra_x, amostra_y) = concat[Real.fmt (StringCvt.FIX (SOME 3)) (A(amostra_x, amostra_y)), " + ", Real.fmt (StringCvt.FIX (SOME 3)) (B(amostra_x, amostra_y)), "x"];
 
 fun median(amostra) = List.nth(amostra, Real.round(length(amostra) / 2.0));
 
