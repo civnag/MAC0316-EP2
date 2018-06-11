@@ -22,7 +22,7 @@ commands
     j := toInt(t);
     q := true;
     print("lkko");
-    while (9 < 8) do 
+    while (9 > 8) do 
         print("kork butchek1");
     end
     print(s);

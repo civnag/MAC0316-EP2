@@ -199,7 +199,7 @@ atom_bool
     | LP exp_bool RP
     ;
 loop
-    : KW_WHILE exp_bool KW_DO commands KW_END => (if (getBool exp_bool) then commands else ())
+    : KW_WHILE exp_bool KW_DO commands KW_END => (if (not(getBool exp_bool)) then (print "aqui") else (print "lok"))
     ;
 conditional
     : KW_IF exp_bool block@(getBool exp_bool) => ()
