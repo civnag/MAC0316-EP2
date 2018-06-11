@@ -2,6 +2,14 @@ structure
 DarwinTokens = struct
 
     datatype token = EOF
+      | TUPLE of Grammar.tipo
+      | KW_LINREG
+      | KW_COV
+      | KW_GET
+      | KW_VAR
+      | KW_STDEV
+      | KW_MEDIAN
+      | KW_CORR
       | KW_MEAN
       | KW_TOSTRING
       | KW_END
@@ -52,11 +60,19 @@ DarwinTokens = struct
       | KW_in
       | KW_let
 
-    val allToks = [EOF, KW_MEAN, KW_TOSTRING, KW_END, KW_DO, KW_WHILE, KW_ELSE, KW_THEN, KW_IF, EMPTY, KW_PROD, KW_SUM, KW_terminate, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, NEQ, GEQ, LEQ, LT, GT, SPACE, NOT, OR, AND, RP, LP, COMMA, MINUS, DIV, TIMES, EEQ, DOT, PLUS, EQ, KW_title, KW_in, KW_let]
+    val allToks = [EOF, KW_LINREG, KW_COV, KW_GET, KW_VAR, KW_STDEV, KW_MEDIAN, KW_CORR, KW_MEAN, KW_TOSTRING, KW_END, KW_DO, KW_WHILE, KW_ELSE, KW_THEN, KW_IF, EMPTY, KW_PROD, KW_SUM, KW_terminate, KW_endvars, KW_Print, KW_comands, SEMI, KW_variables, NEQ, GEQ, LEQ, LT, GT, SPACE, NOT, OR, AND, RP, LP, COMMA, MINUS, DIV, TIMES, EEQ, DOT, PLUS, EQ, KW_title, KW_in, KW_let]
 
     fun toString tok =
 (case (tok)
  of (EOF) => "EOF"
+  | (TUPLE(_)) => "TUPLE"
+  | (KW_LINREG) => "linearRegression"
+  | (KW_COV) => "covariance"
+  | (KW_GET) => "get"
+  | (KW_VAR) => "variance"
+  | (KW_STDEV) => "stdDeviation"
+  | (KW_MEDIAN) => "median"
+  | (KW_CORR) => "correlation"
   | (KW_MEAN) => "mean"
   | (KW_TOSTRING) => "toString"
   | (KW_END) => "end"
@@ -110,6 +126,14 @@ DarwinTokens = struct
     fun isKW tok =
 (case (tok)
  of (EOF) => false
+  | (TUPLE(_)) => false
+  | (KW_LINREG) => true
+  | (KW_COV) => true
+  | (KW_GET) => true
+  | (KW_VAR) => true
+  | (KW_STDEV) => true
+  | (KW_MEDIAN) => true
+  | (KW_CORR) => true
   | (KW_MEAN) => true
   | (KW_TOSTRING) => true
   | (KW_END) => true
@@ -246,7 +270,7 @@ fun funcs_float_PROD_3_ACT (LP, RP, KW_PROD, EMPTY, LP_SPAN : (Lex.pos * Lex.pos
 fun funcs_float_PROD_4_ACT (LP, RP, KW_PROD, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
   ( List.foldl op* 1.0 float_list)
 fun funcs_float_PROD_5_ACT (LP, RP, KW_MEAN, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_MEAN_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
-  ( Statistics.mean float_list)
+  ( 0.0)
 fun float_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
   ( List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
 fun float_list_PROD_2_ACT (SFLOAT, SFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts) = 
@@ -364,6 +388,38 @@ fun unwrap (ret, strm, repairs) = (ret, strm, repairs, getS())
           in try prods end
 fun matchEOF strm = (case (lex(strm))
  of (Tok.EOF, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchTUPLE strm = (case (lex(strm))
+ of (Tok.TUPLE(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_LINREG strm = (case (lex(strm))
+ of (Tok.KW_LINREG, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_COV strm = (case (lex(strm))
+ of (Tok.KW_COV, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_GET strm = (case (lex(strm))
+ of (Tok.KW_GET, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_VAR strm = (case (lex(strm))
+ of (Tok.KW_VAR, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_STDEV strm = (case (lex(strm))
+ of (Tok.KW_STDEV, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_MEDIAN strm = (case (lex(strm))
+ of (Tok.KW_MEDIAN, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_CORR strm = (case (lex(strm))
+ of (Tok.KW_CORR, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
 fun matchKW_MEAN strm = (case (lex(strm))

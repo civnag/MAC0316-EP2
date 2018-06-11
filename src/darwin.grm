@@ -36,6 +36,9 @@
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") 
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
+    | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
+    | KW_VAR("variance") | KW_GET("get") | KW_COV("covariance")
+    | KW_LINREG("linearRegression") | TUPLE of Grammar.tipo
     ;
 %keywords
     KW_variables,
@@ -52,7 +55,14 @@
     KW_PROD,
     KW_SUM,
     KW_TOSTRING,
-    KW_MEAN
+    KW_MEAN,
+    KW_CORR,
+    KW_MEDIAN,
+    KW_STDEV,
+    KW_VAR,
+    KW_GET,
+    KW_COV,
+    KW_LINREG
     ;
 
 %refcell v : (Grammar.tipo) AtomMap.map = (AtomMap.empty);
@@ -106,7 +116,7 @@ funcs_float
     | KW_PROD LP EMPTY RP  => (0.0)
     | KW_PROD LP float_list RP 
         => (List.foldl op* 1.0 float_list)
-    | KW_MEAN LP float_list RP => (Statistics.mean float_list)
+    | KW_MEAN LP float_list RP => (0.0)
     ;
 float_list
     : ID => (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
