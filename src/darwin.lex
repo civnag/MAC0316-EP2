@@ -3,11 +3,12 @@
 %let digit = [0-9];
 %let int = {digit}+;
 %let alpha = [a-zA-Z];
+%let alphaChars = [a-zA-Z:\" !@#$%^*&0-9]*;
 %let true = "true";
 %let false = "false";
 %let boolean = ({true}|{false});
 %let id = {alpha}({alpha} | {digit})*;
-%let str = ["]{id}["];
+%let str = ["]{alphaChars}["];
 %let primitivo = ("int"|"string"|"boolean"|"float");
 %let tuple = "tuple" "(" ({primitivo} ("," {primitivo}){1,9} ")" );
 %let lista = ("sample of "({primitivo}|{tuple}));  
