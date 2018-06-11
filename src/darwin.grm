@@ -113,15 +113,7 @@ val_list
     | ID => (valOf(AtomMap.find (!v, Atom.atom ID))) 
     ;
 prints
-   :  KW_Print LP STR RP => ( ps := (STR::(!ps)))
-   |  KW_Print LP ID RP => (
-        let 
-            val k = Grammar.show (valOf (AtomMap.find (!v, Atom.atom ID)))
-        in 
-            ps := k::(!ps)
-        end
-      )
-   | KW_Print LP funcs_string RP => (ps := (funcs_string)::(!ps))
+   : KW_Print LP exp_string RP => (ps := exp_string::(!ps))
    ;
 funcs_string
     : KW_TOSTRING LP expr RP => (Grammar.show expr)
@@ -175,11 +167,19 @@ exp_bool
     | %try atom_bool
     ;
 exp_string
+    : %try op_str
+    | %try atom_string
+    ;
+op_str
     : atom_string CONCAT atom_string => ("\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(atom_string1 ^ atom_string2)))) ^ "\"")
     ;    
 atom_string
-    : ID => (getString(valOf(AtomMap.find (!v, Atom.atom ID))) )
+    : ID %where (
+        AtomMap.inDomain(!v,Atom.atom ID) andalso (isType (valOf(AtomMap.find (!v, Atom.atom ID))) "string")
+     ) 
+        => (getString(valOf(AtomMap.find (!v, Atom.atom ID))) )
     | STR => (STR)
+    | funcs_string => (funcs_string)
     | LP exp_string RP
     ;
 rel_op
