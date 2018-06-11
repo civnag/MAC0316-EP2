@@ -9,10 +9,9 @@ end variables
 commands
     print("lol");
     print("lool");
-    p = sum({2.0,7.0});
+    p = correlation({2.0,7.0},{4.0,5.5});
     h = 2;
-    y = {7.0,1.0};
-    s = toString(sum(y));
+    s = toString(8);
     print(s);
     print(p);
     print(z);
