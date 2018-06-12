@@ -1,7 +1,7 @@
 %name DarwinLexer;
 
 %let digit = [0-9];
-%let int = {digit}+;
+%let int = ({digit}+|("-"|"+"){digit}+);
 %let alpha = [a-zA-Z];
 %let alphaChars = [a-zA-Z:\" !@#$%*&0-9]*;
 %let booleano = ("true"|"false");
@@ -11,7 +11,7 @@
 %let tuple = "tuple" "(" ({primitivo} ("," {primitivo}){1,9} ")" );
 %let lista = ("sample of "({primitivo}|{tuple}));  
 %let tipo = ({primitivo}|{tuple}|{lista});
-%let float = {int}["."]({int}+|{digit}("e"|"E"){int});
+%let float = {int}["."]({digit}+|{digit}+("e"|"E"){int});
 %let valPrim = ({int} | {str} | {booleano} | {float});
 %let tupleVal = ( "(" {valPrim} ("," {valPrim}){1,9} ")" );
 %let empty = "{}";
