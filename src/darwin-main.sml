@@ -23,7 +23,8 @@ struct
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs
 		in
-			List.app (fn(x) => print (x ^ "\n") ) (List.rev prints); print "\n"
+			List.app (fn(x) => print (x ^ "\n") ) (List.rev prints); print "\n Teste: \n";
+			ParseTree.interpret(ptree,AtomMap.empty)
 		end
 
 	fun main (prog_name, args) =

@@ -24,6 +24,9 @@ commands
     print("lkko");
     if (9 < 8) then
         print("kork butchek1");
+    else
+        print("kork butchek2");
+    end
     print(s);
     print(toString(p));
     print("lololokokoskso");

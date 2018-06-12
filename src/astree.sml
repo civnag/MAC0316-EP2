@@ -10,18 +10,18 @@ datatype Tree = Assign of (tipo AtomMap.map -> tipo AtomMap.map) * Tree
 
 fun interpret(Print(s,t), am) = 
     let 
-        val _ = (print s)
+        val _ = (print (s^ "\n")) 
     in 
         interpret(t,am)
     end
-fun interpret(Assign(f,t), am) = 
+  | interpret(Assign(f,t), am) = 
     let 
         val _ = (f am)
     in
         interpret(t,am)
     end
-fun interpret(Null,am): unit = ()
-fun interpret(If(_,b,l,r),am) =
+  | interpret(Null,am): unit = ()
+  | interpret(If(_,b,l,r),am) =
     if b then
         interpret(l,am)
     else
