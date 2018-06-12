@@ -1,6 +1,7 @@
 structure DarwinTest =
 struct
 	open Grammar
+	open ParseTree
 	structure CP = DarwinParseFn(DarwinLexer)
 
 	fun darwin instrm =
@@ -17,7 +18,7 @@ struct
 			val _ = print "        Interpreting code...        \n"
 			val _ = print "                                    \n"
 
-			val (r, strm', errs,{ps=prints,v=vars,ts=tps}) = CP.parse lex nil strm
+			val (r, strm', errs,{ps=prints,v=vars,ts=tps,tree=ptree}) = CP.parse lex nil strm
 			fun doErr err = print ("Syntax error " ^
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs

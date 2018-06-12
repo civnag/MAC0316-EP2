@@ -1,6 +1,8 @@
 %name Darwin;
 
 %defs (
+    open ParseTree
+    
     fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0))
       | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.String_ ""))
       | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Float_ 0.0))
@@ -76,6 +78,7 @@
 %refcell v : (Grammar.tipo) AtomMap.map = (AtomMap.empty);
 %refcell ts : string AtomMap.map = (AtomMap.empty);
 %refcell ps : string list = (nil);
+%refcell tree : ParseTree.Tree = (Null);
 
 program(d)
     : KW_title STR SEMI
@@ -202,11 +205,7 @@ loop
     : KW_WHILE exp_bool KW_DO commands KW_END => ()
     ;
 conditional
-    : KW_IF exp_bool block@(getBool exp_bool) => ()
-    ;
-block(b)
-    : %try KW_THEN commands => (if b then commands else ())
-    | %try KW_THEN commands else_block@(b) => (if b then commands else else_block)
+    : KW_IF exp_bool KW_THEN commands (KW_ELSE commands)? KW_END => ()
     ;
 else_block(b)
     : KW_ELSE commands KW_END
