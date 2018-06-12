@@ -20,7 +20,6 @@
     
     fun getVar v = AtomMap.appi (fn (k,w) => print (
         let val _ = print(Atom.toString k) 
-            val _ = "oi"
             val _ = print (Grammar.show w)
         in 
             ""
