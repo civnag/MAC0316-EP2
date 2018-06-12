@@ -254,15 +254,20 @@ DarwinTokens
 fun program_PROD_1_ACT (d, STR, commands, SEMI, KW_title, KW_variables, variables, KW_comands, STR_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_title_SPAN : (Lex.pos * Lex.pos), KW_variables_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), KW_comands_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( )
 fun commands_PROD_1_ACT (commands, SEMI, prints, commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), prints_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( )
+  ( prints)
 fun commands_PROD_2_ACT (commands, SEMI, assign, commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), assign_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( )
+  ( assign)
 fun commands_PROD_3_ACT (conditional, conditional_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( )
-fun commands_PROD_4_ACT (loop, loop_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( )
+  ( conditional)
 fun assign_PROD_1_ACT (ID, expr, DOTDOT, ID_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), DOTDOT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( v := Grammar.updateHt(!v,Atom.atom ID,expr))
+  ( let 
+                                fun k w = Grammar.updateHt(w,Atom.atom ID,expr)
+                                val assi = ParseTree.Assign(fn(w)=> k(w),(!tree))
+                            in
+                                v := k(!v);
+                                tree:= assi;
+                                assi
+                            end)
 fun expr_PROD_1_ACT (exp_arit, exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( exp_arit)
 fun expr_PROD_2_ACT (exp_bool, exp_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
@@ -290,7 +295,15 @@ fun val_list_PROD_4_ACT (SSTRING, SSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN 
 fun val_list_PROD_5_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( valOf(AtomMap.find (!v, Atom.atom ID)))
 fun prints_PROD_1_ACT (LP, RP, KW_Print, exp_string, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( ps := exp_string::(!ps))
+  ( 
+            let 
+                val pr = ParseTree.Print(exp_string,(!tree))
+            in
+                ps := exp_string::(!ps);
+                tree := pr;
+                pr
+            end
+     )
 fun funcs_string_PROD_1_ACT (LP, RP, expr, KW_TOSTRING, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_TOSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( Grammar.show expr)
 fun funcs_string_PROD_2_ACT (LP, RP, KW_LINREG, COMMA, float_list1, float_list2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_LINREG_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
@@ -369,8 +382,15 @@ fun atom_bool_PROD_2_ACT (BOOL, BOOL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Le
   (  Grammar.Primitivo (Grammar.Boolean_ BOOL))
 fun loop_PROD_1_ACT (commands, KW_WHILE, exp_bool, KW_DO, KW_END, commands_SPAN : (Lex.pos * Lex.pos), KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( )
-fun conditional_PROD_1_ACT (SR, commands, exp_bool, KW_THEN, KW_IF, KW_END, SR_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( )
+fun conditional_PROD_1_ACT (exp_bool, KW_ELSE, KW_THEN, commands1, commands2, KW_IF, KW_END, exp_bool_SPAN : (Lex.pos * Lex.pos), KW_ELSE_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), commands1_SPAN : (Lex.pos * Lex.pos), commands2_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
+  ( 
+        let 
+            val ifi = ParseTree.If((!tree),(getBool exp_bool),commands1,commands2)
+        in
+            tree := ifi;
+            ifi
+        end
+      )
 fun addExp_PROD_1_ACT (PLUS, multExp1, multExp2, PLUS_SPAN : (Lex.pos * Lex.pos), multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( Grammar.oper("+",multExp1,multExp2))
 fun addExp_PROD_2_ACT (multExp1, multExp2, MINUS, multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), MINUS_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
@@ -1681,7 +1701,6 @@ fun commands_NT (strm) = let
                    of (Tok.ID(_), _, strm') => true
                     | (Tok.KW_Print, _, strm') => true
                     | (Tok.KW_IF, _, strm') => true
-                    | (Tok.KW_WHILE, _, strm') => true
                     | _ => false
                   (* end case *))
             val (commands_RES, commands_SPAN, strm') = EBNF.optional(commands_PROD_1_SUBRULE_1_PRED, commands_PROD_1_SUBRULE_1_NT, strm')
@@ -1703,7 +1722,6 @@ fun commands_NT (strm) = let
                    of (Tok.ID(_), _, strm') => true
                     | (Tok.KW_Print, _, strm') => true
                     | (Tok.KW_IF, _, strm') => true
-                    | (Tok.KW_WHILE, _, strm') => true
                     | _ => false
                   (* end case *))
             val (commands_RES, commands_SPAN, strm') = EBNF.optional(commands_PROD_2_SUBRULE_1_PRED, commands_PROD_2_SUBRULE_1_NT, strm')
@@ -1719,54 +1737,25 @@ fun commands_NT (strm) = let
               (UserCode.commands_PROD_3_ACT (conditional_RES, conditional_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
                 FULL_SPAN, strm')
             end
-      fun commands_PROD_4 (strm) = let
-            val (loop_RES, loop_SPAN, strm') = loop_NT(strm)
-            val FULL_SPAN = (#1(loop_SPAN), #2(loop_SPAN))
-            in
-              (UserCode.commands_PROD_4_ACT (loop_RES, loop_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
-                FULL_SPAN, strm')
-            end
       in
         (case (lex(strm))
-         of (Tok.KW_WHILE, _, strm') => commands_PROD_4(strm)
-          | (Tok.ID(_), _, strm') => commands_PROD_2(strm)
+         of (Tok.KW_IF, _, strm') => commands_PROD_3(strm)
           | (Tok.KW_Print, _, strm') => commands_PROD_1(strm)
-          | (Tok.KW_IF, _, strm') => commands_PROD_3(strm)
+          | (Tok.ID(_), _, strm') => commands_PROD_2(strm)
           | _ => fail()
         (* end case *))
-      end
-and loop_NT (strm) = let
-      val (KW_WHILE_RES, KW_WHILE_SPAN, strm') = matchKW_WHILE(strm)
-      val (exp_bool_RES, exp_bool_SPAN, strm') = exp_bool_NT(strm')
-      val (KW_DO_RES, KW_DO_SPAN, strm') = matchKW_DO(strm')
-      val (commands_RES, commands_SPAN, strm') = commands_NT(strm')
-      val (KW_END_RES, KW_END_SPAN, strm') = matchKW_END(strm')
-      val FULL_SPAN = (#1(KW_WHILE_SPAN), #2(KW_END_SPAN))
-      in
-        (UserCode.loop_PROD_1_ACT (commands_RES, KW_WHILE_RES, exp_bool_RES, KW_DO_RES, KW_END_RES, commands_SPAN : (Lex.pos * Lex.pos), KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
-          FULL_SPAN, strm')
       end
 and conditional_NT (strm) = let
       val (KW_IF_RES, KW_IF_SPAN, strm') = matchKW_IF(strm)
       val (exp_bool_RES, exp_bool_SPAN, strm') = exp_bool_NT(strm')
       val (KW_THEN_RES, KW_THEN_SPAN, strm') = matchKW_THEN(strm')
-      val (commands_RES, commands_SPAN, strm') = commands_NT(strm')
-      fun conditional_PROD_1_SUBRULE_1_NT (strm) = let
-            val (KW_ELSE_RES, KW_ELSE_SPAN, strm') = matchKW_ELSE(strm)
-            val (commands_RES, commands_SPAN, strm') = commands_NT(strm')
-            val FULL_SPAN = (#1(KW_ELSE_SPAN), #2(commands_SPAN))
-            in
-              ((commands_RES), FULL_SPAN, strm')
-            end
-      fun conditional_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
-             of (Tok.KW_ELSE, _, strm') => true
-              | _ => false
-            (* end case *))
-      val (SR_RES, SR_SPAN, strm') = EBNF.optional(conditional_PROD_1_SUBRULE_1_PRED, conditional_PROD_1_SUBRULE_1_NT, strm')
+      val (commands1_RES, commands1_SPAN, strm') = commands_NT(strm')
+      val (KW_ELSE_RES, KW_ELSE_SPAN, strm') = matchKW_ELSE(strm')
+      val (commands2_RES, commands2_SPAN, strm') = commands_NT(strm')
       val (KW_END_RES, KW_END_SPAN, strm') = matchKW_END(strm')
       val FULL_SPAN = (#1(KW_IF_SPAN), #2(KW_END_SPAN))
       in
-        (UserCode.conditional_PROD_1_ACT (SR_RES, commands_RES, exp_bool_RES, KW_THEN_RES, KW_IF_RES, KW_END_RES, SR_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
+        (UserCode.conditional_PROD_1_ACT (exp_bool_RES, KW_ELSE_RES, KW_THEN_RES, commands1_RES, commands2_RES, KW_IF_RES, KW_END_RES, exp_bool_SPAN : (Lex.pos * Lex.pos), KW_ELSE_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), commands1_SPAN : (Lex.pos * Lex.pos), commands2_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
           FULL_SPAN, strm')
       end
 fun declaration_NT (strm) = let

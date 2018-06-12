@@ -88,15 +88,21 @@ program(d)
       commands => ()
     ;
 commands
-    : prints SEMI commands? => ()
-    | assign SEMI commands?  => ()   
-    | conditional => ()
-    | loop => ()
+    : prints SEMI commands? => (prints)
+    | assign SEMI commands?  => (assign)   
+    | conditional => (conditional)
     ;
 assign
     : ID DOTDOT expr %where (AtomMap.inDomain(!v,Atom.atom ID)
                         andalso (isType expr (valOf (AtomMap.find (!ts, Atom.atom ID))))) 
-                        => (v := Grammar.updateHt(!v,Atom.atom ID,expr))
+                        => (let 
+                                fun k w = Grammar.updateHt(w,Atom.atom ID,expr)
+                                val assi = ParseTree.Assign(fn(w)=> k(w),(!tree))
+                            in
+                                v := k(!v);
+                                tree:= assi;
+                                assi
+                            end)
     ;
 expr
     : %try exp_arit => (exp_arit)
@@ -116,7 +122,15 @@ val_list
     | ID => (valOf(AtomMap.find (!v, Atom.atom ID))) 
     ;
 prints
-   : KW_Print LP exp_string RP => (ps := exp_string::(!ps))
+   : KW_Print LP exp_string RP => (
+            let 
+                val pr = ParseTree.Print(exp_string,(!tree))
+            in
+                ps := exp_string::(!ps);
+                tree := pr;
+                pr
+            end
+     )
    ;
 funcs_string
     : KW_TOSTRING LP expr RP => (Grammar.show expr)
@@ -205,10 +219,14 @@ loop
     : KW_WHILE exp_bool KW_DO commands KW_END => ()
     ;
 conditional
-    : KW_IF exp_bool KW_THEN commands (KW_ELSE commands)? KW_END => ()
-    ;
-else_block(b)
-    : KW_ELSE commands KW_END
+    : KW_IF exp_bool KW_THEN commands KW_ELSE commands KW_END => (
+        let 
+            val ifi = ParseTree.If((!tree),(getBool exp_bool),commands1,commands2)
+        in
+            tree := ifi;
+            ifi
+        end
+      )
     ;
 exp_arit
     : %try addExp 
