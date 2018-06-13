@@ -84,12 +84,12 @@ program(d)
       KW_variables
       variables
       KW_comands
-      commands@(false) => ()
+      commands@(!tree,true) => ()
     ;
-commands(desvio)
-    : prints@(desvio) SEMI (commands@(desvio))? => (prints)
-    | assign SEMI (commands@(desvio))?  => (assign)   
-    | conditional => (conditional)
+commands(atree,principal)
+    : prints@(atree,principal) SEMI (commands@(atree,principal))? => (prints)
+    | assign SEMI (commands@(atree,principal))?  => (assign)   
+    | conditional (commands@(atree,principal))? => (conditional)
     ;
 assign
     : ID DOTDOT expr %where (AtomMap.inDomain(!v,Atom.atom ID)
@@ -120,18 +120,15 @@ val_list
     | SSTRING => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
     | ID => (valOf(AtomMap.find (!v, Atom.atom ID))) 
     ;
-prints(desvio)
+prints(auxtree,principal)
    : KW_Print LP exp_string RP => (
             let 
-                val pr = 
-                    if desvio then 
-                        (!tree) @ [(ParseTree.Print(exp_string))] 
-                    else
-                        [(ParseTree.Print(exp_string))]
+                val _ = print (Bool.toString principal)
+                val _ = if principal then 
+                    (tree := (!tree) @ [(ParseTree.Print(exp_string))]) else ()
             in
                 ps := exp_string::(!ps);
-                tree := pr;
-                pr
+                auxtree @ [(ParseTree.Print(exp_string))] 
             end
      )
    ;
@@ -222,9 +219,9 @@ loop
     : KW_WHILE exp_bool KW_DO commands KW_END => ()
     ;
 conditional
-    : KW_IF exp_bool KW_THEN commands@(true) KW_ELSE commands@(true) KW_END => (
+    : KW_IF exp_bool KW_THEN commands@(nil,false) KW_ELSE commands@(nil,false) KW_END => (
         let 
-            val ifi = (!tree) @ [ParseTree.If((getBool exp_bool),nil @ commands1,nil @ commands2)] 
+            val ifi = (!tree) @ [ParseTree.If((getBool exp_bool),commands1,commands2)] 
         in
             tree := ifi;
             ifi

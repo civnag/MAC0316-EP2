@@ -244,7 +244,6 @@ DarwinTokens
     
     fun getVar v = AtomMap.appi (fn (k,w) => print (
         let val _ = print(Atom.toString k) 
-            val _ = "oi"
             val _ = print (Grammar.show w)
         in 
             ""
@@ -253,11 +252,11 @@ DarwinTokens
 
 fun program_PROD_1_ACT (d, STR, commands, SEMI, KW_title, KW_variables, variables, KW_comands, STR_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_title_SPAN : (Lex.pos * Lex.pos), KW_variables_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), KW_comands_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( )
-fun commands_PROD_1_ACT (SR, SEMI, desvio, prints, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), prints_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
+fun commands_PROD_1_ACT (SR, SEMI, principal, atree, prints, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), prints_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( prints)
-fun commands_PROD_2_ACT (SR, SEMI, assign, desvio, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), assign_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
+fun commands_PROD_2_ACT (SR, SEMI, principal, assign, atree, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), assign_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( assign)
-fun commands_PROD_3_ACT (conditional, desvio, conditional_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
+fun commands_PROD_3_ACT (SR, conditional, principal, atree, SR_SPAN : (Lex.pos * Lex.pos), conditional_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( conditional)
 fun assign_PROD_1_ACT (ID, expr, DOTDOT, ID_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), DOTDOT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( let 
@@ -294,18 +293,15 @@ fun val_list_PROD_4_ACT (SSTRING, SSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN 
   (  Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
 fun val_list_PROD_5_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( valOf(AtomMap.find (!v, Atom.atom ID)))
-fun prints_PROD_1_ACT (LP, RP, KW_Print, desvio, exp_string, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
+fun prints_PROD_1_ACT (LP, RP, KW_Print, auxtree, principal, exp_string, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( 
             let 
-                val pr = 
-                    if desvio then 
-                        (!tree) @ [(ParseTree.Print(exp_string))] 
-                    else
-                        [(ParseTree.Print(exp_string))]
+                val _ = print (Bool.toString principal)
+                val _ = if principal then 
+                    (tree := (!tree) @ [(ParseTree.Print(exp_string))]) else ()
             in
                 ps := exp_string::(!ps);
-                tree := pr;
-                pr
+                auxtree @ [(ParseTree.Print(exp_string))] 
             end
      )
 fun funcs_string_PROD_1_ACT (LP, RP, expr, KW_TOSTRING, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_TOSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
@@ -389,7 +385,7 @@ fun loop_PROD_1_ACT (commands, KW_WHILE, exp_bool, KW_DO, KW_END, commands_SPAN 
 fun conditional_PROD_1_ACT (exp_bool, KW_ELSE, KW_THEN, commands1, commands2, KW_IF, KW_END, exp_bool_SPAN : (Lex.pos * Lex.pos), KW_ELSE_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), commands1_SPAN : (Lex.pos * Lex.pos), commands2_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( 
         let 
-            val ifi = (!tree) @ [ParseTree.If((getBool exp_bool),nil @ commands1,nil @ commands2)] 
+            val ifi = (!tree) @ [ParseTree.If((getBool exp_bool),commands1,commands2)] 
         in
             tree := ifi;
             ifi
@@ -450,17 +446,19 @@ fun multExp_PROD_1_PRED (DIV, prefixExp1, prefixExp2, ps, v, ts, tree) =
 fun multExp_PROD_2_PRED (TIMES, prefixExp1, prefixExp2, ps, v, ts, tree) = 
   ( exprTypes prefixExp1 prefixExp2)
 fun ARGS_8 (d, STR, SEMI, KW_title, KW_variables, variables, KW_comands, ps, v, ts, tree) = 
-  (false)
-fun ARGS_11 (SEMI, desvio, prints, ps, v, ts, tree) = 
-  (desvio)
-fun ARGS_10 (desvio, ps, v, ts, tree) = 
-  (desvio)
-fun ARGS_13 (SEMI, assign, desvio, ps, v, ts, tree) = 
-  (desvio)
-fun ARGS_81 (exp_bool, KW_THEN, KW_IF, ps, v, ts, tree) = 
-  (true)
-fun ARGS_82 (exp_bool, KW_ELSE, KW_THEN, commands1, KW_IF, ps, v, ts, tree) = 
-  (true)
+  (!tree,true)
+fun ARGS_11 (SEMI, principal, atree, prints, ps, v, ts, tree) = 
+  (atree,principal)
+fun ARGS_10 (principal, atree, ps, v, ts, tree) = 
+  (atree,principal)
+fun ARGS_13 (SEMI, principal, assign, atree, ps, v, ts, tree) = 
+  (atree,principal)
+fun ARGS_15 (conditional, principal, atree, ps, v, ts, tree) = 
+  (atree,principal)
+fun ARGS_82 (exp_bool, KW_THEN, KW_IF, ps, v, ts, tree) = 
+  (nil,false)
+fun ARGS_83 (exp_bool, KW_ELSE, KW_THEN, commands1, KW_IF, ps, v, ts, tree) = 
+  (nil,false)
 fun mkps_REFC() : (string list) ref = ref ( nil)
 fun mkv_REFC() : ((Grammar.tipo) AtomMap.map) ref = ref ( AtomMap.empty)
 fun mkts_REFC() : (string AtomMap.map) ref = ref ( AtomMap.empty)
@@ -1693,22 +1691,22 @@ fun assign_NT (strm) = let
             end
           else fail()
       end
-fun prints_NT (desvio_RES) (strm) = let
+fun prints_NT (auxtree_RES, principal_RES) (strm) = let
       val (KW_Print_RES, KW_Print_SPAN, strm') = matchKW_Print(strm)
       val (LP_RES, LP_SPAN, strm') = matchLP(strm')
       val (exp_string_RES, exp_string_SPAN, strm') = exp_string_NT(strm')
       val (RP_RES, RP_SPAN, strm') = matchRP(strm')
       val FULL_SPAN = (#1(KW_Print_SPAN), #2(RP_SPAN))
       in
-        (UserCode.prints_PROD_1_ACT (LP_RES, RP_RES, KW_Print_RES, desvio_RES, exp_string_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
+        (UserCode.prints_PROD_1_ACT (LP_RES, RP_RES, KW_Print_RES, auxtree_RES, principal_RES, exp_string_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
           FULL_SPAN, strm')
       end
-fun commands_NT (desvio_RES) (strm) = let
+fun commands_NT (atree_RES, principal_RES) (strm) = let
       fun commands_PROD_1 (strm) = let
-            val (prints_RES, prints_SPAN, strm') = (prints_NT (UserCode.ARGS_10 (desvio_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm)
+            val (prints_RES, prints_SPAN, strm') = (prints_NT (UserCode.ARGS_10 (principal_RES, atree_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm)
             val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
             fun commands_PROD_1_SUBRULE_1_NT (strm) = let
-                  val (commands_RES, commands_SPAN, strm') = (commands_NT (UserCode.ARGS_11 (SEMI_RES, desvio_RES, prints_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm)
+                  val (commands_RES, commands_SPAN, strm') = (commands_NT (UserCode.ARGS_11 (SEMI_RES, principal_RES, atree_RES, prints_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm)
                   val FULL_SPAN = (#1(commands_SPAN), #2(commands_SPAN))
                   in
                     ((commands_RES), FULL_SPAN, strm')
@@ -1722,14 +1720,14 @@ fun commands_NT (desvio_RES) (strm) = let
             val (SR_RES, SR_SPAN, strm') = EBNF.optional(commands_PROD_1_SUBRULE_1_PRED, commands_PROD_1_SUBRULE_1_NT, strm')
             val FULL_SPAN = (#1(prints_SPAN), #2(SR_SPAN))
             in
-              (UserCode.commands_PROD_1_ACT (SR_RES, SEMI_RES, desvio_RES, prints_RES, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), prints_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
+              (UserCode.commands_PROD_1_ACT (SR_RES, SEMI_RES, principal_RES, atree_RES, prints_RES, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), prints_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
                 FULL_SPAN, strm')
             end
       fun commands_PROD_2 (strm) = let
             val (assign_RES, assign_SPAN, strm') = assign_NT(strm)
             val (SEMI_RES, SEMI_SPAN, strm') = matchSEMI(strm')
             fun commands_PROD_2_SUBRULE_1_NT (strm) = let
-                  val (commands_RES, commands_SPAN, strm') = (commands_NT (UserCode.ARGS_13 (SEMI_RES, assign_RES, desvio_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm)
+                  val (commands_RES, commands_SPAN, strm') = (commands_NT (UserCode.ARGS_13 (SEMI_RES, principal_RES, assign_RES, atree_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm)
                   val FULL_SPAN = (#1(commands_SPAN), #2(commands_SPAN))
                   in
                     ((commands_RES), FULL_SPAN, strm')
@@ -1743,14 +1741,27 @@ fun commands_NT (desvio_RES) (strm) = let
             val (SR_RES, SR_SPAN, strm') = EBNF.optional(commands_PROD_2_SUBRULE_1_PRED, commands_PROD_2_SUBRULE_1_NT, strm')
             val FULL_SPAN = (#1(assign_SPAN), #2(SR_SPAN))
             in
-              (UserCode.commands_PROD_2_ACT (SR_RES, SEMI_RES, assign_RES, desvio_RES, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), assign_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
+              (UserCode.commands_PROD_2_ACT (SR_RES, SEMI_RES, principal_RES, assign_RES, atree_RES, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), assign_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
                 FULL_SPAN, strm')
             end
       fun commands_PROD_3 (strm) = let
             val (conditional_RES, conditional_SPAN, strm') = conditional_NT(strm)
-            val FULL_SPAN = (#1(conditional_SPAN), #2(conditional_SPAN))
+            fun commands_PROD_3_SUBRULE_1_NT (strm) = let
+                  val (commands_RES, commands_SPAN, strm') = (commands_NT (UserCode.ARGS_15 (conditional_RES, principal_RES, atree_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm)
+                  val FULL_SPAN = (#1(commands_SPAN), #2(commands_SPAN))
+                  in
+                    ((commands_RES), FULL_SPAN, strm')
+                  end
+            fun commands_PROD_3_SUBRULE_1_PRED (strm) = (case (lex(strm))
+                   of (Tok.ID(_), _, strm') => true
+                    | (Tok.KW_Print, _, strm') => true
+                    | (Tok.KW_IF, _, strm') => true
+                    | _ => false
+                  (* end case *))
+            val (SR_RES, SR_SPAN, strm') = EBNF.optional(commands_PROD_3_SUBRULE_1_PRED, commands_PROD_3_SUBRULE_1_NT, strm')
+            val FULL_SPAN = (#1(conditional_SPAN), #2(SR_SPAN))
             in
-              (UserCode.commands_PROD_3_ACT (conditional_RES, desvio_RES, conditional_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
+              (UserCode.commands_PROD_3_ACT (SR_RES, conditional_RES, principal_RES, atree_RES, SR_SPAN : (Lex.pos * Lex.pos), conditional_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
                 FULL_SPAN, strm')
             end
       in
@@ -1765,9 +1776,9 @@ and conditional_NT (strm) = let
       val (KW_IF_RES, KW_IF_SPAN, strm') = matchKW_IF(strm)
       val (exp_bool_RES, exp_bool_SPAN, strm') = exp_bool_NT(strm')
       val (KW_THEN_RES, KW_THEN_SPAN, strm') = matchKW_THEN(strm')
-      val (commands1_RES, commands1_SPAN, strm') = (commands_NT (UserCode.ARGS_81 (exp_bool_RES, KW_THEN_RES, KW_IF_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm')
+      val (commands1_RES, commands1_SPAN, strm') = (commands_NT (UserCode.ARGS_82 (exp_bool_RES, KW_THEN_RES, KW_IF_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm')
       val (KW_ELSE_RES, KW_ELSE_SPAN, strm') = matchKW_ELSE(strm')
-      val (commands2_RES, commands2_SPAN, strm') = (commands_NT (UserCode.ARGS_82 (exp_bool_RES, KW_ELSE_RES, KW_THEN_RES, commands1_RES, KW_IF_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm')
+      val (commands2_RES, commands2_SPAN, strm') = (commands_NT (UserCode.ARGS_83 (exp_bool_RES, KW_ELSE_RES, KW_THEN_RES, commands1_RES, KW_IF_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC)))(strm')
       val (KW_END_RES, KW_END_SPAN, strm') = matchKW_END(strm')
       val FULL_SPAN = (#1(KW_IF_SPAN), #2(KW_END_SPAN))
       in

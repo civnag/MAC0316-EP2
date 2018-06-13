@@ -22,8 +22,9 @@ commands
     j := toInt(t);
     q := true;
     print("lkko");
-    if (9 < 8) then
+    if (9 > 8) then
         print("kork butchek1");
+        print("kork butchek3");
     else
         print("kork butchek2");
     end
