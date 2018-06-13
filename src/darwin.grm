@@ -2,26 +2,26 @@
 
 %defs (
     open ParseTree
-    
+
     fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0))
       | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.String_ ""))
       | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Float_ 0.0))
       | insere(hm,n,"boolean") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Boolean_ false))
       | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Void)
-    
+
     fun getInt x = (Grammar.extractInt x)
     fun getFloat x = (Grammar.extractFloat x)
     fun getString x = (Grammar.extractString x)
     fun getBool x = (Grammar.extractBool x)
     fun getList x = (Grammar.extractList x)
-    
+
     fun exprTypes e1 e2 = (Grammar.typeof e1) = (Grammar.typeof e2)
     fun isType e1 t = (Grammar.typeof e1) = t
-    
+
     fun getVar v = AtomMap.appi (fn (k,w) => print (
-        let val _ = print(Atom.toString k) 
+        let val _ = print(Atom.toString k)
             val _ = print (Grammar.show w)
-        in 
+        in
             ""
         end)) v
 );
@@ -88,13 +88,13 @@ program(d)
     ;
 commands(atree,principal)
     : prints@(atree,principal) SEMI (commands@(atree,principal))? => (prints)
-    | assign SEMI (commands@(atree,principal))?  => (assign)   
+    | assign SEMI (commands@(atree,principal))?  => (assign)
     | conditional (commands@(atree,principal))? => (conditional)
     ;
 assign
     : ID DOTDOT expr %where (AtomMap.inDomain(!v,Atom.atom ID)
-                        andalso (isType expr (valOf (AtomMap.find (!ts, Atom.atom ID))))) 
-                        => (let 
+                        andalso (isType expr (valOf (AtomMap.find (!ts, Atom.atom ID)))))
+                        => (let
                                 fun k w = Grammar.updateHt(w,Atom.atom ID,expr)
                                 val assi = (!tree) @ ([ParseTree.Assign(fn(w)=> k(w))])
                             in
@@ -110,7 +110,7 @@ expr
     | %try funcs_float => (Grammar.Primitivo (Grammar.Float_ funcs_float))
     | %try funcs_int => (Grammar.Primitivo (Grammar.Int_ funcs_int))
     | %try funcs_string => (Grammar.Primitivo (Grammar.String_ funcs_string))
-    | %try funcs_list => (funcs_list) 
+    | %try funcs_list => (funcs_list)
     | %try val_list => (val_list)
     ;
 val_list
@@ -118,63 +118,62 @@ val_list
     | SFLOAT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Float_ x)) SFLOAT) )
     | SBOOL => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Boolean_ x)) SBOOL) )
     | SSTRING => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
-    | ID => (valOf(AtomMap.find (!v, Atom.atom ID))) 
+    | ID => (valOf(AtomMap.find (!v, Atom.atom ID)))
     ;
 prints(auxtree,principal)
    : KW_Print LP exp_string RP => (
-            let 
-                val _ = print (Bool.toString principal)
+            let
                 val _ = if principal then 
                     (tree := (!tree) @ [(ParseTree.Print(exp_string))]) else ()
             in
                 ps := exp_string::(!ps);
-                auxtree @ [(ParseTree.Print(exp_string))] 
+                auxtree @ [(ParseTree.Print(exp_string))]
             end
      )
    ;
 funcs_string
     : KW_TOSTRING LP expr RP => (Grammar.show expr)
     | KW_LINREG LP float_list COMMA float_list RP => (Statistics.linearRegression(float_list1,float_list2))
-    | KW_GETS LP string_list COMMA exp_arit RP %where (isType exp_arit "int") 
-        => (List.nth(string_list,getInt exp_arit)) 
+    | KW_GETS LP string_list COMMA exp_arit RP %where (isType exp_arit "int")
+        => (List.nth(string_list,getInt exp_arit))
     ;
 funcs_int
-    : KW_GETI LP int_list COMMA exp_arit RP %where (isType exp_arit "int") 
-        => (List.nth(int_list,getInt exp_arit)) 
+    : KW_GETI LP int_list COMMA exp_arit RP %where (isType exp_arit "int")
+        => (List.nth(int_list,getInt exp_arit))
     | KW_TOINT LP exp_arit RP %where (isType exp_arit "float")
         => (Real.round(getFloat exp_arit))
     ;
 funcs_float
     : KW_SUM LP EMPTY RP  => ( 0.0)
-    | KW_SUM LP float_list RP  
+    | KW_SUM LP float_list RP
         => (List.foldl op+ 0.0 float_list)
     | KW_PROD LP EMPTY RP  => (0.0)
-    | KW_PROD LP float_list RP 
+    | KW_PROD LP float_list RP
         => (List.foldl op* 1.0 float_list)
     | KW_MEAN LP float_list RP => (Statistics.mean float_list)
     | KW_CORR LP float_list COMMA float_list RP => (Statistics.correlation(float_list1, float_list2))
     | KW_STDEV LP float_list RP => (Statistics.standardDeviation(float_list))
     | KW_MEDIAN LP float_list RP => (Statistics.median(float_list))
     | KW_COV LP float_list COMMA float_list RP => (Statistics.covariance(float_list1, float_list2))
-    | KW_GETF LP float_list COMMA exp_arit RP %where (isType exp_arit "int") 
+    | KW_GETF LP float_list COMMA exp_arit RP %where (isType exp_arit "int")
         => (List.nth(float_list,getInt exp_arit))
     | KW_TOFLOAT LP exp_arit RP %where (isType exp_arit "int")
         => (valOf (Real.fromString((Int.toString (getInt exp_arit))^".0")))
     ;
 funcs_list
-    : KW_SUBS LP val_list COMMA exp_arit COMMA exp_arit RP %where ((isType exp_arit1 "int") andalso (isType exp_arit2 "int")) 
+    : KW_SUBS LP val_list COMMA exp_arit COMMA exp_arit RP %where ((isType exp_arit1 "int") andalso (isType exp_arit2 "int"))
         => (Grammar.Sample (List.take((List.drop(getList val_list,getInt(exp_arit2))),getInt(exp_arit1))))
     ;
 float_list
-    : ID => (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
+    : ID => (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
     | SFLOAT => (SFLOAT)
     ;
 string_list
-    : ID => (List.map getString (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
+    : ID => (List.map getString (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
     | SSTRING => (SSTRING)
     ;
 int_list
-    : ID => (List.map getInt (getList (valOf(AtomMap.find (!v, Atom.atom ID))))) 
+    : ID => (List.map getInt (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
     | SINT => (SINT)
     ;
 exp_bool
@@ -187,16 +186,16 @@ op_bool
     | %try atom_bool OR atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
     ;
 exp_string
-    : %try op_str 
+    : %try op_str
     | %try atom_string
     ;
 op_str
     : atom_string CONCAT atom_string => ("\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(atom_string1 ^ atom_string2)))) ^ "\"")
-    ;    
+    ;
 atom_string
     : ID %where (
         AtomMap.inDomain(!v,Atom.atom ID) andalso (isType (valOf(AtomMap.find (!v, Atom.atom ID))) "string")
-     ) 
+     )
         => (getString(valOf(AtomMap.find (!v, Atom.atom ID))) )
     | STR => (STR)
     | funcs_string => (funcs_string)
@@ -220,8 +219,8 @@ loop
     ;
 conditional
     : KW_IF exp_bool KW_THEN commands@(nil,false) KW_ELSE commands@(nil,false) KW_END => (
-        let 
-            val ifi = (!tree) @ [ParseTree.If((getBool exp_bool),commands1,commands2)] 
+        let
+            val ifi = (!tree) @ [ParseTree.If((getBool exp_bool),commands1,commands2)]
         in
             tree := ifi;
             ifi
@@ -229,7 +228,7 @@ conditional
       )
     ;
 exp_arit
-    : %try addExp 
+    : %try addExp
     | %try atomicExp
     ;
 addExp
@@ -238,9 +237,9 @@ addExp
     | %try multExp
     ;
 multExp
-    : %try prefixExp DIV prefixExp %where ((isType prefixExp1 "float") andalso (isType prefixExp2 "float") andalso (exprTypes prefixExp1 prefixExp2)) 
+    : %try prefixExp DIV prefixExp %where ((isType prefixExp1 "float") andalso (isType prefixExp2 "float") andalso (exprTypes prefixExp1 prefixExp2))
         => ( Grammar.oper("/",prefixExp1,prefixExp2) )
-    | %try prefixExp TIMES prefixExp %where (exprTypes prefixExp1 prefixExp2) 
+    | %try prefixExp TIMES prefixExp %where (exprTypes prefixExp1 prefixExp2)
         => ( Grammar.oper("*",prefixExp1,prefixExp2) )
     | %try atomicExp
     ;
@@ -250,7 +249,7 @@ prefixExp
         => ( Grammar.oper("neg",prefixExp,prefixExp) )
     ;
 atomicExp
-    : ID => (valOf(AtomMap.find (!v, Atom.atom ID))) 
+    : ID => (valOf(AtomMap.find (!v, Atom.atom ID)))
     | NUM => (Grammar.Primitivo (Grammar.Int_ NUM))
     | REAL => (Grammar.Primitivo (Grammar.Float_ REAL))
     | "(" exp_arit ")"

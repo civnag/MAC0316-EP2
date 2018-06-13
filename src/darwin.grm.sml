@@ -1,265 +1,259 @@
-structure 
-DarwinTokens = struct
-
-    datatype token = EOF
-      | CONCAT
-      | KW_TOINT
-      | KW_TOFLOAT
-      | KW_GETI
-      | VOID
-      | TUPLE of Grammar.tipo
-      | KW_LINREG
-      | KW_SUBS
-      | KW_COV
-      | KW_GETF
-      | KW_VAR
-      | KW_STDEV
-      | KW_MEDIAN
-      | KW_CORR
-      | KW_MEAN
-      | KW_TOSTRING
-      | KW_END
-      | KW_DO
-      | KW_WHILE
-      | KW_ELSE
-      | KW_THEN
-      | KW_IF
-      | KW_GETS
-      | EMPTY
-      | KW_PROD
-      | KW_SUM
-      | KW_terminate
-      | KW_endvars
-      | KW_Print
-      | STR of string
-      | KW_comands
-      | DOTDOT
-      | TIPO of string
-      | SEMI
-      | KW_variables
-      | NEQ
-      | GEQ
-      | LEQ
-      | LT
-      | GT
-      | SPACE
-      | NOT
-      | OR
-      | AND
-      | BOOL of bool
-      | RP
-      | LP
-      | SBOOL of (Bool.bool list)
-      | COMMA
-      | MINUS
-      | DIV
-      | TIMES
-      | SFLOAT of (Real.real list)
-      | EEQ
-      | DOT
-      | PLUS
-      | EQ
-      | SINT of (Int.int list)
-      | REAL of Real.real
-      | NUM of Int.int
-      | ID of string
-      | SSTRING of (string list)
-      | KW_title
+structure DarwinTokens =
+  struct
+    datatype token
+      = KW_let
       | KW_in
-      | KW_let
-
-    val allToks = [EOF, CONCAT, KW_TOINT, KW_TOFLOAT, KW_GETI, VOID, KW_LINREG, KW_SUBS, KW_COV, KW_GETF, KW_VAR, KW_STDEV, KW_MEDIAN, KW_CORR, KW_MEAN, KW_TOSTRING, KW_END, KW_DO, KW_WHILE, KW_ELSE, KW_THEN, KW_IF, KW_GETS, EMPTY, KW_PROD, KW_SUM, KW_terminate, KW_endvars, KW_Print, KW_comands, DOTDOT, SEMI, KW_variables, NEQ, GEQ, LEQ, LT, GT, SPACE, NOT, OR, AND, RP, LP, COMMA, MINUS, DIV, TIMES, EEQ, DOT, PLUS, EQ, KW_title, KW_in, KW_let]
-
+      | KW_title
+      | SSTRING of (string list)
+      | ID of string
+      | NUM of Int.int
+      | REAL of Real.real
+      | SINT of (Int.int list)
+      | EQ
+      | PLUS
+      | DOT
+      | EEQ
+      | SFLOAT of (Real.real list)
+      | TIMES
+      | DIV
+      | MINUS
+      | COMMA
+      | SBOOL of (Bool.bool list)
+      | LP
+      | RP
+      | BOOL of bool
+      | AND
+      | OR
+      | NOT
+      | SPACE
+      | GT
+      | LT
+      | LEQ
+      | GEQ
+      | NEQ
+      | KW_variables
+      | SEMI
+      | TIPO of string
+      | DOTDOT
+      | KW_comands
+      | STR of string
+      | KW_Print
+      | KW_endvars
+      | KW_terminate
+      | KW_SUM
+      | KW_PROD
+      | EMPTY
+      | KW_GETS
+      | KW_IF
+      | KW_THEN
+      | KW_ELSE
+      | KW_WHILE
+      | KW_DO
+      | KW_END
+      | KW_TOSTRING
+      | KW_MEAN
+      | KW_CORR
+      | KW_MEDIAN
+      | KW_STDEV
+      | KW_VAR
+      | KW_GETF
+      | KW_COV
+      | KW_SUBS
+      | KW_LINREG
+      | TUPLE of Grammar.tipo
+      | VOID
+      | KW_GETI
+      | KW_TOFLOAT
+      | KW_TOINT
+      | CONCAT
+      | EOF
+    val allToks = [
+            KW_let, KW_in, KW_title, EQ, PLUS, DOT, EEQ, TIMES, DIV, MINUS, COMMA, LP, RP, AND, OR, NOT, SPACE, GT, LT, LEQ, GEQ, NEQ, KW_variables, SEMI, DOTDOT, KW_comands, KW_Print, KW_endvars, KW_terminate, KW_SUM, KW_PROD, EMPTY, KW_GETS, KW_IF, KW_THEN, KW_ELSE, KW_WHILE, KW_DO, KW_END, KW_TOSTRING, KW_MEAN, KW_CORR, KW_MEDIAN, KW_STDEV, KW_VAR, KW_GETF, KW_COV, KW_SUBS, KW_LINREG, VOID, KW_GETI, KW_TOFLOAT, KW_TOINT, CONCAT, EOF
+           ]
     fun toString tok =
 (case (tok)
- of (EOF) => "EOF"
-  | (CONCAT) => "++"
-  | (KW_TOINT) => "toInt"
-  | (KW_TOFLOAT) => "toFloat"
-  | (KW_GETI) => "getInt"
-  | (VOID) => "void"
-  | (TUPLE(_)) => "TUPLE"
-  | (KW_LINREG) => "linearRegression"
-  | (KW_SUBS) => "subSample"
-  | (KW_COV) => "covariance"
-  | (KW_GETF) => "getFloat"
-  | (KW_VAR) => "variance"
-  | (KW_STDEV) => "stdDeviation"
-  | (KW_MEDIAN) => "median"
-  | (KW_CORR) => "correlation"
-  | (KW_MEAN) => "mean"
-  | (KW_TOSTRING) => "toString"
-  | (KW_END) => "end"
-  | (KW_DO) => "do"
-  | (KW_WHILE) => "while"
-  | (KW_ELSE) => "else"
-  | (KW_THEN) => "then"
-  | (KW_IF) => "if"
-  | (KW_GETS) => "getString"
-  | (EMPTY) => "{}"
-  | (KW_PROD) => "prod"
-  | (KW_SUM) => "sum"
-  | (KW_terminate) => "terminate"
-  | (KW_endvars) => "end variables"
-  | (KW_Print) => "print"
-  | (STR(_)) => "STR"
-  | (KW_comands) => "commands"
-  | (DOTDOT) => ":="
-  | (TIPO(_)) => "TIPO"
-  | (SEMI) => "SEMI"
-  | (KW_variables) => "variables"
-  | (NEQ) => "!="
-  | (GEQ) => ">="
-  | (LEQ) => "<="
-  | (LT) => "<"
-  | (GT) => ">"
-  | (SPACE) => " "
-  | (NOT) => "!"
-  | (OR) => "||"
-  | (AND) => "&&"
-  | (BOOL(_)) => "BOOL"
-  | (RP) => ")"
-  | (LP) => "("
-  | (SBOOL(_)) => "SBOOL"
-  | (COMMA) => ","
-  | (MINUS) => "-"
-  | (DIV) => "/"
-  | (TIMES) => "*"
-  | (SFLOAT(_)) => "SFLOAT"
-  | (EEQ) => "=="
-  | (DOT) => "."
-  | (PLUS) => "+"
-  | (EQ) => "="
-  | (SINT(_)) => "SINT"
-  | (REAL(_)) => "REAL"
-  | (NUM(_)) => "NUM"
-  | (ID(_)) => "ID"
-  | (SSTRING(_)) => "SSTRING"
-  | (KW_title) => "title"
+ of (KW_let) => "let"
   | (KW_in) => "in"
-  | (KW_let) => "let"
+  | (KW_title) => "title"
+  | (SSTRING(_)) => "SSTRING"
+  | (ID(_)) => "ID"
+  | (NUM(_)) => "NUM"
+  | (REAL(_)) => "REAL"
+  | (SINT(_)) => "SINT"
+  | (EQ) => "="
+  | (PLUS) => "+"
+  | (DOT) => "."
+  | (EEQ) => "=="
+  | (SFLOAT(_)) => "SFLOAT"
+  | (TIMES) => "*"
+  | (DIV) => "/"
+  | (MINUS) => "-"
+  | (COMMA) => ","
+  | (SBOOL(_)) => "SBOOL"
+  | (LP) => "("
+  | (RP) => ")"
+  | (BOOL(_)) => "BOOL"
+  | (AND) => "&&"
+  | (OR) => "||"
+  | (NOT) => "!"
+  | (SPACE) => " "
+  | (GT) => ">"
+  | (LT) => "<"
+  | (LEQ) => "<="
+  | (GEQ) => ">="
+  | (NEQ) => "!="
+  | (KW_variables) => "variables"
+  | (SEMI) => "SEMI"
+  | (TIPO(_)) => "TIPO"
+  | (DOTDOT) => ":="
+  | (KW_comands) => "commands"
+  | (STR(_)) => "STR"
+  | (KW_Print) => "print"
+  | (KW_endvars) => "end variables"
+  | (KW_terminate) => "terminate"
+  | (KW_SUM) => "sum"
+  | (KW_PROD) => "prod"
+  | (EMPTY) => "{}"
+  | (KW_GETS) => "getString"
+  | (KW_IF) => "if"
+  | (KW_THEN) => "then"
+  | (KW_ELSE) => "else"
+  | (KW_WHILE) => "while"
+  | (KW_DO) => "do"
+  | (KW_END) => "end"
+  | (KW_TOSTRING) => "toString"
+  | (KW_MEAN) => "mean"
+  | (KW_CORR) => "correlation"
+  | (KW_MEDIAN) => "median"
+  | (KW_STDEV) => "stdDeviation"
+  | (KW_VAR) => "variance"
+  | (KW_GETF) => "getFloat"
+  | (KW_COV) => "covariance"
+  | (KW_SUBS) => "subSample"
+  | (KW_LINREG) => "linearRegression"
+  | (TUPLE(_)) => "TUPLE"
+  | (VOID) => "void"
+  | (KW_GETI) => "getInt"
+  | (KW_TOFLOAT) => "toFloat"
+  | (KW_TOINT) => "toInt"
+  | (CONCAT) => "++"
+  | (EOF) => "EOF"
 (* end case *))
     fun isKW tok =
 (case (tok)
- of (EOF) => false
-  | (CONCAT) => false
-  | (KW_TOINT) => true
-  | (KW_TOFLOAT) => true
-  | (KW_GETI) => true
-  | (VOID) => false
-  | (TUPLE(_)) => false
-  | (KW_LINREG) => true
-  | (KW_SUBS) => true
-  | (KW_COV) => true
-  | (KW_GETF) => true
-  | (KW_VAR) => true
-  | (KW_STDEV) => true
-  | (KW_MEDIAN) => true
-  | (KW_CORR) => true
-  | (KW_MEAN) => true
-  | (KW_TOSTRING) => true
-  | (KW_END) => true
-  | (KW_DO) => true
-  | (KW_WHILE) => true
-  | (KW_ELSE) => true
-  | (KW_THEN) => true
-  | (KW_IF) => true
-  | (KW_GETS) => true
-  | (EMPTY) => false
-  | (KW_PROD) => true
-  | (KW_SUM) => true
-  | (KW_terminate) => true
-  | (KW_endvars) => true
-  | (KW_Print) => false
-  | (STR(_)) => false
-  | (KW_comands) => true
-  | (DOTDOT) => false
-  | (TIPO(_)) => false
-  | (SEMI) => false
-  | (KW_variables) => true
-  | (NEQ) => false
-  | (GEQ) => false
-  | (LEQ) => false
-  | (LT) => false
-  | (GT) => false
-  | (SPACE) => false
-  | (NOT) => false
-  | (OR) => false
-  | (AND) => false
-  | (BOOL(_)) => false
-  | (RP) => false
-  | (LP) => false
-  | (SBOOL(_)) => false
-  | (COMMA) => false
-  | (MINUS) => false
-  | (DIV) => false
-  | (TIMES) => false
-  | (SFLOAT(_)) => false
-  | (EEQ) => false
-  | (DOT) => false
-  | (PLUS) => false
-  | (EQ) => false
-  | (SINT(_)) => false
-  | (REAL(_)) => false
-  | (NUM(_)) => false
-  | (ID(_)) => false
-  | (SSTRING(_)) => false
-  | (KW_title) => true
+ of (KW_let) => false
   | (KW_in) => false
-  | (KW_let) => false
+  | (KW_title) => true
+  | (SSTRING(_)) => false
+  | (ID(_)) => false
+  | (NUM(_)) => false
+  | (REAL(_)) => false
+  | (SINT(_)) => false
+  | (EQ) => false
+  | (PLUS) => false
+  | (DOT) => false
+  | (EEQ) => false
+  | (SFLOAT(_)) => false
+  | (TIMES) => false
+  | (DIV) => false
+  | (MINUS) => false
+  | (COMMA) => false
+  | (SBOOL(_)) => false
+  | (LP) => false
+  | (RP) => false
+  | (BOOL(_)) => false
+  | (AND) => false
+  | (OR) => false
+  | (NOT) => false
+  | (SPACE) => false
+  | (GT) => false
+  | (LT) => false
+  | (LEQ) => false
+  | (GEQ) => false
+  | (NEQ) => false
+  | (KW_variables) => true
+  | (SEMI) => false
+  | (TIPO(_)) => false
+  | (DOTDOT) => false
+  | (KW_comands) => true
+  | (STR(_)) => false
+  | (KW_Print) => false
+  | (KW_endvars) => true
+  | (KW_terminate) => true
+  | (KW_SUM) => true
+  | (KW_PROD) => true
+  | (EMPTY) => false
+  | (KW_GETS) => true
+  | (KW_IF) => true
+  | (KW_THEN) => true
+  | (KW_ELSE) => true
+  | (KW_WHILE) => true
+  | (KW_DO) => true
+  | (KW_END) => true
+  | (KW_TOSTRING) => true
+  | (KW_MEAN) => true
+  | (KW_CORR) => true
+  | (KW_MEDIAN) => true
+  | (KW_STDEV) => true
+  | (KW_VAR) => true
+  | (KW_GETF) => true
+  | (KW_COV) => true
+  | (KW_SUBS) => true
+  | (KW_LINREG) => true
+  | (TUPLE(_)) => false
+  | (VOID) => false
+  | (KW_GETI) => true
+  | (KW_TOFLOAT) => true
+  | (KW_TOINT) => true
+  | (CONCAT) => false
+  | (EOF) => false
 (* end case *))
+    fun isEOF EOF = true
+      | isEOF _ = false
+  end (* DarwinTokens *)
 
-
-  fun toksToString toks = String.concatWith " " (map toString toks)
-
-  fun isEOF EOF = true
-    | isEOF _ = false
-
-end
-
-functor DarwinParseFn(Lex : ANTLR_LEXER) = struct
+functor DarwinParseFn (Lex : ANTLR_LEXER) = struct
 
   local
-    structure Tok = 
+    structure Tok =
 DarwinTokens
-    structure UserCode = struct
+    structure UserCode =
+      struct
 
- 
     open ParseTree
-    
+
     fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0))
       | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.String_ ""))
       | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Float_ 0.0))
       | insere(hm,n,"boolean") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Boolean_ false))
       | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Void)
-    
+
     fun getInt x = (Grammar.extractInt x)
     fun getFloat x = (Grammar.extractFloat x)
     fun getString x = (Grammar.extractString x)
     fun getBool x = (Grammar.extractBool x)
     fun getList x = (Grammar.extractList x)
-    
+
     fun exprTypes e1 e2 = (Grammar.typeof e1) = (Grammar.typeof e2)
     fun isType e1 t = (Grammar.typeof e1) = t
-    
+
     fun getVar v = AtomMap.appi (fn (k,w) => print (
-        let val _ = print(Atom.toString k) 
+        let val _ = print(Atom.toString k)
             val _ = print (Grammar.show w)
-        in 
+        in
             ""
         end)) v
 
-
 fun program_PROD_1_ACT (d, STR, commands, SEMI, KW_title, KW_variables, variables, KW_comands, STR_SPAN : (Lex.pos * Lex.pos), commands_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), KW_title_SPAN : (Lex.pos * Lex.pos), KW_variables_SPAN : (Lex.pos * Lex.pos), variables_SPAN : (Lex.pos * Lex.pos), KW_comands_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( )
+  ()
 fun commands_PROD_1_ACT (SR, SEMI, principal, atree, prints, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), prints_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( prints)
+  (prints)
 fun commands_PROD_2_ACT (SR, SEMI, principal, assign, atree, SR_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), assign_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( assign)
+  (assign)
 fun commands_PROD_3_ACT (SR, conditional, principal, atree, SR_SPAN : (Lex.pos * Lex.pos), conditional_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( conditional)
+  (conditional)
 fun assign_PROD_1_ACT (ID, expr, DOTDOT, ID_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), DOTDOT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( let 
+  (let
                                 fun k w = Grammar.updateHt(w,Atom.atom ID,expr)
                                 val assi = (!tree) @ ([ParseTree.Assign(fn(w)=> k(w))])
                             in
@@ -268,183 +262,182 @@ fun assign_PROD_1_ACT (ID, expr, DOTDOT, ID_SPAN : (Lex.pos * Lex.pos), expr_SPA
                                 assi
                             end)
 fun expr_PROD_1_ACT (exp_arit, exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( exp_arit)
+  (exp_arit)
 fun expr_PROD_2_ACT (exp_bool, exp_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( exp_bool)
+  (exp_bool)
 fun expr_PROD_3_ACT (exp_string, exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.Primitivo (Grammar.String_ exp_string))
+  (Grammar.Primitivo (Grammar.String_ exp_string))
 fun expr_PROD_4_ACT (funcs_float, funcs_float_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.Primitivo (Grammar.Float_ funcs_float))
+  (Grammar.Primitivo (Grammar.Float_ funcs_float))
 fun expr_PROD_5_ACT (funcs_int, funcs_int_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.Primitivo (Grammar.Int_ funcs_int))
+  (Grammar.Primitivo (Grammar.Int_ funcs_int))
 fun expr_PROD_6_ACT (funcs_string, funcs_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.Primitivo (Grammar.String_ funcs_string))
+  (Grammar.Primitivo (Grammar.String_ funcs_string))
 fun expr_PROD_7_ACT (funcs_list, funcs_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( funcs_list)
+  (funcs_list)
 fun expr_PROD_8_ACT (val_list, val_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( val_list)
+  (val_list)
 fun val_list_PROD_1_ACT (SINT, SINT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  (  Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Int_ x)) SINT) )
+  ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Int_ x)) SINT) )
 fun val_list_PROD_2_ACT (SFLOAT, SFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  (  Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Float_ x)) SFLOAT) )
+  ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Float_ x)) SFLOAT) )
 fun val_list_PROD_3_ACT (SBOOL, SBOOL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  (  Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Boolean_ x)) SBOOL) )
+  ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Boolean_ x)) SBOOL) )
 fun val_list_PROD_4_ACT (SSTRING, SSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  (  Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
+  ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
 fun val_list_PROD_5_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( valOf(AtomMap.find (!v, Atom.atom ID)))
+  (valOf(AtomMap.find (!v, Atom.atom ID)))
 fun prints_PROD_1_ACT (LP, RP, KW_Print, auxtree, principal, exp_string, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( 
-            let 
-                val _ = print (Bool.toString principal)
+  (
+            let
                 val _ = if principal then 
                     (tree := (!tree) @ [(ParseTree.Print(exp_string))]) else ()
             in
                 ps := exp_string::(!ps);
-                auxtree @ [(ParseTree.Print(exp_string))] 
+                auxtree @ [(ParseTree.Print(exp_string))]
             end
      )
 fun funcs_string_PROD_1_ACT (LP, RP, expr, KW_TOSTRING, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_TOSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.show expr)
+  (Grammar.show expr)
 fun funcs_string_PROD_2_ACT (LP, RP, KW_LINREG, COMMA, float_list1, float_list2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_LINREG_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Statistics.linearRegression(float_list1,float_list2))
+  (Statistics.linearRegression(float_list1,float_list2))
 fun funcs_string_PROD_3_ACT (LP, RP, exp_arit, KW_GETS, COMMA, string_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETS_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), string_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( List.nth(string_list,getInt exp_arit))
+  (List.nth(string_list,getInt exp_arit))
 fun funcs_int_PROD_1_ACT (LP, RP, exp_arit, KW_GETI, COMMA, int_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETI_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), int_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( List.nth(int_list,getInt exp_arit))
+  (List.nth(int_list,getInt exp_arit))
 fun funcs_int_PROD_2_ACT (LP, RP, KW_TOINT, exp_arit, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_TOINT_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Real.round(getFloat exp_arit))
+  (Real.round(getFloat exp_arit))
 fun funcs_float_PROD_1_ACT (LP, RP, EMPTY, KW_SUM, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  (  0.0)
-fun funcs_float_PROD_2_ACT (LP, RP, float_list, KW_SUM, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( List.foldl op+ 0.0 float_list)
-fun funcs_float_PROD_3_ACT (LP, RP, KW_PROD, EMPTY, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( 0.0)
+fun funcs_float_PROD_2_ACT (LP, RP, float_list, KW_SUM, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
+  (List.foldl op+ 0.0 float_list)
+fun funcs_float_PROD_3_ACT (LP, RP, KW_PROD, EMPTY, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
+  (0.0)
 fun funcs_float_PROD_4_ACT (LP, RP, KW_PROD, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( List.foldl op* 1.0 float_list)
+  (List.foldl op* 1.0 float_list)
 fun funcs_float_PROD_5_ACT (LP, RP, KW_MEAN, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_MEAN_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Statistics.mean float_list)
+  (Statistics.mean float_list)
 fun funcs_float_PROD_6_ACT (LP, RP, KW_CORR, COMMA, float_list1, float_list2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_CORR_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Statistics.correlation(float_list1, float_list2))
+  (Statistics.correlation(float_list1, float_list2))
 fun funcs_float_PROD_7_ACT (LP, RP, KW_STDEV, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_STDEV_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Statistics.standardDeviation(float_list))
+  (Statistics.standardDeviation(float_list))
 fun funcs_float_PROD_8_ACT (LP, RP, KW_MEDIAN, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_MEDIAN_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Statistics.median(float_list))
+  (Statistics.median(float_list))
 fun funcs_float_PROD_9_ACT (LP, RP, COMMA, float_list1, float_list2, KW_COV, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), KW_COV_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Statistics.covariance(float_list1, float_list2))
+  (Statistics.covariance(float_list1, float_list2))
 fun funcs_float_PROD_10_ACT (LP, RP, exp_arit, KW_GETF, float_list, COMMA, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETF_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( List.nth(float_list,getInt exp_arit))
+  (List.nth(float_list,getInt exp_arit))
 fun funcs_float_PROD_11_ACT (LP, RP, exp_arit, KW_TOFLOAT, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_TOFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( valOf (Real.fromString((Int.toString (getInt exp_arit))^".0")))
+  (valOf (Real.fromString((Int.toString (getInt exp_arit))^".0")))
 fun funcs_list_PROD_1_ACT (LP, RP, exp_arit1, exp_arit2, KW_SUBS, val_list, COMMA1, COMMA2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit1_SPAN : (Lex.pos * Lex.pos), exp_arit2_SPAN : (Lex.pos * Lex.pos), KW_SUBS_SPAN : (Lex.pos * Lex.pos), val_list_SPAN : (Lex.pos * Lex.pos), COMMA1_SPAN : (Lex.pos * Lex.pos), COMMA2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.Sample (List.take((List.drop(getList val_list,getInt(exp_arit2))),getInt(exp_arit1))))
+  (Grammar.Sample (List.take((List.drop(getList val_list,getInt(exp_arit2))),getInt(exp_arit1))))
 fun float_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
+  (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
 fun float_list_PROD_2_ACT (SFLOAT, SFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( SFLOAT)
+  (SFLOAT)
 fun string_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( List.map getString (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
+  (List.map getString (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
 fun string_list_PROD_2_ACT (SSTRING, SSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( SSTRING)
+  (SSTRING)
 fun int_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( List.map getInt (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
+  (List.map getInt (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
 fun int_list_PROD_2_ACT (SINT, SINT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( SINT)
+  (SINT)
 fun exp_bool_PROD_3_ACT (rel_op, addExp1, addExp2, rel_op_SPAN : (Lex.pos * Lex.pos), addExp1_SPAN : (Lex.pos * Lex.pos), addExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.oper(rel_op,addExp1,addExp2))
+  (Grammar.oper(rel_op,addExp1,addExp2))
 fun op_bool_PROD_1_ACT (AND, atom_bool1, atom_bool2, AND_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( (Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
+  ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
 fun op_bool_PROD_2_ACT (OR, atom_bool1, atom_bool2, OR_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( (Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
+  ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
 fun op_str_PROD_1_ACT (atom_string1, atom_string2, CONCAT, atom_string1_SPAN : (Lex.pos * Lex.pos), atom_string2_SPAN : (Lex.pos * Lex.pos), CONCAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( "\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(atom_string1 ^ atom_string2)))) ^ "\"")
+  ("\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(atom_string1 ^ atom_string2)))) ^ "\"")
 fun atom_string_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( getString(valOf(AtomMap.find (!v, Atom.atom ID))) )
+  (getString(valOf(AtomMap.find (!v, Atom.atom ID))) )
 fun atom_string_PROD_2_ACT (STR, STR_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( STR)
+  (STR)
 fun atom_string_PROD_3_ACT (funcs_string, funcs_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( funcs_string)
+  (funcs_string)
 fun rel_op_PROD_1_ACT (EEQ, EEQ_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( "==")
+  ("==")
 fun rel_op_PROD_2_ACT (NEQ, NEQ_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( "!=")
+  ("!=")
 fun rel_op_PROD_3_ACT (GEQ, GEQ_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( ">=")
+  (">=")
 fun rel_op_PROD_4_ACT (LEQ, LEQ_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( "<=")
+  ("<=")
 fun rel_op_PROD_5_ACT (LT, LT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( "<")
+  ("<")
 fun rel_op_PROD_6_ACT (GT, GT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( ">")
+  (">")
 fun atom_bool_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( valOf(AtomMap.find (!v, Atom.atom ID)))
+  (valOf(AtomMap.find (!v, Atom.atom ID)))
 fun atom_bool_PROD_2_ACT (BOOL, BOOL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  (  Grammar.Primitivo (Grammar.Boolean_ BOOL))
+  ( Grammar.Primitivo (Grammar.Boolean_ BOOL))
 fun loop_PROD_1_ACT (commands, KW_WHILE, exp_bool, KW_DO, KW_END, commands_SPAN : (Lex.pos * Lex.pos), KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( )
+  ()
 fun conditional_PROD_1_ACT (exp_bool, KW_ELSE, KW_THEN, commands1, commands2, KW_IF, KW_END, exp_bool_SPAN : (Lex.pos * Lex.pos), KW_ELSE_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), commands1_SPAN : (Lex.pos * Lex.pos), commands2_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( 
-        let 
-            val ifi = (!tree) @ [ParseTree.If((getBool exp_bool),commands1,commands2)] 
+  (
+        let
+            val ifi = (!tree) @ [ParseTree.If((getBool exp_bool),commands1,commands2)]
         in
             tree := ifi;
             ifi
         end
       )
 fun addExp_PROD_1_ACT (PLUS, multExp1, multExp2, PLUS_SPAN : (Lex.pos * Lex.pos), multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.oper("+",multExp1,multExp2))
+  (Grammar.oper("+",multExp1,multExp2))
 fun addExp_PROD_2_ACT (multExp1, multExp2, MINUS, multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), MINUS_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.oper("-",multExp1,multExp2))
+  (Grammar.oper("-",multExp1,multExp2))
 fun multExp_PROD_1_ACT (DIV, prefixExp1, prefixExp2, DIV_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  (  Grammar.oper("/",prefixExp1,prefixExp2) )
+  ( Grammar.oper("/",prefixExp1,prefixExp2) )
 fun multExp_PROD_2_ACT (TIMES, prefixExp1, prefixExp2, TIMES_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  (  Grammar.oper("*",prefixExp1,prefixExp2) )
+  ( Grammar.oper("*",prefixExp1,prefixExp2) )
 fun prefixExp_PROD_2_ACT (MINUS, prefixExp, MINUS_SPAN : (Lex.pos * Lex.pos), prefixExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  (  Grammar.oper("neg",prefixExp,prefixExp) )
+  ( Grammar.oper("neg",prefixExp,prefixExp) )
 fun atomicExp_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( valOf(AtomMap.find (!v, Atom.atom ID)))
+  (valOf(AtomMap.find (!v, Atom.atom ID)))
 fun atomicExp_PROD_2_ACT (NUM, NUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.Primitivo (Grammar.Int_ NUM))
+  (Grammar.Primitivo (Grammar.Int_ NUM))
 fun atomicExp_PROD_3_ACT (REAL, REAL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( Grammar.Primitivo (Grammar.Float_ REAL))
+  (Grammar.Primitivo (Grammar.Float_ REAL))
 fun variables_PROD_1_ACT (SR, KW_endvars, SR_SPAN : (Lex.pos * Lex.pos), KW_endvars_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( (fn(_) => ()) SR)
+  ((fn(_) => ()) SR)
 fun declaration_PROD_1_ACT (ID, SEMI, TIPO, ID_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TIPO_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
-  ( v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO));
+  (v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO));
                        ts:=AtomMap.insert(!ts,Atom.atom ID,TIPO))
 fun assign_PROD_1_PRED (ID, expr, DOTDOT, ps, v, ts, tree) = 
-  ( AtomMap.inDomain(!v,Atom.atom ID)
+  (AtomMap.inDomain(!v,Atom.atom ID)
                         andalso (isType expr (valOf (AtomMap.find (!ts, Atom.atom ID)))))
 fun funcs_string_PROD_3_PRED (LP, RP, exp_arit, KW_GETS, COMMA, string_list, ps, v, ts, tree) = 
-  ( isType exp_arit "int")
+  (isType exp_arit "int")
 fun funcs_int_PROD_1_PRED (LP, RP, exp_arit, KW_GETI, COMMA, int_list, ps, v, ts, tree) = 
-  ( isType exp_arit "int")
+  (isType exp_arit "int")
 fun funcs_int_PROD_2_PRED (LP, RP, KW_TOINT, exp_arit, ps, v, ts, tree) = 
-  ( isType exp_arit "float")
+  (isType exp_arit "float")
 fun funcs_float_PROD_10_PRED (LP, RP, exp_arit, KW_GETF, float_list, COMMA, ps, v, ts, tree) = 
-  ( isType exp_arit "int")
+  (isType exp_arit "int")
 fun funcs_float_PROD_11_PRED (LP, RP, exp_arit, KW_TOFLOAT, ps, v, ts, tree) = 
-  ( isType exp_arit "int")
+  (isType exp_arit "int")
 fun funcs_list_PROD_1_PRED (LP, RP, exp_arit1, exp_arit2, KW_SUBS, val_list, COMMA1, COMMA2, ps, v, ts, tree) = 
-  ( (isType exp_arit1 "int") andalso (isType exp_arit2 "int"))
+  ((isType exp_arit1 "int") andalso (isType exp_arit2 "int"))
 fun exp_bool_PROD_3_PRED (rel_op, addExp1, addExp2, ps, v, ts, tree) = 
-  ( exprTypes addExp1 addExp2)
+  (exprTypes addExp1 addExp2)
 fun op_bool_PROD_1_PRED (AND, atom_bool1, atom_bool2, ps, v, ts, tree) = 
-  ( exprTypes atom_bool1 atom_bool2)
+  (exprTypes atom_bool1 atom_bool2)
 fun op_bool_PROD_2_PRED (OR, atom_bool1, atom_bool2, ps, v, ts, tree) = 
-  ( exprTypes atom_bool1 atom_bool2)
+  (exprTypes atom_bool1 atom_bool2)
 fun atom_string_PROD_1_PRED (ID, ps, v, ts, tree) = 
-  ( 
+  (
         AtomMap.inDomain(!v,Atom.atom ID) andalso (isType (valOf(AtomMap.find (!v, Atom.atom ID))) "string")
      )
 fun addExp_PROD_1_PRED (PLUS, multExp1, multExp2, ps, v, ts, tree) = 
-  ( exprTypes multExp1 multExp2)
+  (exprTypes multExp1 multExp2)
 fun addExp_PROD_2_PRED (multExp1, multExp2, MINUS, ps, v, ts, tree) = 
-  ( exprTypes multExp1 multExp2)
+  (exprTypes multExp1 multExp2)
 fun multExp_PROD_1_PRED (DIV, prefixExp1, prefixExp2, ps, v, ts, tree) = 
-  ( (isType prefixExp1 "float") andalso (isType prefixExp2 "float") andalso (exprTypes prefixExp1 prefixExp2))
+  ((isType prefixExp1 "float") andalso (isType prefixExp2 "float") andalso (exprTypes prefixExp1 prefixExp2))
 fun multExp_PROD_2_PRED (TIMES, prefixExp1, prefixExp2, ps, v, ts, tree) = 
-  ( exprTypes prefixExp1 prefixExp2)
+  (exprTypes prefixExp1 prefixExp2)
 fun ARGS_8 (d, STR, SEMI, KW_title, KW_variables, variables, KW_comands, ps, v, ts, tree) = 
   (!tree,true)
 fun ARGS_11 (SEMI, principal, atree, prints, ps, v, ts, tree) = 
@@ -459,20 +452,53 @@ fun ARGS_82 (exp_bool, KW_THEN, KW_IF, ps, v, ts, tree) =
   (nil,false)
 fun ARGS_83 (exp_bool, KW_ELSE, KW_THEN, commands1, KW_IF, ps, v, ts, tree) = 
   (nil,false)
-fun mkps_REFC() : (string list) ref = ref ( nil)
-fun mkv_REFC() : ((Grammar.tipo) AtomMap.map) ref = ref ( AtomMap.empty)
-fun mkts_REFC() : (string AtomMap.map) ref = ref ( AtomMap.empty)
-fun mktree_REFC() : (ParseTree.RoseTree) ref = ref ( nil)
-
-    end
+fun mkps_REFC() : (string list) ref = ref (nil)
+fun mkv_REFC() : ((Grammar.tipo) AtomMap.map) ref = ref (AtomMap.empty)
+fun mkts_REFC() : (string AtomMap.map) ref = ref (AtomMap.empty)
+fun mktree_REFC() : (ParseTree.RoseTree) ref = ref (nil)
+      end (* UserCode *)
 
     structure Err = AntlrErrHandler(
       structure Tok = Tok
       structure Lex = Lex)
-    structure EBNF = AntlrEBNF(struct
-			         type strm = Err.wstream
-			         val getSpan = Err.getSpan
-			       end)
+
+(* replace functor with inline structure for better optimization
+    structure EBNF = AntlrEBNF(
+      struct
+	type strm = Err.wstream
+	val getSpan = Err.getSpan
+      end)
+*)
+    structure EBNF =
+      struct
+	fun optional (pred, parse, strm) =
+	      if pred strm
+		then let
+		  val (y, span, strm') = parse strm
+		  in
+		    (SOME y, span, strm')
+		  end
+		else (NONE, Err.getSpan strm, strm)
+
+	fun closure (pred, parse, strm) = let
+	      fun iter (strm, (left, right), ys) =
+		    if pred strm
+		      then let
+			val (y, (_, right'), strm') = parse strm
+			in iter (strm', (left, right'), y::ys)
+			end
+		      else (List.rev ys, (left, right), strm)
+	      in
+		iter (strm, Err.getSpan strm, [])
+	      end
+
+	fun posclos (pred, parse, strm) = let
+	      val (y, (left, _), strm') = parse strm
+	      val (ys, (_, right), strm'') = closure (pred, parse, strm')
+	      in
+		(y::ys, (left, right), strm'')
+	      end
+      end
 
     fun mk lexFn = let
 val ps_REFC = UserCode.mkps_REFC()
@@ -486,272 +512,272 @@ fun unwrap (ret, strm, repairs) = (ret, strm, repairs, getS())
 	fun fail() = Err.failure eh
 	fun tryProds (strm, prods) = let
 	  fun try [] = fail()
-	    | try (prod :: prods) = 
-	        (Err.whileDisabled eh (fn() => prod strm)) 
+	    | try (prod :: prods) =
+	        (Err.whileDisabled eh (fn() => prod strm))
 		handle Err.ParseError => try (prods)
           in try prods end
-fun matchEOF strm = (case (lex(strm))
- of (Tok.EOF, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchCONCAT strm = (case (lex(strm))
- of (Tok.CONCAT, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_TOINT strm = (case (lex(strm))
- of (Tok.KW_TOINT, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_TOFLOAT strm = (case (lex(strm))
- of (Tok.KW_TOFLOAT, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_GETI strm = (case (lex(strm))
- of (Tok.KW_GETI, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchVOID strm = (case (lex(strm))
- of (Tok.VOID, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchTUPLE strm = (case (lex(strm))
- of (Tok.TUPLE(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_LINREG strm = (case (lex(strm))
- of (Tok.KW_LINREG, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_SUBS strm = (case (lex(strm))
- of (Tok.KW_SUBS, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_COV strm = (case (lex(strm))
- of (Tok.KW_COV, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_GETF strm = (case (lex(strm))
- of (Tok.KW_GETF, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_VAR strm = (case (lex(strm))
- of (Tok.KW_VAR, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_STDEV strm = (case (lex(strm))
- of (Tok.KW_STDEV, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_MEDIAN strm = (case (lex(strm))
- of (Tok.KW_MEDIAN, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_CORR strm = (case (lex(strm))
- of (Tok.KW_CORR, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_MEAN strm = (case (lex(strm))
- of (Tok.KW_MEAN, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_TOSTRING strm = (case (lex(strm))
- of (Tok.KW_TOSTRING, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_END strm = (case (lex(strm))
- of (Tok.KW_END, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_DO strm = (case (lex(strm))
- of (Tok.KW_DO, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_WHILE strm = (case (lex(strm))
- of (Tok.KW_WHILE, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_ELSE strm = (case (lex(strm))
- of (Tok.KW_ELSE, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_THEN strm = (case (lex(strm))
- of (Tok.KW_THEN, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_IF strm = (case (lex(strm))
- of (Tok.KW_IF, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_GETS strm = (case (lex(strm))
- of (Tok.KW_GETS, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchEMPTY strm = (case (lex(strm))
- of (Tok.EMPTY, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_PROD strm = (case (lex(strm))
- of (Tok.KW_PROD, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_SUM strm = (case (lex(strm))
- of (Tok.KW_SUM, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_terminate strm = (case (lex(strm))
- of (Tok.KW_terminate, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_endvars strm = (case (lex(strm))
- of (Tok.KW_endvars, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_Print strm = (case (lex(strm))
- of (Tok.KW_Print, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchSTR strm = (case (lex(strm))
- of (Tok.STR(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_comands strm = (case (lex(strm))
- of (Tok.KW_comands, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchDOTDOT strm = (case (lex(strm))
- of (Tok.DOTDOT, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchTIPO strm = (case (lex(strm))
- of (Tok.TIPO(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchSEMI strm = (case (lex(strm))
- of (Tok.SEMI, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_variables strm = (case (lex(strm))
- of (Tok.KW_variables, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchNEQ strm = (case (lex(strm))
- of (Tok.NEQ, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchGEQ strm = (case (lex(strm))
- of (Tok.GEQ, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchLEQ strm = (case (lex(strm))
- of (Tok.LEQ, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchLT strm = (case (lex(strm))
- of (Tok.LT, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchGT strm = (case (lex(strm))
- of (Tok.GT, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchSPACE strm = (case (lex(strm))
- of (Tok.SPACE, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchNOT strm = (case (lex(strm))
- of (Tok.NOT, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchOR strm = (case (lex(strm))
- of (Tok.OR, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchAND strm = (case (lex(strm))
- of (Tok.AND, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchBOOL strm = (case (lex(strm))
- of (Tok.BOOL(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchRP strm = (case (lex(strm))
- of (Tok.RP, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchLP strm = (case (lex(strm))
- of (Tok.LP, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchSBOOL strm = (case (lex(strm))
- of (Tok.SBOOL(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchCOMMA strm = (case (lex(strm))
- of (Tok.COMMA, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchMINUS strm = (case (lex(strm))
- of (Tok.MINUS, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchDIV strm = (case (lex(strm))
- of (Tok.DIV, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchTIMES strm = (case (lex(strm))
- of (Tok.TIMES, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchSFLOAT strm = (case (lex(strm))
- of (Tok.SFLOAT(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchEEQ strm = (case (lex(strm))
- of (Tok.EEQ, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchDOT strm = (case (lex(strm))
- of (Tok.DOT, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchPLUS strm = (case (lex(strm))
- of (Tok.PLUS, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchEQ strm = (case (lex(strm))
- of (Tok.EQ, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchSINT strm = (case (lex(strm))
- of (Tok.SINT(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchREAL strm = (case (lex(strm))
- of (Tok.REAL(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchNUM strm = (case (lex(strm))
- of (Tok.NUM(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchID strm = (case (lex(strm))
- of (Tok.ID(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchSSTRING strm = (case (lex(strm))
- of (Tok.SSTRING(x), span, strm') => (x, span, strm')
-  | _ => fail()
-(* end case *))
-fun matchKW_title strm = (case (lex(strm))
- of (Tok.KW_title, span, strm') => ((), span, strm')
+fun matchKW_let strm = (case (lex(strm))
+ of (Tok.KW_let, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
 fun matchKW_in strm = (case (lex(strm))
  of (Tok.KW_in, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
-fun matchKW_let strm = (case (lex(strm))
- of (Tok.KW_let, span, strm') => ((), span, strm')
+fun matchKW_title strm = (case (lex(strm))
+ of (Tok.KW_title, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchSSTRING strm = (case (lex(strm))
+ of (Tok.SSTRING(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchID strm = (case (lex(strm))
+ of (Tok.ID(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchNUM strm = (case (lex(strm))
+ of (Tok.NUM(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchREAL strm = (case (lex(strm))
+ of (Tok.REAL(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchSINT strm = (case (lex(strm))
+ of (Tok.SINT(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchEQ strm = (case (lex(strm))
+ of (Tok.EQ, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchPLUS strm = (case (lex(strm))
+ of (Tok.PLUS, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchDOT strm = (case (lex(strm))
+ of (Tok.DOT, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchEEQ strm = (case (lex(strm))
+ of (Tok.EEQ, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchSFLOAT strm = (case (lex(strm))
+ of (Tok.SFLOAT(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchTIMES strm = (case (lex(strm))
+ of (Tok.TIMES, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchDIV strm = (case (lex(strm))
+ of (Tok.DIV, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchMINUS strm = (case (lex(strm))
+ of (Tok.MINUS, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchCOMMA strm = (case (lex(strm))
+ of (Tok.COMMA, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchSBOOL strm = (case (lex(strm))
+ of (Tok.SBOOL(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchLP strm = (case (lex(strm))
+ of (Tok.LP, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchRP strm = (case (lex(strm))
+ of (Tok.RP, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchBOOL strm = (case (lex(strm))
+ of (Tok.BOOL(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchAND strm = (case (lex(strm))
+ of (Tok.AND, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchOR strm = (case (lex(strm))
+ of (Tok.OR, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchNOT strm = (case (lex(strm))
+ of (Tok.NOT, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchSPACE strm = (case (lex(strm))
+ of (Tok.SPACE, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchGT strm = (case (lex(strm))
+ of (Tok.GT, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchLT strm = (case (lex(strm))
+ of (Tok.LT, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchLEQ strm = (case (lex(strm))
+ of (Tok.LEQ, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchGEQ strm = (case (lex(strm))
+ of (Tok.GEQ, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchNEQ strm = (case (lex(strm))
+ of (Tok.NEQ, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_variables strm = (case (lex(strm))
+ of (Tok.KW_variables, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchSEMI strm = (case (lex(strm))
+ of (Tok.SEMI, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchTIPO strm = (case (lex(strm))
+ of (Tok.TIPO(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchDOTDOT strm = (case (lex(strm))
+ of (Tok.DOTDOT, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_comands strm = (case (lex(strm))
+ of (Tok.KW_comands, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchSTR strm = (case (lex(strm))
+ of (Tok.STR(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_Print strm = (case (lex(strm))
+ of (Tok.KW_Print, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_endvars strm = (case (lex(strm))
+ of (Tok.KW_endvars, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_terminate strm = (case (lex(strm))
+ of (Tok.KW_terminate, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_SUM strm = (case (lex(strm))
+ of (Tok.KW_SUM, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_PROD strm = (case (lex(strm))
+ of (Tok.KW_PROD, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchEMPTY strm = (case (lex(strm))
+ of (Tok.EMPTY, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_GETS strm = (case (lex(strm))
+ of (Tok.KW_GETS, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_IF strm = (case (lex(strm))
+ of (Tok.KW_IF, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_THEN strm = (case (lex(strm))
+ of (Tok.KW_THEN, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_ELSE strm = (case (lex(strm))
+ of (Tok.KW_ELSE, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_WHILE strm = (case (lex(strm))
+ of (Tok.KW_WHILE, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_DO strm = (case (lex(strm))
+ of (Tok.KW_DO, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_END strm = (case (lex(strm))
+ of (Tok.KW_END, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_TOSTRING strm = (case (lex(strm))
+ of (Tok.KW_TOSTRING, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_MEAN strm = (case (lex(strm))
+ of (Tok.KW_MEAN, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_CORR strm = (case (lex(strm))
+ of (Tok.KW_CORR, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_MEDIAN strm = (case (lex(strm))
+ of (Tok.KW_MEDIAN, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_STDEV strm = (case (lex(strm))
+ of (Tok.KW_STDEV, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_VAR strm = (case (lex(strm))
+ of (Tok.KW_VAR, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_GETF strm = (case (lex(strm))
+ of (Tok.KW_GETF, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_COV strm = (case (lex(strm))
+ of (Tok.KW_COV, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_SUBS strm = (case (lex(strm))
+ of (Tok.KW_SUBS, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_LINREG strm = (case (lex(strm))
+ of (Tok.KW_LINREG, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchTUPLE strm = (case (lex(strm))
+ of (Tok.TUPLE(x), span, strm') => (x, span, strm')
+  | _ => fail()
+(* end case *))
+fun matchVOID strm = (case (lex(strm))
+ of (Tok.VOID, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_GETI strm = (case (lex(strm))
+ of (Tok.KW_GETI, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_TOFLOAT strm = (case (lex(strm))
+ of (Tok.KW_TOFLOAT, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_TOINT strm = (case (lex(strm))
+ of (Tok.KW_TOINT, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchCONCAT strm = (case (lex(strm))
+ of (Tok.CONCAT, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchEOF strm = (case (lex(strm))
+ of (Tok.EOF, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
 
