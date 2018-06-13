@@ -2,28 +2,30 @@ structure ParseTree = struct
 
 open Grammar
 
-datatype Tree = Assign of (tipo AtomMap.map -> tipo AtomMap.map) * Tree 
-              | Print of string * Tree
-              | If of Tree * bool * Tree * Tree 
-              | While of Tree * bool * (Tree list) 
-              | Null
+datatype Tree = Assign of (tipo AtomMap.map -> tipo AtomMap.map)  
+              | Print of string
+              | If of bool * (Tree list) * (Tree list) 
+              | While of bool * (Tree list) 
 
-fun interpret(Print(s,t), am) = 
+type RoseTree = Tree list
+
+fun interpret(Print(s)::cs, am: tipo AtomMap.map): unit = 
     let 
         val _ = (print (s^ "\n")) 
     in 
-        interpret(t,am)
+        interpret(cs,am)
     end
-  | interpret(Assign(f,t), am) = 
+  | interpret(Assign(f)::cs, am: tipo AtomMap.map) = 
     let 
         val _ = (f am)
     in
-        interpret(t,am)
+        interpret(cs,am)
     end
-  | interpret(Null,am): unit = ()
-  | interpret(If(_,b,l,r),am) =
-    if b then
-        interpret(l,am)
-    else
-        interpret(r,am)
+  | interpret(If(b,l,r)::cs,am: tipo AtomMap.map) =
+        let 
+            val _ = if b then (interpret(l,am); print "Lula") else (interpret(r,am); print "Mito")
+        in
+            ()
+        end
+  | interpret(nil,am: tipo AtomMap.map) = ()
 end

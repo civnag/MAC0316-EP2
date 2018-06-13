@@ -78,18 +78,18 @@
 %refcell v : (Grammar.tipo) AtomMap.map = (AtomMap.empty);
 %refcell ts : string AtomMap.map = (AtomMap.empty);
 %refcell ps : string list = (nil);
-%refcell tree : ParseTree.Tree = (Null);
+%refcell tree : ParseTree.RoseTree = (nil);
 
 program(d)
     : KW_title STR SEMI
       KW_variables
       variables
       KW_comands
-      commands => ()
+      commands@(false) => ()
     ;
-commands
-    : prints SEMI commands? => (prints)
-    | assign SEMI commands?  => (assign)   
+commands(desvio)
+    : prints@(desvio) SEMI (commands@(desvio))? => (prints)
+    | assign SEMI (commands@(desvio))?  => (assign)   
     | conditional => (conditional)
     ;
 assign
@@ -97,7 +97,7 @@ assign
                         andalso (isType expr (valOf (AtomMap.find (!ts, Atom.atom ID))))) 
                         => (let 
                                 fun k w = Grammar.updateHt(w,Atom.atom ID,expr)
-                                val assi = ParseTree.Assign(fn(w)=> k(w),(!tree))
+                                val assi = (!tree) @ ([ParseTree.Assign(fn(w)=> k(w))])
                             in
                                 v := k(!v);
                                 tree:= assi;
@@ -121,10 +121,14 @@ val_list
     | SSTRING => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
     | ID => (valOf(AtomMap.find (!v, Atom.atom ID))) 
     ;
-prints
+prints(desvio)
    : KW_Print LP exp_string RP => (
             let 
-                val pr = ParseTree.Print(exp_string,(!tree))
+                val pr = 
+                    if desvio then 
+                        (!tree) @ [(ParseTree.Print(exp_string))] 
+                    else
+                        [(ParseTree.Print(exp_string))]
             in
                 ps := exp_string::(!ps);
                 tree := pr;
@@ -219,9 +223,9 @@ loop
     : KW_WHILE exp_bool KW_DO commands KW_END => ()
     ;
 conditional
-    : KW_IF exp_bool KW_THEN commands KW_ELSE commands KW_END => (
+    : KW_IF exp_bool KW_THEN commands@(true) KW_ELSE commands@(true) KW_END => (
         let 
-            val ifi = ParseTree.If((!tree),(getBool exp_bool),commands1,commands2)
+            val ifi = (!tree) @ [ParseTree.If((getBool exp_bool),nil @ commands1,nil @ commands2)] 
         in
             tree := ifi;
             ifi

@@ -24,7 +24,7 @@ struct
 			val _ = app doErr errs
 		in
 			List.app (fn(x) => print (x ^ "\n") ) (List.rev prints); print "\n Teste: \n";
-			ParseTree.interpret(ptree,AtomMap.empty)
+			ParseTree.interpret(ptree,vars) 
 		end
 
 	fun main (prog_name, args) =
