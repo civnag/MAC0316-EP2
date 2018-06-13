@@ -23,13 +23,13 @@ struct
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs
 		in
-			List.rev prints; 
+			List.rev prints;
 			ParseTree.interpret(ptree,vars)
 		end
 
-	fun main (prog_name, args) =
+	fun main (prog_name) =
     	let
-      		val _ = darwin (TextIO.openIn "lol")
+      		val _ = darwin (TextIO.openIn prog_name)
     	in
       		1
     	end

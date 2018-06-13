@@ -1,0 +1,11 @@
+title "Correlacao entre combustivel e quilometros rodados em automoveis";
+variables
+    sample of float quilometros;
+    sample of float consumo;
+    float correlacao;
+end variables
+commands
+    quilometros := {1233.0,1534.0,65363.0,3453.0};
+    consumo := {12.0,13.0,15.0,12.0};
+    correlacao := correlation(quilometros,consumo);
+    print("A correlacao e dada por: " ++ toString(correlacao));
