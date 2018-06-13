@@ -11,16 +11,7 @@ datatype tipo_primitivo = Int_ of int
                         | Float_ of real
                         | Boolean_ of bool
 
-datatype tipo = Tupla2 of tipo * tipo
-              | Tupla3 of tipo * tipo * tipo
-              | Tupla4 of tipo * tipo * tipo * tipo
-              | Tupla5 of tipo * tipo * tipo * tipo * tipo
-              | Tupla6 of tipo * tipo * tipo * tipo * tipo * tipo
-              | Tupla7 of tipo * tipo * tipo * tipo * tipo * tipo * tipo
-              | Tupla8 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
-              | Tupla9 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
-              | Tupla0 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
-              | Sample of (tipo list)
+datatype tipo = Sample of (tipo list)
               | Primitivo of tipo_primitivo
               | Void
 
@@ -55,23 +46,6 @@ fun show (Primitivo(Int_ i)) = Int.toString i
     | show (Primitivo(String_ s)) = s
     | show (Primitivo(Boolean_ b)) = Bool.toString b
     | show (Primitivo(Float_ b)) = Real.toString b
-    | show (Tupla2 (a,b)) = "(" ^ show a ^ "," ^ show b ^ ")"
-    | show (Tupla3 (a,b,c)) =
-        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ ")"
-    | show (Tupla4 (a,b,c,d)) =
-        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ ")"
-    | show (Tupla5 (a,b,c,d,e)) =
-        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ ")"
-    | show (Tupla6 (a,b,c,d,e,f)) =
-        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ ")"
-    | show (Tupla7 (a,b,c,d,e,f,g)) =
-        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ "," ^ show g ^ ")"
-    | show (Tupla8 (a,b,c,d,e,f,g,h)) =
-        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ "," ^ show g ^ "," ^ show h ^")"
-    | show (Tupla9 (a,b,c,d,e,f,g,h,i)) =
-        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ "," ^ show g ^ "," ^ show h ^ "," ^ show i ^ ")"
-    | show (Tupla0 (a,b,c,d,e,f,g,h,i,j)) =
-        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ "," ^ show g ^ "," ^ show h ^ "," ^ show i ^ "," ^ show j ^")"
     | show (Sample nil) = "[]"
     | show (Sample (x::xs)) = (show x) ^ "," ^ String.concat(List.map show xs)
     | show _ = "null"
@@ -124,30 +98,6 @@ fun typeof (Primitivo(Float_ _)) = "float"
     | typeof (Primitivo(Int_ _)) = "int"
     | typeof (Primitivo(Boolean_ _)) = "boolean"
     | typeof (Primitivo(String_ _)) = "string"
-    | typeof (Tupla2 (a,b)) = "tuple(" ^ typeof a ^ "," ^ typeof b ^ ")"
-    | typeof (Tupla3 (a,b,c)) = "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ ")"
-    | typeof (Tupla4 (a,b,c,d)) =
-        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ ")"
-    | typeof (Tupla5 (a,b,c,d,e)) =
-        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^")"
-    | typeof (Tupla6 (a,b,c,d,e,f)) =
-        "tuple(" ^ typeof a ^ "," ^ typeof b ^ ","
-            ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," ^ typeof f ^")"
-    | typeof (Tupla7 (a,b,c,d,e,f,g)) =
-        "tuple(" ^ typeof a ^ "," ^ typeof b ^ ","
-            ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," ^ typeof f ^"," ^ typeof g ^")"
-    | typeof (Tupla8 (a,b,c,d,e,f,g,h)) =
-        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^","
-            ^ typeof f ^"," ^ typeof g ^"," ^ typeof h ^")"
-    | typeof (Tupla9 (a,b,c,d,e,f,g,h,i)) =
-        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c
-            ^ "," ^ typeof d ^ "," ^ typeof e ^","
-            ^ typeof f ^"," ^ typeof g ^","
-            ^ typeof h ^"," ^ typeof i ^")"
-    | typeof (Tupla0 (a,b,c,d,e,f,g,h,i,j)) =
-        "tuple(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^ ","
-            ^ typeof f ^ "," ^ typeof g ^"," ^ typeof h ^","
-            ^ typeof i ^"," ^ typeof j ^")"
     | typeof (Sample nil) = "[]"
     | typeof (Sample (x::_)) = "sample of " ^ (typeof x)
     | typeof _ = "null"

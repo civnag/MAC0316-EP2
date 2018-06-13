@@ -62,7 +62,6 @@ structure DarwinTokens =
       | KW_COV
       | KW_SUBS
       | KW_LINREG
-      | TUPLE of Grammar.tipo
       | VOID
       | KW_GETI
       | KW_TOFLOAT
@@ -135,7 +134,6 @@ structure DarwinTokens =
   | (KW_COV) => "covariance"
   | (KW_SUBS) => "subSample"
   | (KW_LINREG) => "linearRegression"
-  | (TUPLE(_)) => "TUPLE"
   | (VOID) => "void"
   | (KW_GETI) => "getInt"
   | (KW_TOFLOAT) => "toFloat"
@@ -206,7 +204,6 @@ structure DarwinTokens =
   | (KW_COV) => true
   | (KW_SUBS) => true
   | (KW_LINREG) => true
-  | (TUPLE(_)) => false
   | (VOID) => false
   | (KW_GETI) => true
   | (KW_TOFLOAT) => true
@@ -774,10 +771,6 @@ fun matchKW_SUBS strm = (case (lex(strm))
 (* end case *))
 fun matchKW_LINREG strm = (case (lex(strm))
  of (Tok.KW_LINREG, span, strm') => ((), span, strm')
-  | _ => fail()
-(* end case *))
-fun matchTUPLE strm = (case (lex(strm))
- of (Tok.TUPLE(x), span, strm') => (x, span, strm')
   | _ => fail()
 (* end case *))
 fun matchVOID strm = (case (lex(strm))

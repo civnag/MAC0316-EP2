@@ -8,18 +8,15 @@
 %let id = {alpha}({alpha} | {digit} | "_")*;
 %let str = ["]{alphaChars}["];
 %let primitivo = ("int"|"string"|"boolean"|"float");
-%let tuple = "tuple" "(" ({primitivo} ("," {primitivo}){1,9} ")" );
-%let lista = ("sample of "({primitivo}|{tuple}));
-%let tipo = ({primitivo}|{tuple}|{lista});
+%let lista = ("sample of "({primitivo}));
+%let tipo = ({primitivo}|{lista});
 %let float = {int}["."]({digit}+|{digit}+("e"|"E"){int});
 %let valPrim = ({int} | {str} | {booleano} | {float});
-%let tupleVal = ( "(" {valPrim} ("," {valPrim}){1,9} ")" );
 %let empty = "{}";
 %let intList = ({empty} | "{" {int} ("," {int})* "}" );
 %let floatList = ({empty} | "{" {float} ("," {float})* "}" );
 %let booleanList = ({empty} | "{" {booleano} ("," {booleano})* "}" );
 %let strList = ({empty} | "{" {str} ("," {str})* "}" );
-%let tupleList = ({empty} | "{" {tupleVal} ("," {tupleVal})* "}" );
 %defs (
     structure T = DarwinTokens
     type lex_result = T.token

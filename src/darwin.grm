@@ -41,7 +41,7 @@
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
     | KW_VAR("variance") | KW_RT("rt") | KW_POW("pow") | KW_GETF("getFloat") | KW_COV("covariance") | KW_SUBS("subSample")
-    | KW_LINREG("linearRegression") | TUPLE of Grammar.tipo | VOID("void")
+    | KW_LINREG("linearRegression") | VOID("void")
     | KW_GETI("getInt") | KW_TOFLOAT("toFloat") | KW_TOINT("toInt") | CONCAT("++")
     ;
 %keywords
