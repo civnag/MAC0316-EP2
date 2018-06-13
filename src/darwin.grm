@@ -40,7 +40,7 @@
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
-    | KW_VAR("variance") | KW_POW("pow") | KW_GETF("getFloat") | KW_COV("covariance") | KW_SUBS("subSample")
+    | KW_VAR("variance") | KW_RT("rt") | KW_POW("pow") | KW_GETF("getFloat") | KW_COV("covariance") | KW_SUBS("subSample")
     | KW_LINREG("linearRegression") | TUPLE of Grammar.tipo | VOID("void")
     | KW_GETI("getInt") | KW_TOFLOAT("toFloat") | KW_TOINT("toInt") | CONCAT("++")
     ;
@@ -65,6 +65,7 @@
     KW_STDEV,
     KW_VAR,
     KW_POW,
+    KW_RT,
     KW_GETF,
     KW_COV,
     KW_LINREG,
@@ -179,9 +180,9 @@ int_list
     | SINT => (SINT)
     ;
 exp_bool
-    : %try op_bool
+    : %try addExp rel_op addExp %where (exprTypes addExp1 addExp2) => (Grammar.oper(rel_op,addExp1,addExp2))
+    | %try op_bool
     | %try atom_bool
-    | %try addExp rel_op addExp %where (exprTypes addExp1 addExp2) => (Grammar.oper(rel_op,addExp1,addExp2))
     ;
 op_bool
     : %try atom_bool AND atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
@@ -248,6 +249,8 @@ multExp
 powExp
     : %try KW_POW LP prefixExp COMMA prefixExp RP %where ((isType prefixExp1 "float") andalso (isType prefixExp2 "float"))
         => (Grammar.oper("pow",prefixExp1,prefixExp2))
+    | %try KW_RT LP prefixExp COMMA prefixExp RP %where ((isType prefixExp1 "float") andalso (isType prefixExp2 "float"))
+        => (Grammar.oper("rt",prefixExp1,prefixExp2))
     | %try atomicExp
     ;
 

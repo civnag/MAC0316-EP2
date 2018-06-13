@@ -48,6 +48,7 @@
 "linearRegression" => (T.KW_LINREG);
 "covariance" => (T.KW_COV);
 "pow" => (T.KW_POW);
+"rt" => (T.KW_RT);
 "void" => ( T.VOID );
 "if" => ( T.KW_IF );
 "then" => ( T.KW_THEN );

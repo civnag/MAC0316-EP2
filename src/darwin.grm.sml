@@ -56,6 +56,7 @@ structure DarwinTokens =
       | KW_MEDIAN
       | KW_STDEV
       | KW_VAR
+      | KW_RT
       | KW_POW
       | KW_GETF
       | KW_COV
@@ -69,7 +70,7 @@ structure DarwinTokens =
       | CONCAT
       | EOF
     val allToks = [
-            KW_let, KW_in, KW_title, EQ, PLUS, DOT, EEQ, TIMES, DIV, MINUS, COMMA, LP, RP, AND, OR, NOT, SPACE, GT, LT, LEQ, GEQ, NEQ, KW_variables, SEMI, DOTDOT, KW_comands, KW_Print, KW_endvars, KW_terminate, KW_SUM, KW_PROD, EMPTY, KW_GETS, KW_IF, KW_THEN, KW_ELSE, KW_WHILE, KW_DO, KW_END, KW_TOSTRING, KW_MEAN, KW_CORR, KW_MEDIAN, KW_STDEV, KW_VAR, KW_POW, KW_GETF, KW_COV, KW_SUBS, KW_LINREG, VOID, KW_GETI, KW_TOFLOAT, KW_TOINT, CONCAT, EOF
+            KW_let, KW_in, KW_title, EQ, PLUS, DOT, EEQ, TIMES, DIV, MINUS, COMMA, LP, RP, AND, OR, NOT, SPACE, GT, LT, LEQ, GEQ, NEQ, KW_variables, SEMI, DOTDOT, KW_comands, KW_Print, KW_endvars, KW_terminate, KW_SUM, KW_PROD, EMPTY, KW_GETS, KW_IF, KW_THEN, KW_ELSE, KW_WHILE, KW_DO, KW_END, KW_TOSTRING, KW_MEAN, KW_CORR, KW_MEDIAN, KW_STDEV, KW_VAR, KW_RT, KW_POW, KW_GETF, KW_COV, KW_SUBS, KW_LINREG, VOID, KW_GETI, KW_TOFLOAT, KW_TOINT, CONCAT, EOF
            ]
     fun toString tok =
 (case (tok)
@@ -128,6 +129,7 @@ structure DarwinTokens =
   | (KW_MEDIAN) => "median"
   | (KW_STDEV) => "stdDeviation"
   | (KW_VAR) => "variance"
+  | (KW_RT) => "rt"
   | (KW_POW) => "pow"
   | (KW_GETF) => "getFloat"
   | (KW_COV) => "covariance"
@@ -198,6 +200,7 @@ structure DarwinTokens =
   | (KW_MEDIAN) => true
   | (KW_STDEV) => true
   | (KW_VAR) => true
+  | (KW_RT) => true
   | (KW_POW) => true
   | (KW_GETF) => true
   | (KW_COV) => true
@@ -348,7 +351,7 @@ fun int_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos
   (List.map getInt (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
 fun int_list_PROD_2_ACT (SINT, SINT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   (SINT)
-fun exp_bool_PROD_3_ACT (rel_op, addExp1, addExp2, rel_op_SPAN : (Lex.pos * Lex.pos), addExp1_SPAN : (Lex.pos * Lex.pos), addExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
+fun exp_bool_PROD_1_ACT (rel_op, addExp1, addExp2, rel_op_SPAN : (Lex.pos * Lex.pos), addExp1_SPAN : (Lex.pos * Lex.pos), addExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   (Grammar.oper(rel_op,addExp1,addExp2))
 fun op_bool_PROD_1_ACT (AND, atom_bool1, atom_bool2, AND_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
@@ -399,6 +402,8 @@ fun multExp_PROD_2_ACT (TIMES, powExp1, powExp2, TIMES_SPAN : (Lex.pos * Lex.pos
   ( Grammar.oper("*",powExp1,powExp2) )
 fun powExp_PROD_1_ACT (LP, RP, COMMA, prefixExp1, prefixExp2, KW_POW, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), KW_POW_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   (Grammar.oper("pow",prefixExp1,prefixExp2))
+fun powExp_PROD_2_ACT (LP, RP, COMMA, KW_RT, prefixExp1, prefixExp2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), KW_RT_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
+  (Grammar.oper("rt",prefixExp1,prefixExp2))
 fun prefixExp_PROD_2_ACT (MINUS, prefixExp, MINUS_SPAN : (Lex.pos * Lex.pos), prefixExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
   ( Grammar.oper("neg",prefixExp,prefixExp) )
 fun atomicExp_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps, v, ts, tree) = 
@@ -427,7 +432,7 @@ fun funcs_float_PROD_12_PRED (LP, RP, exp_arit, KW_TOFLOAT, ps, v, ts, tree) =
   (isType exp_arit "int")
 fun funcs_list_PROD_1_PRED (LP, RP, exp_arit1, exp_arit2, KW_SUBS, val_list, COMMA1, COMMA2, ps, v, ts, tree) = 
   ((isType exp_arit1 "int") andalso (isType exp_arit2 "int"))
-fun exp_bool_PROD_3_PRED (rel_op, addExp1, addExp2, ps, v, ts, tree) = 
+fun exp_bool_PROD_1_PRED (rel_op, addExp1, addExp2, ps, v, ts, tree) = 
   (exprTypes addExp1 addExp2)
 fun op_bool_PROD_1_PRED (AND, atom_bool1, atom_bool2, ps, v, ts, tree) = 
   (exprTypes atom_bool1 atom_bool2)
@@ -446,6 +451,8 @@ fun multExp_PROD_1_PRED (DIV, powExp1, powExp2, ps, v, ts, tree) =
 fun multExp_PROD_2_PRED (TIMES, powExp1, powExp2, ps, v, ts, tree) = 
   (exprTypes powExp1 powExp2)
 fun powExp_PROD_1_PRED (LP, RP, COMMA, prefixExp1, prefixExp2, KW_POW, ps, v, ts, tree) = 
+  ((isType prefixExp1 "float") andalso (isType prefixExp2 "float"))
+fun powExp_PROD_2_PRED (LP, RP, COMMA, KW_RT, prefixExp1, prefixExp2, ps, v, ts, tree) = 
   ((isType prefixExp1 "float") andalso (isType prefixExp2 "float"))
 fun ARGS_8 (d, STR, SEMI, KW_title, KW_variables, variables, KW_comands, ps, v, ts, tree) = 
   (!tree,true)
@@ -745,6 +752,10 @@ fun matchKW_VAR strm = (case (lex(strm))
  of (Tok.KW_VAR, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
+fun matchKW_RT strm = (case (lex(strm))
+ of (Tok.KW_RT, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
 fun matchKW_POW strm = (case (lex(strm))
  of (Tok.KW_POW, span, strm') => ((), span, strm')
   | _ => fail()
@@ -841,6 +852,8 @@ fun addExp_NT (strm) = let
               tryProds(strm, [addExp_PROD_1, addExp_PROD_2, addExp_PROD_3])
           | (Tok.LP, _, strm') =>
               tryProds(strm, [addExp_PROD_1, addExp_PROD_2, addExp_PROD_3])
+          | (Tok.KW_RT, _, strm') =>
+              tryProds(strm, [addExp_PROD_1, addExp_PROD_2, addExp_PROD_3])
           | (Tok.KW_POW, _, strm') =>
               tryProds(strm, [addExp_PROD_1, addExp_PROD_2, addExp_PROD_3])
           | _ => fail()
@@ -891,6 +904,8 @@ and multExp_NT (strm) = let
               tryProds(strm, [multExp_PROD_1, multExp_PROD_2, multExp_PROD_3])
           | (Tok.LP, _, strm') =>
               tryProds(strm, [multExp_PROD_1, multExp_PROD_2, multExp_PROD_3])
+          | (Tok.KW_RT, _, strm') =>
+              tryProds(strm, [multExp_PROD_1, multExp_PROD_2, multExp_PROD_3])
           | (Tok.KW_POW, _, strm') =>
               tryProds(strm, [multExp_PROD_1, multExp_PROD_2, multExp_PROD_3])
           | _ => fail()
@@ -915,6 +930,23 @@ and powExp_NT (strm) = let
                 else fail()
             end
       fun powExp_PROD_2 (strm) = let
+            val (KW_RT_RES, KW_RT_SPAN, strm') = matchKW_RT(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (prefixExp1_RES, prefixExp1_SPAN, strm') = prefixExp_NT(strm')
+            val (COMMA_RES, COMMA_SPAN, strm') = matchCOMMA(strm')
+            val (prefixExp2_RES, prefixExp2_SPAN, strm') = prefixExp_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            in
+              if (UserCode.powExp_PROD_2_PRED (LP_RES, RP_RES, COMMA_RES, KW_RT_RES, prefixExp1_RES, prefixExp2_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC))
+                then let
+                  val FULL_SPAN = (#1(KW_RT_SPAN), #2(RP_SPAN))
+                  in
+                    (UserCode.powExp_PROD_2_ACT (LP_RES, RP_RES, COMMA_RES, KW_RT_RES, prefixExp1_RES, prefixExp2_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), KW_RT_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
+                      FULL_SPAN, strm')
+                  end
+                else fail()
+            end
+      fun powExp_PROD_3 (strm) = let
             val (atomicExp_RES, atomicExp_SPAN, strm') = atomicExp_NT(strm)
             val FULL_SPAN = (#1(atomicExp_SPAN), #2(atomicExp_SPAN))
             in
@@ -922,11 +954,12 @@ and powExp_NT (strm) = let
             end
       in
         (case (lex(strm))
-         of (Tok.ID(_), _, strm') => powExp_PROD_2(strm)
-          | (Tok.NUM(_), _, strm') => powExp_PROD_2(strm)
-          | (Tok.REAL(_), _, strm') => powExp_PROD_2(strm)
-          | (Tok.LP, _, strm') => powExp_PROD_2(strm)
+         of (Tok.ID(_), _, strm') => powExp_PROD_3(strm)
+          | (Tok.NUM(_), _, strm') => powExp_PROD_3(strm)
+          | (Tok.REAL(_), _, strm') => powExp_PROD_3(strm)
+          | (Tok.LP, _, strm') => powExp_PROD_3(strm)
           | (Tok.KW_POW, _, strm') => powExp_PROD_1(strm)
+          | (Tok.KW_RT, _, strm') => powExp_PROD_2(strm)
           | _ => fail()
         (* end case *))
       end
@@ -992,6 +1025,7 @@ and exp_arit_NT (strm) = let
               tryProds(strm, [exp_arit_PROD_1, exp_arit_PROD_2])
           | (Tok.LP, _, strm') =>
               tryProds(strm, [exp_arit_PROD_1, exp_arit_PROD_2])
+          | (Tok.KW_RT, _, strm') => exp_arit_PROD_1(strm)
           | (Tok.KW_POW, _, strm') => exp_arit_PROD_1(strm)
           | _ => fail()
         (* end case *))
@@ -1077,36 +1111,37 @@ fun rel_op_NT (strm) = let
       end
 fun exp_bool_NT (strm) = let
       fun exp_bool_PROD_1 (strm) = let
+            val (addExp1_RES, addExp1_SPAN, strm') = addExp_NT(strm)
+            val (rel_op_RES, rel_op_SPAN, strm') = rel_op_NT(strm')
+            val (addExp2_RES, addExp2_SPAN, strm') = addExp_NT(strm')
+            in
+              if (UserCode.exp_bool_PROD_1_PRED (rel_op_RES, addExp1_RES, addExp2_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC))
+                then let
+                  val FULL_SPAN = (#1(addExp1_SPAN), #2(addExp2_SPAN))
+                  in
+                    (UserCode.exp_bool_PROD_1_ACT (rel_op_RES, addExp1_RES, addExp2_RES, rel_op_SPAN : (Lex.pos * Lex.pos), addExp1_SPAN : (Lex.pos * Lex.pos), addExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
+                      FULL_SPAN, strm')
+                  end
+                else fail()
+            end
+      fun exp_bool_PROD_2 (strm) = let
             val (op_bool_RES, op_bool_SPAN, strm') = op_bool_NT(strm)
             val FULL_SPAN = (#1(op_bool_SPAN), #2(op_bool_SPAN))
             in
               ((op_bool_RES), FULL_SPAN, strm')
             end
-      fun exp_bool_PROD_2 (strm) = let
+      fun exp_bool_PROD_3 (strm) = let
             val (atom_bool_RES, atom_bool_SPAN, strm') = atom_bool_NT(strm)
             val FULL_SPAN = (#1(atom_bool_SPAN), #2(atom_bool_SPAN))
             in
               ((atom_bool_RES), FULL_SPAN, strm')
             end
-      fun exp_bool_PROD_3 (strm) = let
-            val (addExp1_RES, addExp1_SPAN, strm') = addExp_NT(strm)
-            val (rel_op_RES, rel_op_SPAN, strm') = rel_op_NT(strm')
-            val (addExp2_RES, addExp2_SPAN, strm') = addExp_NT(strm')
-            in
-              if (UserCode.exp_bool_PROD_3_PRED (rel_op_RES, addExp1_RES, addExp2_RES, ps_REFC, v_REFC, ts_REFC, tree_REFC))
-                then let
-                  val FULL_SPAN = (#1(addExp1_SPAN), #2(addExp2_SPAN))
-                  in
-                    (UserCode.exp_bool_PROD_3_ACT (rel_op_RES, addExp1_RES, addExp2_RES, rel_op_SPAN : (Lex.pos * Lex.pos), addExp1_SPAN : (Lex.pos * Lex.pos), addExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ps_REFC, v_REFC, ts_REFC, tree_REFC),
-                      FULL_SPAN, strm')
-                  end
-                else fail()
-            end
       in
         (case (lex(strm))
-         of (Tok.NUM(_), _, strm') => exp_bool_PROD_3(strm)
-          | (Tok.REAL(_), _, strm') => exp_bool_PROD_3(strm)
-          | (Tok.KW_POW, _, strm') => exp_bool_PROD_3(strm)
+         of (Tok.NUM(_), _, strm') => exp_bool_PROD_1(strm)
+          | (Tok.REAL(_), _, strm') => exp_bool_PROD_1(strm)
+          | (Tok.KW_RT, _, strm') => exp_bool_PROD_1(strm)
+          | (Tok.KW_POW, _, strm') => exp_bool_PROD_1(strm)
           | (Tok.ID(_), _, strm') =>
               tryProds(strm, [exp_bool_PROD_1, exp_bool_PROD_2,
                 exp_bool_PROD_3])
@@ -1114,7 +1149,7 @@ fun exp_bool_NT (strm) = let
               tryProds(strm, [exp_bool_PROD_1, exp_bool_PROD_2,
                 exp_bool_PROD_3])
           | (Tok.BOOL(_), _, strm') =>
-              tryProds(strm, [exp_bool_PROD_1, exp_bool_PROD_2])
+              tryProds(strm, [exp_bool_PROD_2, exp_bool_PROD_3])
           | _ => fail()
         (* end case *))
       end
@@ -1610,6 +1645,7 @@ fun expr_NT (strm) = let
               tryProds(strm, [expr_PROD_1, expr_PROD_2])
           | (Tok.REAL(_), _, strm') =>
               tryProds(strm, [expr_PROD_1, expr_PROD_2])
+          | (Tok.KW_RT, _, strm') => tryProds(strm, [expr_PROD_1, expr_PROD_2])
           | (Tok.KW_POW, _, strm') =>
               tryProds(strm, [expr_PROD_1, expr_PROD_2])
           | (Tok.ID(_), _, strm') =>
