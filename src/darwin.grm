@@ -40,7 +40,7 @@
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
-    | KW_VAR("variance") | KW_GETF("getFloat") | KW_COV("covariance") | KW_SUBS("subSample")
+    | KW_VAR("variance") | KW_POW("pow") | KW_GETF("getFloat") | KW_COV("covariance") | KW_SUBS("subSample")
     | KW_LINREG("linearRegression") | TUPLE of Grammar.tipo | VOID("void")
     | KW_GETI("getInt") | KW_TOFLOAT("toFloat") | KW_TOINT("toInt") | CONCAT("++")
     ;
@@ -64,6 +64,7 @@
     KW_MEDIAN,
     KW_STDEV,
     KW_VAR,
+    KW_POW,
     KW_GETF,
     KW_COV,
     KW_LINREG,
@@ -238,12 +239,18 @@ addExp
     | %try multExp
     ;
 multExp
-    : %try prefixExp DIV prefixExp %where ((isType prefixExp1 "float") andalso (isType prefixExp2 "float") andalso (exprTypes prefixExp1 prefixExp2))
-        => ( Grammar.oper("/",prefixExp1,prefixExp2) )
-    | %try prefixExp TIMES prefixExp %where (exprTypes prefixExp1 prefixExp2)
-        => ( Grammar.oper("*",prefixExp1,prefixExp2) )
+    : %try powExp DIV powExp %where ((isType powExp1 "float") andalso (isType powExp2 "float") andalso (exprTypes powExp1 powExp2))
+        => ( Grammar.oper("/",powExp1,powExp2) )
+    | %try powExp TIMES powExp %where (exprTypes powExp1 powExp2)
+        => ( Grammar.oper("*",powExp1,powExp2) )
+    | %try powExp
+    ;
+powExp
+    : %try KW_POW LP prefixExp COMMA prefixExp RP %where ((isType prefixExp1 "float") andalso (isType prefixExp2 "float"))
+        => (Grammar.oper("pow",prefixExp1,prefixExp2))
     | %try atomicExp
     ;
+
 prefixExp
     : atomicExp
     | "-" prefixExp

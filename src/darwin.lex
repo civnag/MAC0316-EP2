@@ -9,7 +9,7 @@
 %let str = ["]{alphaChars}["];
 %let primitivo = ("int"|"string"|"boolean"|"float");
 %let tuple = "tuple" "(" ({primitivo} ("," {primitivo}){1,9} ")" );
-%let lista = ("sample of "({primitivo}|{tuple}));  
+%let lista = ("sample of "({primitivo}|{tuple}));
 %let tipo = ({primitivo}|{tuple}|{lista});
 %let float = {int}["."]({digit}+|{digit}+("e"|"E"){int});
 %let valPrim = ({int} | {str} | {booleano} | {float});
@@ -47,6 +47,7 @@
 "subSample" => ( T.KW_SUBS );
 "linearRegression" => (T.KW_LINREG);
 "covariance" => (T.KW_COV);
+"pow" => (T.KW_POW);
 "void" => ( T.VOID );
 "if" => ( T.KW_IF );
 "then" => ( T.KW_THEN );
@@ -87,6 +88,6 @@
 "," => ( T.COMMA );
 ":=" => ( T.DOTDOT );
 " " | \n | \t  => ( continue() );
-"terminate"   => ( T.KW_terminate ); 
+"terminate"   => ( T.KW_terminate );
 .		=> (print (concat ["Unexpected character: '", yytext,
 			           "'\n"]); continue());
