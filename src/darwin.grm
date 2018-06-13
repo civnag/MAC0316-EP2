@@ -123,7 +123,7 @@ val_list
 prints(auxtree,principal)
    : KW_Print LP exp_string RP => (
             let
-                val _ = if principal then 
+                val _ = if principal then
                     (tree := (!tree) @ [(ParseTree.Print(exp_string))]) else ()
             in
                 ps := exp_string::(!ps);
@@ -154,6 +154,7 @@ funcs_float
     | KW_CORR LP float_list COMMA float_list RP => (Statistics.correlation(float_list1, float_list2))
     | KW_STDEV LP float_list RP => (Statistics.standardDeviation(float_list))
     | KW_MEDIAN LP float_list RP => (Statistics.median(float_list))
+    | KW_VAR LP float_list RP => (Statistics.variance(float_list))
     | KW_COV LP float_list COMMA float_list RP => (Statistics.covariance(float_list1, float_list2))
     | KW_GETF LP float_list COMMA exp_arit RP %where (isType exp_arit "int")
         => (List.nth(float_list,getInt exp_arit))
