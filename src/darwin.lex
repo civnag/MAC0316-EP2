@@ -25,7 +25,7 @@
 
 "variables" => ( T.KW_variables );
 "title" => ( T.KW_title );
-"commands" => ( T.KW_comands );
+"commands" => ( T.KW_commands );
 "print" => ( T.KW_Print );
 "sum" => ( T.KW_SUM );
 "prod" => ( T.KW_PROD );

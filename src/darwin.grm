@@ -3,12 +3,6 @@
 %defs (
     open ParseTree
 
-    fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0))
-      | insere(hm,n,"string") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.String_ ""))
-      | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Float_ 0.0))
-      | insere(hm,n,"boolean") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Boolean_ false))
-      | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Void)
-
     fun getInt x = (Grammar.extractInt x)
     fun getFloat x = (Grammar.extractFloat x)
     fun getString x = (Grammar.extractString x)
@@ -34,7 +28,7 @@
     | LP ("(") | RP (")") | BOOL of bool | AND ("&&") | OR ("||") | NOT("!")
     | SPACE (" ") | GT(">") | LT("<") | LEQ("<=") | GEQ(">=") | NEQ("!=")
     | KW_variables ("variables") | SEMI | TIPO of string | DOTDOT(":=")
-    | KW_comands ("commands") | STR of string | KW_Print ("print")
+    | KW_commands ("commands") | STR of string | KW_Print ("print")
     | KW_endvars ("end variables") | KW_terminate ("terminate")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") | KW_GETS("getString")
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
@@ -47,7 +41,7 @@
 %keywords
     KW_variables,
     KW_title,
-    KW_comands,
+    KW_commands,
     KW_endvars,
     KW_terminate,
     KW_IF,
@@ -76,133 +70,100 @@
     KW_TOINT
     ;
 
-%refcell v : (Grammar.tipo) AtomMap.map = (AtomMap.empty);
-%refcell ts : string AtomMap.map = (AtomMap.empty);
-%refcell ps : string list = (nil);
-%refcell tree : ParseTree.RoseTree = (nil);
-
-program(d)
+program
     : KW_title STR SEMI
       KW_variables
       variables
-      KW_comands
-      commands@(!tree,true) => ()
+      KW_commands
+      (commands)* => ()
     ;
-commands(atree,principal)
-    : prints@(atree,principal) SEMI (commands@(atree,principal))? => (prints)
-    | assign SEMI (commands@(atree,principal))?  => (assign)
-    | conditional (commands@(atree,principal))? => (conditional)
+commands
+    : prints SEMI  => ()
+    | assign SEMI  => ()
+    | conditional  => ()
     ;
 assign
-    : ID DOTDOT expr %where (AtomMap.inDomain(!v,Atom.atom ID)
-                        andalso (isType expr (valOf (AtomMap.find (!ts, Atom.atom ID)))))
-                        => (let
-                                fun k w = Grammar.updateHt(w,Atom.atom ID,expr)
-                                val assi = (!tree) @ ([ParseTree.Assign(fn(w)=> k(w))])
-                            in
-                                v := k(!v);
-                                tree:= assi;
-                                assi
-                            end)
+    : ID DOTDOT expr => ()
     ;
 expr
-    : %try exp_arit => (exp_arit)
-    | %try exp_bool => (exp_bool)
-    | %try exp_string => (Grammar.Primitivo (Grammar.String_ exp_string))
-    | %try funcs_float => (Grammar.Primitivo (Grammar.Float_ funcs_float))
-    | %try funcs_int => (Grammar.Primitivo (Grammar.Int_ funcs_int))
-    | %try funcs_string => (Grammar.Primitivo (Grammar.String_ funcs_string))
-    | %try funcs_list => (funcs_list)
-    | %try val_list => (val_list)
+    : %try exp_arit => ()
+    | %try exp_bool => ()
+    | %try exp_string => ()
+    | %try funcs_float => ()
+    | %try funcs_int => ()
+    | %try funcs_string => ()
+    | %try funcs_list => ()
+    | %try val_list => ()
     ;
 val_list
-    : SINT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Int_ x)) SINT) )
-    | SFLOAT => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Float_ x)) SFLOAT) )
-    | SBOOL => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Boolean_ x)) SBOOL) )
-    | SSTRING => ( Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.String_ x)) SSTRING) )
-    | ID => (valOf(AtomMap.find (!v, Atom.atom ID)))
+    : SINT => ()
+    | SFLOAT => ()
+    | SBOOL => ()
+    | SSTRING => ()
+    | ID => ()
     ;
-prints(auxtree,principal)
-   : KW_Print LP exp_string RP => (
-            let
-                val _ = if principal then
-                    (tree := (!tree) @ [(ParseTree.Print(exp_string))]) else ()
-            in
-                ps := exp_string::(!ps);
-                auxtree @ [(ParseTree.Print(exp_string))]
-            end
-     )
+prints
+   : KW_Print LP exp_string RP => ()
    ;
 funcs_string
-    : KW_TOSTRING LP expr RP => (Grammar.show expr)
-    | KW_LINREG LP float_list COMMA float_list RP => (Statistics.linearRegression(float_list1,float_list2))
-    | KW_GETS LP string_list COMMA exp_arit RP %where (isType exp_arit "int")
-        => (List.nth(string_list,getInt exp_arit))
+    : KW_TOSTRING LP expr RP => ()
+    | KW_LINREG LP float_list COMMA float_list RP => ()
+    | KW_GETS LP string_list COMMA exp_arit RP => ()
     ;
 funcs_int
-    : KW_GETI LP int_list COMMA exp_arit RP %where (isType exp_arit "int")
-        => (List.nth(int_list,getInt exp_arit))
-    | KW_TOINT LP exp_arit RP %where (isType exp_arit "float")
-        => (Real.round(getFloat exp_arit))
+    : KW_GETI LP int_list COMMA exp_arit RP => ()
+    | KW_TOINT LP exp_arit RP => ()
     ;
 funcs_float
-    : KW_SUM LP EMPTY RP  => ( 0.0)
-    | KW_SUM LP float_list RP
-        => (List.foldl op+ 0.0 float_list)
-    | KW_PROD LP EMPTY RP  => (0.0)
-    | KW_PROD LP float_list RP
-        => (List.foldl op* 1.0 float_list)
-    | KW_MEAN LP float_list RP => (Statistics.mean float_list)
-    | KW_CORR LP float_list COMMA float_list RP => (Statistics.correlation(float_list1, float_list2))
-    | KW_STDEV LP float_list RP => (Statistics.standardDeviation(float_list))
-    | KW_MEDIAN LP float_list RP => (Statistics.median(float_list))
-    | KW_VAR LP float_list RP => (Statistics.variance(float_list))
-    | KW_COV LP float_list COMMA float_list RP => (Statistics.covariance(float_list1, float_list2))
-    | KW_GETF LP float_list COMMA exp_arit RP %where (isType exp_arit "int")
-        => (List.nth(float_list,getInt exp_arit))
-    | KW_TOFLOAT LP exp_arit RP %where (isType exp_arit "int")
-        => (valOf (Real.fromString((Int.toString (getInt exp_arit))^".0")))
+    : KW_SUM LP EMPTY RP => ()
+    | KW_SUM LP float_list RP => ()
+    | KW_PROD LP EMPTY RP  => ()
+    | KW_PROD LP float_list RP => ()
+    | KW_MEAN LP float_list RP => ()
+    | KW_CORR LP float_list COMMA float_list RP => ()
+    | KW_STDEV LP float_list RP => ()
+    | KW_MEDIAN LP float_list RP => ()
+    | KW_VAR LP float_list RP => ()
+    | KW_COV LP float_list COMMA float_list RP => ()
+    | KW_GETF LP float_list COMMA exp_arit RP => ()
+    | KW_TOFLOAT LP exp_arit RP => ()
     ;
 funcs_list
-    : KW_SUBS LP val_list COMMA exp_arit COMMA exp_arit RP %where ((isType exp_arit1 "int") andalso (isType exp_arit2 "int"))
-        => (Grammar.Sample (List.take((List.drop(getList val_list,getInt(exp_arit2))),getInt(exp_arit1))))
+    : KW_SUBS LP val_list COMMA exp_arit COMMA exp_arit RP => ()
     ;
 float_list
-    : ID => (List.map getFloat (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
-    | SFLOAT => (SFLOAT)
+    : ID => ()
+    | SFLOAT => ()
     ;
 string_list
-    : ID => (List.map getString (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
-    | SSTRING => (SSTRING)
+    : ID => ()
+    | SSTRING => ()
     ;
 int_list
-    : ID => (List.map getInt (getList (valOf(AtomMap.find (!v, Atom.atom ID)))))
-    | SINT => (SINT)
+    : ID => ()
+    | SINT => ()
     ;
 exp_bool
-    : %try addExp rel_op addExp %where (exprTypes addExp1 addExp2) => (Grammar.oper(rel_op,addExp1,addExp2))
-    | %try op_bool
-    | %try atom_bool
+    : %try addExp rel_op addExp => ()
+    | %try op_bool => ()
+    | %try atom_bool => ()
     ;
 op_bool
-    : %try atom_bool AND atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) andalso (getBool atom_bool2)))))
-    | %try atom_bool OR atom_bool %where (exprTypes atom_bool1 atom_bool2) => ((Grammar.Primitivo(Grammar.Boolean_((getBool atom_bool1) orelse (getBool atom_bool2)))))
+    : %try atom_bool AND atom_bool => ()
+    | %try atom_bool OR atom_bool => ()
     ;
 exp_string
-    : %try op_str
-    | %try atom_string
+    : %try op_str => ()
+    | %try atom_string => ()
     ;
 op_str
-    : atom_string CONCAT atom_string => ("\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(atom_string1 ^ atom_string2)))) ^ "\"")
+    : atom_string CONCAT atom_string => () 
     ;
 atom_string
-    : ID %where (
-        AtomMap.inDomain(!v,Atom.atom ID) andalso (isType (valOf(AtomMap.find (!v, Atom.atom ID))) "string")
-     )
-        => (getString(valOf(AtomMap.find (!v, Atom.atom ID))) )
-    | STR => (STR)
-    | funcs_string => (funcs_string)
-    | LP exp_string RP
+    : ID => ()
+    | STR => ()
+    | funcs_string => ()
+    | LP exp_string RP => ()
     ;
 rel_op
     : EEQ => ("==")
@@ -213,62 +174,49 @@ rel_op
     | GT => (">")
     ;
 atom_bool
-    : ID => (valOf(AtomMap.find (!v, Atom.atom ID)))
-    | BOOL => ( Grammar.Primitivo (Grammar.Boolean_ BOOL))
-    | LP exp_bool RP
+    : ID => ()
+    | BOOL => ()
+    | LP exp_bool RP => ()
     ;
 loop
     : KW_WHILE exp_bool KW_DO commands KW_END => ()
     ;
 conditional
-    : KW_IF exp_bool KW_THEN commands@(nil,false) KW_ELSE commands@(nil,false) KW_END => (
-        let
-            val ifi = (!tree) @ [ParseTree.If((getBool exp_bool),commands1,commands2)]
-        in
-            tree := ifi;
-            ifi
-        end
-      )
+    : KW_IF exp_bool KW_THEN (commands)* KW_ELSE (commands)* KW_END => ()
     ;
 exp_arit
-    : %try addExp
-    | %try atomicExp
+    : %try addExp => ()
+    | %try atomicExp => ()
     ;
 addExp
-    : %try multExp PLUS multExp %where (exprTypes multExp1 multExp2) => (Grammar.oper("+",multExp1,multExp2))
-    | %try multExp MINUS multExp %where (exprTypes multExp1 multExp2) => (Grammar.oper("-",multExp1,multExp2))
-    | %try multExp
+    : %try multExp PLUS multExp => ()
+    | %try multExp MINUS multExp => ()
+    | %try multExp => ()
     ;
 multExp
-    : %try powExp DIV powExp %where ((isType powExp1 "float") andalso (isType powExp2 "float") andalso (exprTypes powExp1 powExp2))
-        => ( Grammar.oper("/",powExp1,powExp2) )
-    | %try powExp TIMES powExp %where (exprTypes powExp1 powExp2)
-        => ( Grammar.oper("*",powExp1,powExp2) )
-    | %try powExp
+    : %try powExp DIV powExp => ()
+    | %try powExp TIMES powExp => ()
+    | %try powExp => ()
     ;
 powExp
-    : %try KW_POW LP prefixExp COMMA prefixExp RP %where ((isType prefixExp1 "float") andalso (isType prefixExp2 "float"))
-        => (Grammar.oper("pow",prefixExp1,prefixExp2))
-    | %try KW_RT LP prefixExp COMMA prefixExp RP %where ((isType prefixExp1 "float") andalso (isType prefixExp2 "float"))
-        => (Grammar.oper("rt",prefixExp1,prefixExp2))
-    | %try atomicExp
+    : %try KW_POW LP prefixExp COMMA prefixExp RP => ()
+    | %try KW_RT LP prefixExp COMMA prefixExp RP => ()
+    | %try atomicExp => ()
     ;
 
 prefixExp
-    : atomicExp
-    | "-" prefixExp
-        => ( Grammar.oper("neg",prefixExp,prefixExp) )
+    : atomicExp => ()
+    | "-" prefixExp => ()
     ;
 atomicExp
-    : ID => (valOf(AtomMap.find (!v, Atom.atom ID)))
-    | NUM => (Grammar.Primitivo (Grammar.Int_ NUM))
-    | REAL => (Grammar.Primitivo (Grammar.Float_ REAL))
+    : ID => ()
+    | NUM => ()
+    | REAL => ()
     | "(" exp_arit ")"
     ;
 variables
-    : (declaration)* KW_endvars => ((fn(_) => ()) SR)
+    : (declaration)* KW_endvars => ()
     ;
 declaration
-    : TIPO ID SEMI => (v:=insere(!v,Atom.atom ID,Atom.toString(Atom.atom TIPO));
-                       ts:=AtomMap.insert(!ts,Atom.atom ID,TIPO))
+    : TIPO ID SEMI => ()
     ;

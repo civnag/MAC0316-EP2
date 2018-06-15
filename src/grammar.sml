@@ -6,6 +6,7 @@ exception TypeMismatch
 exception VariableNotDeclared
 exception SizeNotAllowed
 
+
 datatype tipo_primitivo = Int_ of int
                         | String_ of string
                         | Float_ of real

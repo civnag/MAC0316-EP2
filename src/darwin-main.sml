@@ -18,18 +18,17 @@ struct
 			val _ = print "        Interpreting code...        \n"
 			val _ = print "                                    \n"
 
-			val (r, strm', errs,{ps=prints,v=vars,ts=tps,tree=ptree}) = CP.parse lex nil strm
+			val (r, strm', errs) = CP.parse lex strm
 			fun doErr err = print ("Syntax error " ^
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs
 		in
-			List.rev prints;
-			ParseTree.interpret(ptree,vars)
+			r
 		end
 
 	fun main (prog_name) =
     	let
-      		val _ = darwin (TextIO.openIn prog_name)
+      		val _ = darwin (TextIO.openIn "lol")
     	in
       		1
     	end

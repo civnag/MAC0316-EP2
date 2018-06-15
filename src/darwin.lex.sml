@@ -2,8 +2,6 @@ structure DarwinLexer  = struct
 
     datatype yystart_state = 
 INITIAL
-    local
-
     structure UserDeclarations = 
       struct
 
@@ -12,8 +10,10 @@ INITIAL
     type lex_result = T.token
     fun eof() = T.EOF
 
+
       end
 
+    local
     datatype yymatch 
       = yyNO_MATCH
       | yyMATCH of ULexBuffer.stream * action * yymatch
@@ -1094,7 +1094,7 @@ INITIAL
 		(fn (~1, _, oldMatches) => yystuck oldMatches
 		  | (curState, strm, oldMatches) => let
 		      val (transitions, finals') = Vector.sub (yytable, curState)
-		      val finals = List.map (fn i => Vector.sub (actTable, i)) finals'
+		      val finals = map (fn i => Vector.sub (actTable, i)) finals'
 		      fun tryfinal() = 
 		            yystuck (yyactsToMatches (strm, finals, oldMatches))
 		      fun find (c, []) = NONE
@@ -1116,7 +1116,7 @@ INITIAL
 let
 fun yyAction0 (strm, lastMatch : yymatch) = (yystrm := strm;   T.KW_variables )
 fun yyAction1 (strm, lastMatch : yymatch) = (yystrm := strm;   T.KW_title )
-fun yyAction2 (strm, lastMatch : yymatch) = (yystrm := strm;   T.KW_comands )
+fun yyAction2 (strm, lastMatch : yymatch) = (yystrm := strm;   T.KW_commands )
 fun yyAction3 (strm, lastMatch : yymatch) = (yystrm := strm;   T.KW_Print )
 fun yyAction4 (strm, lastMatch : yymatch) = (yystrm := strm;   T.KW_SUM )
 fun yyAction5 (strm, lastMatch : yymatch) = (yystrm := strm;   T.KW_PROD )

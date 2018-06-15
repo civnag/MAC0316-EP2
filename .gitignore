@@ -3,3 +3,4 @@ grammar/.cm
 src/darwin.grm.sml
 src/darwin.lex.sml
 *.x86-linux
+src/darwin-main.sml
