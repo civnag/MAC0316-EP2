@@ -70,6 +70,8 @@
     KW_TOINT
     ;
 
+%refcell tree : ParseTree.RoseTree = (nil);
+
 program
     : KW_title STR SEMI
       KW_variables
@@ -86,14 +88,14 @@ assign
     : ID DOTDOT expr => ()
     ;
 expr
-    : %try exp_arit => ()
-    | %try exp_bool => ()
-    | %try exp_string => ()
+    : %try exp_string => (exp_string) 
+    (*| %try exp_bool => ()
+    | %try exp_arit => ()
     | %try funcs_float => ()
     | %try funcs_int => ()
     | %try funcs_string => ()
     | %try funcs_list => ()
-    | %try val_list => ()
+    | %try val_list => ()*)
     ;
 val_list
     : SINT => ()
@@ -103,12 +105,18 @@ val_list
     | ID => ()
     ;
 prints
-   : KW_Print LP exp_string RP => ()
+   : KW_Print LP exp_string RP => (
+        let 
+            val k = (ParseTree.Print exp_string)::(!tree)
+        in
+            tree := k
+        end
+    )
    ;
 funcs_string
-    : KW_TOSTRING LP expr RP => ()
-    | KW_LINREG LP float_list COMMA float_list RP => ()
-    | KW_GETS LP string_list COMMA exp_arit RP => ()
+    : KW_TOSTRING LP expr RP => (ParseTree.FuncOne(ParseTree.ToString,expr))
+    (*| KW_LINREG LP float_list COMMA float_list RP => ()*)
+    (*| KW_GETS LP string_list COMMA exp_arit RP => ()*)
     ;
 funcs_int
     : KW_GETI LP int_list COMMA exp_arit RP => ()
@@ -153,17 +161,17 @@ op_bool
     | %try atom_bool OR atom_bool => ()
     ;
 exp_string
-    : %try op_str => ()
-    | %try atom_string => ()
+    : %try op_str => (op_str)
+    | %try atom_string => (atom_string)
     ;
 op_str
-    : atom_string CONCAT atom_string => () 
+    : atom_string CONCAT atom_string => (ParseTree.FuncTwo(ParseTree.Concat,atom_string1,atom_string2)) 
     ;
 atom_string
-    : ID => ()
-    | STR => ()
-    | funcs_string => ()
-    | LP exp_string RP => ()
+    : ID => (ParseTree.Var ID)
+    | STR => (ParseTree.Const (Grammar.Primitivo (Grammar.String_ STR)))
+    | funcs_string 
+    | LP exp_string RP 
     ;
 rel_op
     : EEQ => ("==")
