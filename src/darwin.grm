@@ -71,6 +71,8 @@
     ;
 
 %refcell tree : ParseTree.RoseTree = (nil);
+%refcell vars : tipo AtomMap.map = (AtomMap.empty);
+
 
 program
     : KW_title STR SEMI
@@ -223,8 +225,8 @@ atomicExp
     | "(" exp_arit ")"
     ;
 variables
-    : (declaration)* KW_endvars => ()
+    : (declaration)* KW_endvars => ((fn(_) => ()) SR)
     ;
 declaration
-    : TIPO ID SEMI => ()
+    : TIPO ID SEMI => (vars:=ParseTree.insere(!vars,Atom.atom ID,Atom.toString(Atom.atom TIPO)))
     ;
