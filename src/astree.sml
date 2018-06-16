@@ -16,8 +16,8 @@ datatype Expr = Const of tipo
 
 datatype Tree = Assign of string * Expr
               | Print of Expr 
-              | If of bool * (Tree list) * (Tree list) 
-              | While of bool * (Tree list) 
+              | If of Expr * (Tree list) * (Tree list) 
+              | While of Expr * (Tree list) 
               | Null
 
 type RoseTree = Tree list

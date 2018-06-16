@@ -18,7 +18,7 @@ struct
 			val _ = print "        Interpreting code...        \n"
 			val _ = print "                                    \n"
 
-			val (r, strm', errs, {tree=tr,vars=vs}) = CP.parse lex strm
+			val (r, strm', errs, {tree=tr,vars=vs,ts=tps}) = CP.parse lex strm
 			fun doErr err = print ("Syntax error " ^
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs
