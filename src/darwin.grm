@@ -3,18 +3,18 @@
 %defs (
     open ParseTree
 
-    fun getInt x = (Grammar.extractInt x)
-    fun getFloat x = (Grammar.extractFloat x)
-    fun getString x = (Grammar.extractString x)
-    fun getBool x = (Grammar.extractBool x)
-    fun getList x = (Grammar.extractList x)
+    fun getInt x = (TypeChecker.extractInt x)
+    fun getFloat x = (TypeChecker.extractFloat x)
+    fun getString x = (TypeChecker.extractString x)
+    fun getBool x = (TypeChecker.extractBool x)
+    fun getList x = (TypeChecker.extractList x)
 
-    fun exprTypes e1 e2 = (Grammar.typeof e1) = (Grammar.typeof e2)
-    fun isType e1 t = (Grammar.typeof e1) = t
+    fun exprTypes e1 e2 = (TypeChecker.typeof e1) = (TypeChecker.typeof e2)
+    fun isType e1 t = (TypeChecker.typeof e1) = t
 
     fun getVar v = AtomMap.appi (fn (k,w) => print (
         let val _ = print(Atom.toString k)
-            val _ = print (Grammar.show w)
+            val _ = print (TypeChecker.show w)
         in
             ""
         end)) v

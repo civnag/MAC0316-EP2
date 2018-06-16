@@ -10,6 +10,7 @@ is
     src/astree.sml
     src/statistics.sml
     src/helper.sml
+    src/typechecker.sml
     src/darwin.grm : ml-antlr
     src/darwin.lex : ml-ulex
     src/darwin-main.sml

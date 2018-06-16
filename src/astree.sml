@@ -14,6 +14,7 @@ datatype Expr = Const of tipo
               | Rel of OpRel * Expr * Expr
               | Var of string 
 
+
 datatype Tree = Assign of string * Expr
               | Print of Expr 
               | If of Expr * (Tree list) * (Tree list) 
@@ -35,4 +36,30 @@ fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0)
     | insere(hm,n,"float") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Float_ 0.0))
     | insere(hm,n,"boolean") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Boolean_ false))
     | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Void)
+
+fun showOpRel(NEQR) = "!="
+  | showOpRel(EQR) = "="
+  | showOpRel(GEQR) = ">="
+  | showOpRel(LEQR) = "<="
+  | showOpRel(GTR) = ">"
+  | showOpRel(LTR) = "<"
+
+fun eval(Const t,vars) = t 
+  | eval(Var s,vars) = 
+    let 
+        val v = valOf(AtomMap.find(vars,Atom.atom s))
+    in 
+        v
+    end
+  | eval(Rel(oprel,e1,e2),vars) =
+        let 
+            val ee1 = eval(e1,vars)
+            val ee2 = eval(e2,vars)
+        in
+            case (TypeChecker.typeof ee1,TypeChecker.typeof ee2) of
+                  ("int","int") => TypeChecker.oper(showOpRel oprel,ee1,ee2)
+                | ("float","float") => TypeChecker.oper(showOpRel oprel,ee1,ee2)
+                | (_,_) => raise TypeChecker.TypeMismatch
+        end
+
 end
