@@ -85,13 +85,13 @@ commands
     | conditional  => ()
     ;
 assign
-    : ID DOTDOT expr => ()
+    : ID DOTDOT expr => (tree:=(ParseTree.Assign(ID,expr))::(!tree))
     ;
 expr
     : %try exp_string => (exp_string) 
-    (*| %try exp_bool => ()
-    | %try exp_arit => ()
-    | %try funcs_float => ()
+    | %try exp_bool => (exp_bool)
+    | %try exp_arit => (exp_arit)
+    (*| %try funcs_float => ()
     | %try funcs_int => ()
     | %try funcs_string => ()
     | %try funcs_list => ()
@@ -152,13 +152,13 @@ int_list
     | SINT => ()
     ;
 exp_bool
-    : %try addExp rel_op addExp => ()
-    | %try op_bool => ()
-    | %try atom_bool => ()
+    : %try addExp rel_op addExp => (ParseTree.getExprBoolTree(rel_op,addExp1,addExp2))
+    | %try op_bool => (op_bool)
+    | %try atom_bool => (atom_bool)
     ;
 op_bool
-    : %try atom_bool AND atom_bool => ()
-    | %try atom_bool OR atom_bool => ()
+    : %try atom_bool AND atom_bool => (ParseTree.FuncTwo(ParseTree.And,atom_bool1,atom_bool2))
+    | %try atom_bool OR atom_bool => (ParseTree.FuncTwo(ParseTree.Or,atom_bool1,atom_bool2))
     ;
 exp_string
     : %try op_str => (op_str)
@@ -182,9 +182,9 @@ rel_op
     | GT => (">")
     ;
 atom_bool
-    : ID => ()
-    | BOOL => ()
-    | LP exp_bool RP => ()
+    : ID => (ParseTree.Var ID)
+    | BOOL => ( (ParseTree.Const (Grammar.Primitivo (Grammar.Boolean_ BOOL))))
+    | LP exp_bool RP 
     ;
 loop
     : KW_WHILE exp_bool KW_DO commands KW_END => ()
@@ -193,33 +193,33 @@ conditional
     : KW_IF exp_bool KW_THEN (commands)* KW_ELSE (commands)* KW_END => ()
     ;
 exp_arit
-    : %try addExp => ()
-    | %try atomicExp => ()
+    : %try addExp => (addExp)
+    | %try atomicExp => (atomicExp)
     ;
 addExp
-    : %try multExp PLUS multExp => ()
-    | %try multExp MINUS multExp => ()
-    | %try multExp => ()
+    : %try multExp PLUS multExp => (ParseTree.FuncTwo(ParseTree.Add,multExp1,multExp2))
+    | %try multExp MINUS multExp => (ParseTree.FuncTwo(ParseTree.Sub,multExp1,multExp2))
+    | %try multExp => (multExp)
     ;
 multExp
-    : %try powExp DIV powExp => ()
-    | %try powExp TIMES powExp => ()
-    | %try powExp => ()
+    : %try powExp DIV powExp => (ParseTree.FuncTwo(ParseTree.Div,powExp1,powExp2))
+    | %try powExp TIMES powExp => (ParseTree.FuncTwo(ParseTree.Mul,powExp1,powExp2))
+    | %try powExp => (powExp)
     ;
 powExp
-    : %try KW_POW LP prefixExp COMMA prefixExp RP => ()
-    | %try KW_RT LP prefixExp COMMA prefixExp RP => ()
-    | %try atomicExp => ()
+    : %try KW_POW LP prefixExp COMMA prefixExp RP => (ParseTree.FuncTwo(ParseTree.Pow,prefixExp1,prefixExp2))
+    | %try KW_RT LP prefixExp COMMA prefixExp RP => (ParseTree.FuncTwo(ParseTree.RT,prefixExp1,prefixExp2))
+    | %try atomicExp => (atomicExp)
     ;
 
 prefixExp
-    : atomicExp => ()
-    | "-" prefixExp => ()
+    : atomicExp => (atomicExp)
+    | "-" prefixExp => (ParseTree.FuncTwo(ParseTree.Sub,ParseTree.Const(Grammar.Primitivo (Grammar.Int_ 0)),prefixExp))
     ;
 atomicExp
-    : ID => ()
-    | NUM => ()
-    | REAL => ()
+    : ID => (ParseTree.Var ID)
+    | NUM => (ParseTree.Const (Grammar.Primitivo (Grammar.Int_ NUM)))
+    | REAL => (ParseTree.Const (Grammar.Primitivo (Grammar.Float_ REAL)))
     | "(" exp_arit ")"
     ;
 variables

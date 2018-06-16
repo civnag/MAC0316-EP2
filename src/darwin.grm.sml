@@ -256,9 +256,13 @@ fun commands_PROD_2_ACT (SEMI, assign, SEMI_SPAN : (Lex.pos * Lex.pos), assign_S
 fun commands_PROD_3_ACT (conditional, conditional_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
   ( )
 fun assign_PROD_1_ACT (ID, expr, DOTDOT, ID_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), DOTDOT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( tree:=(ParseTree.Assign(ID,expr))::(!tree))
 fun expr_PROD_1_ACT (exp_string, exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
   ( exp_string)
+fun expr_PROD_2_ACT (exp_bool, exp_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
+  ( exp_bool)
+fun expr_PROD_3_ACT (exp_arit, exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
+  ( exp_arit)
 fun val_list_PROD_1_ACT (SINT, SINT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
   ( )
 fun val_list_PROD_2_ACT (SFLOAT, SFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
@@ -322,15 +326,15 @@ fun int_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos
 fun int_list_PROD_2_ACT (SINT, SINT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
   ( )
 fun exp_bool_PROD_1_ACT (rel_op, addExp1, addExp2, rel_op_SPAN : (Lex.pos * Lex.pos), addExp1_SPAN : (Lex.pos * Lex.pos), addExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.getExprBoolTree(rel_op,addExp1,addExp2))
 fun exp_bool_PROD_2_ACT (op_bool, op_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( op_bool)
 fun exp_bool_PROD_3_ACT (atom_bool, atom_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( atom_bool)
 fun op_bool_PROD_1_ACT (AND, atom_bool1, atom_bool2, AND_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.FuncTwo(ParseTree.And,atom_bool1,atom_bool2))
 fun op_bool_PROD_2_ACT (OR, atom_bool1, atom_bool2, OR_SPAN : (Lex.pos * Lex.pos), atom_bool1_SPAN : (Lex.pos * Lex.pos), atom_bool2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.FuncTwo(ParseTree.Or,atom_bool1,atom_bool2))
 fun exp_string_PROD_1_ACT (op_str, op_str_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
   ( op_str)
 fun exp_string_PROD_2_ACT (atom_string, atom_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
@@ -354,47 +358,45 @@ fun rel_op_PROD_5_ACT (LT, LT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos *
 fun rel_op_PROD_6_ACT (GT, GT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
   ( ">")
 fun atom_bool_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.Var ID)
 fun atom_bool_PROD_2_ACT (BOOL, BOOL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
-fun atom_bool_PROD_3_ACT (LP, RP, exp_bool, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  (  (ParseTree.Const (Grammar.Primitivo (Grammar.Boolean_ BOOL))))
 fun loop_PROD_1_ACT (commands, KW_WHILE, exp_bool, KW_DO, KW_END, commands_SPAN : (Lex.pos * Lex.pos), KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
   ( )
 fun conditional_PROD_1_ACT (SR1, SR2, exp_bool, KW_ELSE, KW_THEN, KW_IF, KW_END, SR1_SPAN : (Lex.pos * Lex.pos), SR2_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_ELSE_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
   ( )
 fun exp_arit_PROD_1_ACT (addExp, addExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( addExp)
 fun exp_arit_PROD_2_ACT (atomicExp, atomicExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( atomicExp)
 fun addExp_PROD_1_ACT (PLUS, multExp1, multExp2, PLUS_SPAN : (Lex.pos * Lex.pos), multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.FuncTwo(ParseTree.Add,multExp1,multExp2))
 fun addExp_PROD_2_ACT (multExp1, multExp2, MINUS, multExp1_SPAN : (Lex.pos * Lex.pos), multExp2_SPAN : (Lex.pos * Lex.pos), MINUS_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.FuncTwo(ParseTree.Sub,multExp1,multExp2))
 fun addExp_PROD_3_ACT (multExp, multExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( multExp)
 fun multExp_PROD_1_ACT (DIV, powExp1, powExp2, DIV_SPAN : (Lex.pos * Lex.pos), powExp1_SPAN : (Lex.pos * Lex.pos), powExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.FuncTwo(ParseTree.Div,powExp1,powExp2))
 fun multExp_PROD_2_ACT (TIMES, powExp1, powExp2, TIMES_SPAN : (Lex.pos * Lex.pos), powExp1_SPAN : (Lex.pos * Lex.pos), powExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.FuncTwo(ParseTree.Mul,powExp1,powExp2))
 fun multExp_PROD_3_ACT (powExp, powExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( powExp)
 fun powExp_PROD_1_ACT (LP, RP, COMMA, prefixExp1, prefixExp2, KW_POW, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), KW_POW_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.FuncTwo(ParseTree.Pow,prefixExp1,prefixExp2))
 fun powExp_PROD_2_ACT (LP, RP, COMMA, KW_RT, prefixExp1, prefixExp2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), KW_RT_SPAN : (Lex.pos * Lex.pos), prefixExp1_SPAN : (Lex.pos * Lex.pos), prefixExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.FuncTwo(ParseTree.RT,prefixExp1,prefixExp2))
 fun powExp_PROD_3_ACT (atomicExp, atomicExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( atomicExp)
 fun prefixExp_PROD_1_ACT (atomicExp, atomicExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( atomicExp)
 fun prefixExp_PROD_2_ACT (MINUS, prefixExp, MINUS_SPAN : (Lex.pos * Lex.pos), prefixExp_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.FuncTwo(ParseTree.Sub,ParseTree.Const(Grammar.Primitivo (Grammar.Int_ 0)),prefixExp))
 fun atomicExp_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.Var ID)
 fun atomicExp_PROD_2_ACT (NUM, NUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.Const (Grammar.Primitivo (Grammar.Int_ NUM)))
 fun atomicExp_PROD_3_ACT (REAL, REAL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
-  ( )
+  ( ParseTree.Const (Grammar.Primitivo (Grammar.Float_ REAL)))
 fun variables_PROD_1_ACT (SR, KW_endvars, SR_SPAN : (Lex.pos * Lex.pos), KW_endvars_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
   ( )
 fun declaration_PROD_1_ACT (ID, SEMI, TIPO, ID_SPAN : (Lex.pos * Lex.pos), SEMI_SPAN : (Lex.pos * Lex.pos), TIPO_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree) = 
@@ -1035,8 +1037,7 @@ and atom_bool_NT (strm) = let
             val (RP_RES, RP_SPAN, strm') = matchRP(strm')
             val FULL_SPAN = (#1(LP_SPAN), #2(RP_SPAN))
             in
-              (UserCode.atom_bool_PROD_3_ACT (LP_RES, RP_RES, exp_bool_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree_REFC),
-                FULL_SPAN, strm')
+              ((exp_bool_RES), FULL_SPAN, strm')
             end
       in
         (case (lex(strm))
@@ -1077,11 +1078,45 @@ and op_bool_NT (strm) = let
         (* end case *))
       end
 fun expr_NT (strm) = let
-      val (exp_string_RES, exp_string_SPAN, strm') = exp_string_NT(strm)
-      val FULL_SPAN = (#1(exp_string_SPAN), #2(exp_string_SPAN))
+      fun expr_PROD_1 (strm) = let
+            val (exp_string_RES, exp_string_SPAN, strm') = exp_string_NT(strm)
+            val FULL_SPAN = (#1(exp_string_SPAN), #2(exp_string_SPAN))
+            in
+              (UserCode.expr_PROD_1_ACT (exp_string_RES, exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree_REFC),
+                FULL_SPAN, strm')
+            end
+      fun expr_PROD_2 (strm) = let
+            val (exp_bool_RES, exp_bool_SPAN, strm') = exp_bool_NT(strm)
+            val FULL_SPAN = (#1(exp_bool_SPAN), #2(exp_bool_SPAN))
+            in
+              (UserCode.expr_PROD_2_ACT (exp_bool_RES, exp_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree_REFC),
+                FULL_SPAN, strm')
+            end
+      fun expr_PROD_3 (strm) = let
+            val (exp_arit_RES, exp_arit_SPAN, strm') = exp_arit_NT(strm)
+            val FULL_SPAN = (#1(exp_arit_SPAN), #2(exp_arit_SPAN))
+            in
+              (UserCode.expr_PROD_3_ACT (exp_arit_RES, exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree_REFC),
+                FULL_SPAN, strm')
+            end
       in
-        (UserCode.expr_PROD_1_ACT (exp_string_RES, exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), tree_REFC),
-          FULL_SPAN, strm')
+        (case (lex(strm))
+         of (Tok.STR(_), _, strm') => expr_PROD_1(strm)
+          | (Tok.KW_TOSTRING, _, strm') => expr_PROD_1(strm)
+          | (Tok.ID(_), _, strm') =>
+              tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
+          | (Tok.LP, _, strm') =>
+              tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
+          | (Tok.NUM(_), _, strm') =>
+              tryProds(strm, [expr_PROD_2, expr_PROD_3])
+          | (Tok.REAL(_), _, strm') =>
+              tryProds(strm, [expr_PROD_2, expr_PROD_3])
+          | (Tok.KW_RT, _, strm') => tryProds(strm, [expr_PROD_2, expr_PROD_3])
+          | (Tok.KW_POW, _, strm') =>
+              tryProds(strm, [expr_PROD_2, expr_PROD_3])
+          | (Tok.BOOL(_), _, strm') => expr_PROD_2(strm)
+          | _ => fail()
+        (* end case *))
       end
 and exp_string_NT (strm) = let
       fun exp_string_PROD_1 (strm) = let
