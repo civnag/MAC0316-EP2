@@ -23,7 +23,7 @@ struct
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs
 		in
-			ParseTree.interpret(tr,vs,tps);
+			ParseTree.interpret(List.rev tr,vs,tps);
 			r
 		end
 

@@ -4,12 +4,12 @@ exception OperationNotSupported
 
 open Grammar
 
-datatype FuncOne = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat
+datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat
 datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
 
 datatype Expr = Const of tipo
-              | FuncOne of FuncOne * Expr
+              | FuncOne of UnOp * Expr
               | FuncTwo of BinOp * Expr * Expr
               | Rel of OpRel * Expr * Expr
               | Var of string 
@@ -61,12 +61,13 @@ fun eval(Const t,vars) = t
                 | ("float","float") => TypeChecker.oper(showOpRel oprel,ee1,ee2)
                 | (_,_) => raise TypeChecker.TypeMismatch
         end
+    | eval(FuncOne(ToString,e),vars) = Grammar.Primitivo(Grammar.String_(Grammar.show(eval(e,vars))))
 
 fun interpret((Print expr)::cs,vars,tps) = 
         let
             val evaluedExpr = eval(expr,vars)
         in
-            print(Grammar.show evaluedExpr);
+            print(Grammar.show evaluedExpr ^ "\n");
             interpret(cs,vars,tps)
         end
   | interpret(Assign(var,e)::cs,vars,tps) =
@@ -91,4 +92,5 @@ fun interpret((Print expr)::cs,vars,tps) =
                 interpret(c2,vars,tps)
             ; interpret(cs,vars,tps)
         end
+  | interpret(nil,vars,tps) = print "fim\n"
 end
