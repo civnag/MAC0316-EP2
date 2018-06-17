@@ -1,9 +1,13 @@
 structure TypeChecker =
-struct 
+struct
 
+open Statistics
 open Grammar
 
 exception TypeMismatch
+exception FunctionOneNotImplemented
+exception FunctionTwoNotImplemented
+exception StatisticsNotImplemented
 
 fun extractList (Sample x) = x
     | extractList _ = raise TypeMismatch
@@ -55,6 +59,27 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
    | oper("rt", Primitivo(Float_ i),Primitivo(Float_ j)) = Primitivo (Float_ (Math.pow(i, 1.0/j)))
    | oper("neg",_,Primitivo(Int_ i)) = Primitivo(Int_ (0-i))
    | oper("neg",_,Primitivo(Float_ i)) = Primitivo(Float_ (0.0-i))
-   | oper(_,_,_) = raise TypeMismatch
+   | oper(_,_,_) = raise FunctionTwoNotImplemented
 
+fun toSMLType(Primitivo(Float_ x)) = x
+  | toSMLType(_) = raise TypeMismatch
+
+fun statistics("correlation", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.correlation((List.map toSMLType x), (List.map toSMLType y))))
+  | statistics("covariance", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.covariance((List.map toSMLType x), (List.map toSMLType y))))
+  | statistics(_, _, _) = raise StatisticsNotImplemented
+
+fun functionOne("mean", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map toSMLType x)))
+  | functionOne("stdDeviation", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map toSMLType x)))
+  | functionOne("variance", Sample(x)) = Primitivo(Float_ (Statistics.variance (List.map toSMLType x)))
+  | functionOne("median", Sample(x)) = Primitivo(Float_ (Statistics.median (List.map toSMLType x)))
+  | functionOne("toString", Primitivo(Int_ x)) = Primitivo(String_ (Int.toString x))
+  | functionOne("toString", Primitivo(Float_ x)) = Primitivo(String_ (Real.toString x))
+  | functionOne("toFloat", Primitivo(String_ value)) = Primitivo(Float_ (case Real.fromString value of SOME value => value | NONE => raise TypeMismatch))
+  | functionOne("toInt", Primitivo(String_ value)) = Primitivo(Float_ (case Real.fromString value of SOME value => value | NONE => raise TypeMismatch))
+  | functionOne("sum", Sample(x)) = raise FunctionOneNotImplemented
+  | functionOne("prod", Sample(x)) = raise FunctionOneNotImplemented
+  | functionOne(_, _) = raise TypeMismatch
+
+
+  (* datatype FuncOne = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat *)
 end
