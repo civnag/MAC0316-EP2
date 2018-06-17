@@ -73,7 +73,8 @@ fun interpret((Print expr)::cs,vars,tps) =
         let 
             val evaluedExpr = eval(e,vars)
             val varExists = AtomMap.inDomain(vars,Atom.atom var) 
-            val sameType = (TypeChecker.isType (valOf(AtomMap.find (tps,Atom.atom var))) (TypeChecker.typeof evaluedExpr))
+            val t = valOf(AtomMap.find (tps,Atom.atom var))
+            val sameType = (TypeChecker.isType evaluedExpr t)
         in 
             if (varExists andalso sameType) then
                 interpret(cs,Grammar.updateHt(vars,Atom.atom var,evaluedExpr),tps)
