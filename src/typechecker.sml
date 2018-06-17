@@ -4,6 +4,7 @@ struct
 open Grammar
 
 exception TypeMismatch
+exception TypeError
 
 fun extractList (Sample x) = x
     | extractList _ = raise TypeMismatch
@@ -56,5 +57,8 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
    | oper("neg",_,Primitivo(Int_ i)) = Primitivo(Int_ (0-i))
    | oper("neg",_,Primitivo(Float_ i)) = Primitivo(Float_ (0.0-i))
    | oper(_,_,_) = raise TypeMismatch
+
+fun exprTypes e1 e2 = (typeof e1) = (typeof e2)
+fun isType e1 t = (typeof e1) = t
 
 end

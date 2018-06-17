@@ -236,9 +236,6 @@ DarwinTokens
     fun getBool x = (TypeChecker.extractBool x)
     fun getList x = (TypeChecker.extractList x)
 
-    fun exprTypes e1 e2 = (TypeChecker.typeof e1) = (TypeChecker.typeof e2)
-    fun isType e1 t = (TypeChecker.typeof e1) = t
-
     fun getVar v = AtomMap.appi (fn (k,w) => print (
         let val _ = print(Atom.toString k)
             val _ = print (TypeChecker.show w)

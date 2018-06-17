@@ -62,4 +62,32 @@ fun eval(Const t,vars) = t
                 | (_,_) => raise TypeChecker.TypeMismatch
         end
 
+fun interpret((Print expr)::cs,vars,tps) = 
+        let
+            val evaluedExpr = eval(expr,vars)
+        in
+            print(Grammar.show evaluedExpr);
+            interpret(cs,vars,tps)
+        end
+  | interpret(Assign(var,e)::cs,vars,tps) =
+        let 
+            val evaluedExpr = eval(e,vars)
+            val varExists = AtomMap.inDomain(vars,Atom.atom var) 
+            val sameType = (TypeChecker.isType (valOf(AtomMap.find (tps,Atom.atom var))) (TypeChecker.typeof evaluedExpr))
+        in 
+            if (varExists andalso sameType) then
+                interpret(cs,Grammar.updateHt(vars,Atom.atom var,evaluedExpr),tps)
+            else 
+                raise TypeChecker.TypeError
+        end
+  | interpret(If(e,c1,c2)::cs,vars,tps) = 
+        let 
+            val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
+        in 
+            if evaluedExpr then 
+                interpret(c1,vars,tps)
+            else
+                interpret(c2,vars,tps)
+            ; interpret(cs,vars,tps)
+        end
 end
