@@ -8,6 +8,7 @@ exception TypeMismatch
 exception FunctionOneNotImplemented
 exception FunctionTwoNotImplemented
 exception StatisticsNotImplemented
+exception TypeError
 
 fun extractList (Sample x) = x
     | extractList _ = raise TypeMismatch
@@ -61,6 +62,9 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
    | oper("neg",_,Primitivo(Float_ i)) = Primitivo(Float_ (0.0-i))
    | oper(_,_,_) = raise FunctionTwoNotImplemented
 
+fun exprTypes e1 e2 = (typeof e1) = (typeof e2)
+fun isType e1 t = (typeof e1) = t
+
 fun toSMLType(Primitivo(Float_ x)) = x
   | toSMLType(_) = raise TypeMismatch
 
@@ -80,6 +84,4 @@ fun functionOne("mean", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviat
   | functionOne("prod", Sample(x)) = raise FunctionOneNotImplemented
   | functionOne(_, _) = raise TypeMismatch
 
-
-  (* datatype FuncOne = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat *)
 end

@@ -4,12 +4,12 @@ exception OperationNotSupported
 
 open Grammar
 
-datatype FuncOne = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance
+datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance
 datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
 
 datatype Expr = Const of tipo
-              | FuncOne of FuncOne * Expr
+              | FuncOne of UnOp * Expr
               | FuncTwo of BinOp * Expr * Expr
               | Rel of OpRel * Expr * Expr
               | Var of string
@@ -110,6 +110,7 @@ fun eval(Const t,vars) = t
                 | ("float","float") => TypeChecker.oper(showOpRel oprel,ee1,ee2)
                 | (_,_) => raise TypeChecker.TypeMismatch
         end
+  | eval(FuncOne(ToString,e),vars) = Grammar.Primitivo(Grammar.String_(Grammar.show(eval(e,vars))))
   | eval(FuncOne(func, e1), vars) =
         let
             val ee1 = eval(e1, vars)
@@ -133,10 +134,37 @@ fun eval(Const t,vars) = t
               | ("string", "string") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | (_) => raise TypeChecker.TypeMismatch
         end
-(*
-datatype Expr = Const of tipo
-              | FuncOne of FuncOne * Expr
-              | FuncTwo of BinOp * Expr * Expr
-              | Rel of OpRel * Expr * Expr
-              | Var of string  *)
+
+
+fun interpret((Print expr)::cs,vars,tps) =
+        let
+            val evaluedExpr = eval(expr,vars)
+        in
+            print(Grammar.show evaluedExpr ^ "\n");
+            interpret(cs,vars,tps)
+        end
+  | interpret(Assign(var,e)::cs,vars,tps) =
+        let
+            val evaluedExpr = eval(e,vars)
+            val varExists = AtomMap.inDomain(vars,Atom.atom var)
+            val t = valOf(AtomMap.find (tps,Atom.atom var))
+            val sameType = (TypeChecker.isType evaluedExpr t)
+        in
+            if (varExists andalso sameType) then
+                interpret(cs,Grammar.updateHt(vars,Atom.atom var,evaluedExpr),tps)
+            else
+                raise TypeChecker.TypeError
+        end
+  | interpret(If(e,c1,c2)::cs,vars,tps) =
+        let
+            val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
+        in
+            if evaluedExpr then
+                interpret(c1,vars,tps)
+            else
+                interpret(c2,vars,tps)
+            ; interpret(cs,vars,tps)
+        end
+  | interpret(nil,vars,tps) = print "fim\n"
+
 end
