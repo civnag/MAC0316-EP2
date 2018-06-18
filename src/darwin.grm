@@ -97,8 +97,8 @@ expr
     | %try exp_arit => (exp_arit)
     | %try funcs_string => (funcs_string)
     | %try funcs_float => (funcs_float)
-    (*| %try funcs_int => (funcs_int)
-    | %try funcs_list => (funcs_list)
+    | %try funcs_int => (funcs_int)
+    (*| %try funcs_list => (funcs_list)
     | %try val_list => (val_list)*)
     ;
 
@@ -125,8 +125,8 @@ funcs_string
     (*| KW_GETS LP string_list COMMA exp_arit RP => ()*)
     ;
 funcs_int
-    : KW_GETI LP int_list COMMA exp_arit RP => ()
-    | KW_TOINT LP exp_arit RP => (ParseTree.getFunctionOne(KW_TOINT, exp_arit))
+    : KW_GETI LP int_list COMMA exp_arit RP =>  (ParseTree.getBinaryFun("getInt", int_list, exp_arit))
+    | KW_TOINT LP exp_arit RP => (ParseTree.getFunctionOne("toInt", exp_arit))
     ;
 funcs_float
     : KW_SUM LP EMPTY RP => (ParseTree.getFunctionOne("sum", ParseTree.Const(Grammar.Sample nil)))
@@ -151,12 +151,12 @@ float_list
     | SFLOAT => (ParseTree.floatListToSampleExpr(SFLOAT))
     ;
 string_list
-    : ID => ()
-    | SSTRING => ()
+    : ID => (ParseTree.Var ID)
+    | SSTRING => (ParseTree.stringListToSampleExpr(SSTRING))
     ;
 int_list
-    : ID => ()
-    | SINT => ()
+    : ID => (ParseTree.Var ID)
+    | SINT => (ParseTree.intListToSampleExpr(SINT))
     ;
 exp_bool
     : %try addExp rel_op addExp => (ParseTree.getExprBoolTree(rel_op,addExp1,addExp2))

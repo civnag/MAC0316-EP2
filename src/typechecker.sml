@@ -70,6 +70,7 @@ fun statistics("correlation", Sample(x), Sample(y)) = Primitivo(Float_ (Statisti
   | statistics(_, _, _) = raise StatisticsNotImplemented
 
 fun functionTwo("getFloat",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
+  | functionTwo("getInt",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo(_,_,_) = raise FunctionTwoNotImplemented
 
 fun functionOne("mean", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map extractFloat x)))

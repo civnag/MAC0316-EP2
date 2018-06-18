@@ -264,6 +264,8 @@ fun expr_PROD_4_ACT (funcs_string, funcs_string_SPAN : (Lex.pos * Lex.pos), FULL
   ( funcs_string)
 fun expr_PROD_5_ACT (funcs_float, funcs_float_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( funcs_float)
+fun expr_PROD_6_ACT (funcs_int, funcs_int_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  ( funcs_int)
 fun val_list_PROD_1_ACT (SINT, SINT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( ParseTree.Const (Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Int_ x)) SINT) ))
 fun val_list_PROD_2_ACT (SFLOAT, SFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
@@ -286,9 +288,9 @@ fun prints_PROD_1_ACT (LP, RP, KW_Print, exp_string, LP_SPAN : (Lex.pos * Lex.po
 fun funcs_string_PROD_1_ACT (LP, RP, expr, KW_TOSTRING, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_TOSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( ParseTree.FuncOne(ParseTree.ToString,expr))
 fun funcs_int_PROD_1_ACT (LP, RP, exp_arit, KW_GETI, COMMA, int_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETI_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), int_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  (  ParseTree.getBinaryFun("getInt", int_list, exp_arit))
 fun funcs_int_PROD_2_ACT (LP, RP, KW_TOINT, exp_arit, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_TOINT_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( ParseTree.getFunctionOne(KW_TOINT, exp_arit))
+  ( ParseTree.getFunctionOne("toInt", exp_arit))
 fun funcs_float_PROD_1_ACT (LP, RP, EMPTY, KW_SUM, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( ParseTree.getFunctionOne("sum", ParseTree.Const(Grammar.Sample nil)))
 fun funcs_float_PROD_2_ACT (LP, RP, float_list, KW_SUM, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
@@ -322,13 +324,13 @@ fun float_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.p
 fun float_list_PROD_2_ACT (SFLOAT, SFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( ParseTree.floatListToSampleExpr(SFLOAT))
 fun string_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.Var ID)
 fun string_list_PROD_2_ACT (SSTRING, SSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.stringListToSampleExpr(SSTRING))
 fun int_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.Var ID)
 fun int_list_PROD_2_ACT (SINT, SINT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.intListToSampleExpr(SINT))
 fun exp_bool_PROD_1_ACT (rel_op, addExp1, addExp2, rel_op_SPAN : (Lex.pos * Lex.pos), addExp1_SPAN : (Lex.pos * Lex.pos), addExp2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( ParseTree.getExprBoolTree(rel_op,addExp1,addExp2))
 fun exp_bool_PROD_2_ACT (op_bool, op_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
@@ -1093,6 +1095,58 @@ and op_bool_NT (strm) = let
           | _ => fail()
         (* end case *))
       end
+fun int_list_NT (strm) = let
+      fun int_list_PROD_1 (strm) = let
+            val (ID_RES, ID_SPAN, strm') = matchID(strm)
+            val FULL_SPAN = (#1(ID_SPAN), #2(ID_SPAN))
+            in
+              (UserCode.int_list_PROD_1_ACT (ID_RES, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun int_list_PROD_2 (strm) = let
+            val (SINT_RES, SINT_SPAN, strm') = matchSINT(strm)
+            val FULL_SPAN = (#1(SINT_SPAN), #2(SINT_SPAN))
+            in
+              (UserCode.int_list_PROD_2_ACT (SINT_RES, SINT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      in
+        (case (lex(strm))
+         of (Tok.SINT(_), _, strm') => int_list_PROD_2(strm)
+          | (Tok.ID(_), _, strm') => int_list_PROD_1(strm)
+          | _ => fail()
+        (* end case *))
+      end
+fun funcs_int_NT (strm) = let
+      fun funcs_int_PROD_1 (strm) = let
+            val (KW_GETI_RES, KW_GETI_SPAN, strm') = matchKW_GETI(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (int_list_RES, int_list_SPAN, strm') = int_list_NT(strm')
+            val (COMMA_RES, COMMA_SPAN, strm') = matchCOMMA(strm')
+            val (exp_arit_RES, exp_arit_SPAN, strm') = exp_arit_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_GETI_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_int_PROD_1_ACT (LP_RES, RP_RES, exp_arit_RES, KW_GETI_RES, COMMA_RES, int_list_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETI_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), int_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_int_PROD_2 (strm) = let
+            val (KW_TOINT_RES, KW_TOINT_SPAN, strm') = matchKW_TOINT(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (exp_arit_RES, exp_arit_SPAN, strm') = exp_arit_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_TOINT_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_int_PROD_2_ACT (LP_RES, RP_RES, KW_TOINT_RES, exp_arit_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_TOINT_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      in
+        (case (lex(strm))
+         of (Tok.KW_TOINT, _, strm') => funcs_int_PROD_2(strm)
+          | (Tok.KW_GETI, _, strm') => funcs_int_PROD_1(strm)
+          | _ => fail()
+        (* end case *))
+      end
 fun float_list_NT (strm) = let
       fun float_list_PROD_1 (strm) = let
             val (ID_RES, ID_SPAN, strm') = matchID(strm)
@@ -1326,9 +1380,33 @@ fun expr_NT (strm) = let
               (UserCode.expr_PROD_5_ACT (funcs_float_RES, funcs_float_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
                 FULL_SPAN, strm')
             end
+      fun expr_PROD_6 (strm) = let
+            val (funcs_int_RES, funcs_int_SPAN, strm') = funcs_int_NT(strm)
+            val FULL_SPAN = (#1(funcs_int_SPAN), #2(funcs_int_SPAN))
+            in
+              (UserCode.expr_PROD_6_ACT (funcs_int_RES, funcs_int_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
       in
         (case (lex(strm))
-         of (Tok.KW_SUM, _, strm') => expr_PROD_5(strm)
+         of (Tok.KW_GETI, _, strm') => expr_PROD_6(strm)
+          | (Tok.KW_TOINT, _, strm') => expr_PROD_6(strm)
+          | (Tok.BOOL(_), _, strm') => expr_PROD_2(strm)
+          | (Tok.NUM(_), _, strm') =>
+              tryProds(strm, [expr_PROD_2, expr_PROD_3])
+          | (Tok.REAL(_), _, strm') =>
+              tryProds(strm, [expr_PROD_2, expr_PROD_3])
+          | (Tok.KW_RT, _, strm') => tryProds(strm, [expr_PROD_2, expr_PROD_3])
+          | (Tok.KW_POW, _, strm') =>
+              tryProds(strm, [expr_PROD_2, expr_PROD_3])
+          | (Tok.ID(_), _, strm') =>
+              tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
+          | (Tok.LP, _, strm') =>
+              tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
+          | (Tok.KW_TOSTRING, _, strm') =>
+              tryProds(strm, [expr_PROD_1, expr_PROD_4])
+          | (Tok.STR(_), _, strm') => expr_PROD_1(strm)
+          | (Tok.KW_SUM, _, strm') => expr_PROD_5(strm)
           | (Tok.KW_PROD, _, strm') => expr_PROD_5(strm)
           | (Tok.KW_MEAN, _, strm') => expr_PROD_5(strm)
           | (Tok.KW_CORR, _, strm') => expr_PROD_5(strm)
@@ -1339,21 +1417,6 @@ fun expr_NT (strm) = let
           | (Tok.KW_COV, _, strm') => expr_PROD_5(strm)
           | (Tok.KW_LINREG, _, strm') => expr_PROD_5(strm)
           | (Tok.KW_TOFLOAT, _, strm') => expr_PROD_5(strm)
-          | (Tok.STR(_), _, strm') => expr_PROD_1(strm)
-          | (Tok.KW_TOSTRING, _, strm') =>
-              tryProds(strm, [expr_PROD_1, expr_PROD_4])
-          | (Tok.ID(_), _, strm') =>
-              tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
-          | (Tok.LP, _, strm') =>
-              tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
-          | (Tok.NUM(_), _, strm') =>
-              tryProds(strm, [expr_PROD_2, expr_PROD_3])
-          | (Tok.REAL(_), _, strm') =>
-              tryProds(strm, [expr_PROD_2, expr_PROD_3])
-          | (Tok.KW_RT, _, strm') => tryProds(strm, [expr_PROD_2, expr_PROD_3])
-          | (Tok.KW_POW, _, strm') =>
-              tryProds(strm, [expr_PROD_2, expr_PROD_3])
-          | (Tok.BOOL(_), _, strm') => expr_PROD_2(strm)
           | _ => fail()
         (* end case *))
       end

@@ -7,7 +7,7 @@ open Grammar
 open Helper
 
 datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance 
-datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat
+datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
 
 datatype Expr = Const of tipo
@@ -43,7 +43,10 @@ fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
 
 fun floatListToSampleExpr(fl) = Const(Sample (List.map (fn(x) => Primitivo(Float_ x)) fl))
 
-fun intListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(Float_ x)) il))
+fun intListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(Int_ x)) il))
+
+fun stringListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(String_ x)) il))
+
 
 fun showBinOp(Add) = "+"
   | showBinOp(Sub) = "-"
@@ -59,6 +62,7 @@ fun showBinOp(Add) = "+"
   | showBinOp(Concat) = "++"
   | showBinOp(LinReg) = "linearRegression"
   | showBinOp(GetFloat) = "getFloat"
+  | showBinOp(GetInt) = "getInt"
 
 fun getFunctionOne("mean", e1) = FuncOne(Mean,e1)
   | getFunctionOne("stdDeviation", e1) = FuncOne(StdDev,e1)
@@ -138,6 +142,8 @@ fun eval(Const t,vars) = t
         in
             case (TypeChecker.typeof ee1, TypeChecker.typeof ee2) of
                 ("Sample of float", "Sample of float") => TypeChecker.statistics(showBinOp binop, ee1, ee2)
+              | ("Sample of float","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
+              | ("Sample of int","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("float", "float") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("int", "int") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("string", "string") => TypeChecker.oper(showBinOp binop, ee1, ee2)
