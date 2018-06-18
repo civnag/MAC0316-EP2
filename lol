@@ -14,3 +14,7 @@ commands
     h := 9;
     s := toString(9 > 7);
     print(s);
+    h := 1;
+    print(toString(h));
+    s := toString(h+1);
+    print(s);

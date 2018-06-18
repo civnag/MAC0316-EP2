@@ -88,7 +88,7 @@ assign
     : ID DOTDOT expr => (tree:=(ParseTree.Assign(ID,expr))::(!tree); (ParseTree.Assign(ID,expr)))
     ;
 expr
-    : %try exp_string => (exp_string) 
+    : %try exp_string => (exp_string)
     | %try exp_bool => (exp_bool)
     | %try exp_arit => (exp_arit)
     | %try funcs_string => (funcs_string)
@@ -106,7 +106,7 @@ val_list
     ;
 prints
    : KW_Print LP exp_string RP => (
-        let 
+        let
             val k = (ParseTree.Print exp_string)::(!tree)
         in
             tree := k;
@@ -116,26 +116,26 @@ prints
    ;
 funcs_string
     : KW_TOSTRING LP expr RP => (ParseTree.FuncOne(ParseTree.ToString,expr))
-    (*| KW_LINREG LP float_list COMMA float_list RP => ()*)
     (*| KW_GETS LP string_list COMMA exp_arit RP => ()*)
     ;
 funcs_int
     : KW_GETI LP int_list COMMA exp_arit RP => ()
-    | KW_TOINT LP exp_arit RP => ()
+    | KW_TOINT LP exp_arit RP => (ParseTree.getFunctionOne(KW_TOINT, exp_arit))
     ;
 funcs_float
     : KW_SUM LP EMPTY RP => ()
-    | KW_SUM LP float_list RP => ()
+    | KW_SUM LP float_list RP => (ParseTree.getFunctionOne(KW_SUM, float_list))
     | KW_PROD LP EMPTY RP  => ()
-    | KW_PROD LP float_list RP => ()
-    | KW_MEAN LP float_list RP => ()
-    | KW_CORR LP float_list COMMA float_list RP => ()
-    | KW_STDEV LP float_list RP => ()
-    | KW_MEDIAN LP float_list RP => ()
-    | KW_VAR LP float_list RP => ()
-    | KW_COV LP float_list COMMA float_list RP => ()
+    | KW_PROD LP float_list RP => (ParseTree.getFunctionOne(KW_PROD, float_list))
+    | KW_MEAN LP float_list RP => (ParseTree.getFunctionOne(KW_MEAN, float_list))
+    | KW_CORR LP float_list COMMA float_list RP => (ParseTree.getBinaryFun(KW_CORR, float_list1, float_list2))
+    | KW_STDEV LP float_list RP => (ParseTree.getFunctionOne(KW_STDEV, float_list))
+    | KW_MEDIAN LP float_list RP => (ParseTree.getFunctionOne(KW_MEDIAN, float_list))
+    | KW_VAR LP float_list RP => (ParseTree.getFunctionOne(KW_VAR, float_list))
+    | KW_COV LP float_list COMMA float_list RP => (ParseTree.getBinaryFun(KW_COV, float_list1, float_list2))
     | KW_GETF LP float_list COMMA exp_arit RP => ()
-    | KW_TOFLOAT LP exp_arit RP => ()
+    | KW_TOFLOAT LP exp_arit RP => (ParseTree.getFunctionOne(KW_TOFLOAT, exp_arit))
+    | KW_LINREG LP float_list COMMA float_list RP => (ParseTree.getBinaryFun(KW_LINREG, float_list1, float_list2))
     ;
 funcs_list
     : KW_SUBS LP val_list COMMA exp_arit COMMA exp_arit RP => ()
@@ -166,13 +166,13 @@ exp_string
     | %try atom_string => (atom_string)
     ;
 op_str
-    : atom_string CONCAT atom_string => (ParseTree.FuncTwo(ParseTree.Concat,atom_string1,atom_string2)) 
+    : atom_string CONCAT atom_string => (ParseTree.FuncTwo(ParseTree.Concat,atom_string1,atom_string2))
     ;
 atom_string
     : ID => (ParseTree.Var ID)
     | STR => (ParseTree.Const (Grammar.Primitivo (Grammar.String_ STR)))
-    | funcs_string 
-    | LP exp_string RP 
+    | funcs_string
+    | LP exp_string RP
     ;
 rel_op
     : EEQ => ("==")
@@ -185,17 +185,17 @@ rel_op
 atom_bool
     : ID => (ParseTree.Var ID)
     | BOOL => ( (ParseTree.Const (Grammar.Primitivo (Grammar.Boolean_ BOOL))))
-    | LP exp_bool RP 
+    | LP exp_bool RP
     ;
 loop
     : KW_WHILE exp_bool KW_DO commands KW_END => ()
     ;
 conditional
-    : KW_IF exp_bool KW_THEN (commands)* KW_ELSE (commands)* KW_END 
+    : KW_IF exp_bool KW_THEN (commands)* KW_ELSE (commands)* KW_END
         => (
             let
                 val ifi = (ParseTree.If(exp_bool,SR1,SR2))
-            in 
+            in
                 tree := (ifi :: (!tree));
                 ifi
             end
