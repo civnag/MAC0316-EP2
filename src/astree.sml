@@ -38,6 +38,11 @@ fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("linearRegression", e1, e2) = FuncTwo(LinReg, e1, e2)
   | getBinaryFun(_,_,_) = raise OperationNotSupported
 
+fun floatListToSampleExpr(fl) = Const(Sample (List.map (fn(x) => Primitivo(Float_ x)) fl))
+fun intListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(Float_ x)) il))
+
+
+
 fun showBinOp(Add) = "+"
   | showBinOp(Sub) = "-"
   | showBinOp(Div) = "/"
@@ -54,6 +59,7 @@ fun showBinOp(Add) = "+"
 
 fun getFunctionOne("mean", e1) = FuncOne(Mean,e1)
   | getFunctionOne("stdDeviation", e1) = FuncOne(StdDev,e1)
+  | getFunctionOne("variance", e1) = FuncOne(Variance,e1)
   | getFunctionOne("median", e1) = FuncOne(Median,e1)
   | getFunctionOne("sum", e1) = FuncOne(SumL,e1)
   | getFunctionOne("prod", e1) = FuncOne(ProdL,e1)
