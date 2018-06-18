@@ -262,8 +262,10 @@ fun expr_PROD_3_ACT (exp_arit, exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : 
   ( exp_arit)
 fun expr_PROD_4_ACT (funcs_string, funcs_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( funcs_string)
+fun expr_PROD_5_ACT (funcs_float, funcs_float_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  ( funcs_float)
 fun val_list_PROD_1_ACT (SINT, SINT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.Const (Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Int_ x)) SINT) ))
 fun val_list_PROD_2_ACT (SFLOAT, SFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( )
 fun val_list_PROD_3_ACT (SBOOL, SBOOL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
@@ -274,7 +276,7 @@ fun val_list_PROD_5_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos
   ( )
 fun prints_PROD_1_ACT (LP, RP, KW_Print, exp_string, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_Print_SPAN : (Lex.pos * Lex.pos), exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( 
-        let 
+        let
             val k = (ParseTree.Print exp_string)::(!tree)
         in
             tree := k;
@@ -286,31 +288,31 @@ fun funcs_string_PROD_1_ACT (LP, RP, expr, KW_TOSTRING, LP_SPAN : (Lex.pos * Lex
 fun funcs_int_PROD_1_ACT (LP, RP, exp_arit, KW_GETI, COMMA, int_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETI_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), int_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( )
 fun funcs_int_PROD_2_ACT (LP, RP, KW_TOINT, exp_arit, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_TOINT_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getFunctionOne(KW_TOINT, exp_arit))
 fun funcs_float_PROD_1_ACT (LP, RP, EMPTY, KW_SUM, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getFunctionOne(KW_SUM, ParseTree.Const(Grammar.Sample nil)))
 fun funcs_float_PROD_2_ACT (LP, RP, float_list, KW_SUM, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getFunctionOne(KW_SUM, ParseTree.Const(float_list)))
 fun funcs_float_PROD_3_ACT (LP, RP, KW_PROD, EMPTY, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getFunctionOne(KW_SUM, ParseTree.Const(Grammar.Sample nil)))
 fun funcs_float_PROD_4_ACT (LP, RP, KW_PROD, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getFunctionOne(KW_PROD, ParseTree.Const(float_list)))
 fun funcs_float_PROD_5_ACT (LP, RP, KW_MEAN, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_MEAN_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getFunctionOne(KW_MEAN, ParseTree.Const(float_list)))
 fun funcs_float_PROD_6_ACT (LP, RP, KW_CORR, COMMA, float_list1, float_list2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_CORR_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getBinaryFun(KW_CORR, float_list1, float_list2))
 fun funcs_float_PROD_7_ACT (LP, RP, KW_STDEV, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_STDEV_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getFunctionOne(KW_STDEV, ParseTree.Const(float_list)))
 fun funcs_float_PROD_8_ACT (LP, RP, KW_MEDIAN, float_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_MEDIAN_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getFunctionOne(KW_MEDIAN, ParseTree.Const(float_list)))
 fun funcs_float_PROD_9_ACT (LP, RP, float_list, KW_VAR, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_VAR_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getFunctionOne(KW_VAR, ParseTree.Const(float_list)))
 fun funcs_float_PROD_10_ACT (LP, RP, COMMA, float_list1, float_list2, KW_COV, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), KW_COV_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
-fun funcs_float_PROD_11_ACT (LP, RP, exp_arit, KW_GETF, float_list, COMMA, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETF_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
-fun funcs_float_PROD_12_ACT (LP, RP, exp_arit, KW_TOFLOAT, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_TOFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+  ( ParseTree.getBinaryFun(KW_COV, float_list1, float_list2))
+fun funcs_float_PROD_11_ACT (LP, RP, exp_arit, KW_TOFLOAT, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_TOFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  ( ParseTree.getFunctionOne(KW_TOFLOAT, exp_arit))
+fun funcs_float_PROD_12_ACT (LP, RP, KW_LINREG, COMMA, float_list1, float_list2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_LINREG_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  ( ParseTree.getBinaryFun(KW_LINREG, float_list1, float_list2))
 fun funcs_list_PROD_1_ACT (LP, RP, exp_arit1, exp_arit2, KW_SUBS, val_list, COMMA1, COMMA2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit1_SPAN : (Lex.pos * Lex.pos), exp_arit2_SPAN : (Lex.pos * Lex.pos), KW_SUBS_SPAN : (Lex.pos * Lex.pos), val_list_SPAN : (Lex.pos * Lex.pos), COMMA1_SPAN : (Lex.pos * Lex.pos), COMMA2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( )
 fun float_list_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
@@ -367,7 +369,7 @@ fun conditional_PROD_1_ACT (SR1, SR2, exp_bool, KW_ELSE, KW_THEN, KW_IF, KW_END,
   ( 
             let
                 val ifi = (ParseTree.If(exp_bool,SR1,SR2))
-            in 
+            in
                 tree := (ifi :: (!tree));
                 ifi
             end
@@ -1089,6 +1091,190 @@ and op_bool_NT (strm) = let
           | _ => fail()
         (* end case *))
       end
+fun float_list_NT (strm) = let
+      fun float_list_PROD_1 (strm) = let
+            val (ID_RES, ID_SPAN, strm') = matchID(strm)
+            val FULL_SPAN = (#1(ID_SPAN), #2(ID_SPAN))
+            in
+              (UserCode.float_list_PROD_1_ACT (ID_RES, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun float_list_PROD_2 (strm) = let
+            val (SFLOAT_RES, SFLOAT_SPAN, strm') = matchSFLOAT(strm)
+            val FULL_SPAN = (#1(SFLOAT_SPAN), #2(SFLOAT_SPAN))
+            in
+              (UserCode.float_list_PROD_2_ACT (SFLOAT_RES, SFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      in
+        (case (lex(strm))
+         of (Tok.SFLOAT(_), _, strm') => float_list_PROD_2(strm)
+          | (Tok.ID(_), _, strm') => float_list_PROD_1(strm)
+          | _ => fail()
+        (* end case *))
+      end
+fun funcs_float_NT (strm) = let
+      fun funcs_float_PROD_1 (strm) = let
+            val (KW_SUM_RES, KW_SUM_SPAN, strm') = matchKW_SUM(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (EMPTY_RES, EMPTY_SPAN, strm') = matchEMPTY(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_SUM_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_1_ACT (LP_RES, RP_RES, EMPTY_RES, KW_SUM_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_2 (strm) = let
+            val (KW_SUM_RES, KW_SUM_SPAN, strm') = matchKW_SUM(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (float_list_RES, float_list_SPAN, strm') = float_list_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_SUM_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_2_ACT (LP_RES, RP_RES, float_list_RES, KW_SUM_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_SUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_3 (strm) = let
+            val (KW_PROD_RES, KW_PROD_SPAN, strm') = matchKW_PROD(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (EMPTY_RES, EMPTY_SPAN, strm') = matchEMPTY(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_PROD_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_3_ACT (LP_RES, RP_RES, KW_PROD_RES, EMPTY_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), EMPTY_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_4 (strm) = let
+            val (KW_PROD_RES, KW_PROD_SPAN, strm') = matchKW_PROD(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (float_list_RES, float_list_SPAN, strm') = float_list_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_PROD_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_4_ACT (LP_RES, RP_RES, KW_PROD_RES, float_list_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_PROD_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_5 (strm) = let
+            val (KW_MEAN_RES, KW_MEAN_SPAN, strm') = matchKW_MEAN(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (float_list_RES, float_list_SPAN, strm') = float_list_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_MEAN_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_5_ACT (LP_RES, RP_RES, KW_MEAN_RES, float_list_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_MEAN_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_6 (strm) = let
+            val (KW_CORR_RES, KW_CORR_SPAN, strm') = matchKW_CORR(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (float_list1_RES, float_list1_SPAN, strm') = float_list_NT(strm')
+            val (COMMA_RES, COMMA_SPAN, strm') = matchCOMMA(strm')
+            val (float_list2_RES, float_list2_SPAN, strm') = float_list_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_CORR_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_6_ACT (LP_RES, RP_RES, KW_CORR_RES, COMMA_RES, float_list1_RES, float_list2_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_CORR_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_7 (strm) = let
+            val (KW_STDEV_RES, KW_STDEV_SPAN, strm') = matchKW_STDEV(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (float_list_RES, float_list_SPAN, strm') = float_list_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_STDEV_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_7_ACT (LP_RES, RP_RES, KW_STDEV_RES, float_list_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_STDEV_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_8 (strm) = let
+            val (KW_MEDIAN_RES, KW_MEDIAN_SPAN, strm') = matchKW_MEDIAN(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (float_list_RES, float_list_SPAN, strm') = float_list_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_MEDIAN_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_8_ACT (LP_RES, RP_RES, KW_MEDIAN_RES, float_list_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_MEDIAN_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_9 (strm) = let
+            val (KW_VAR_RES, KW_VAR_SPAN, strm') = matchKW_VAR(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (float_list_RES, float_list_SPAN, strm') = float_list_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_VAR_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_9_ACT (LP_RES, RP_RES, float_list_RES, KW_VAR_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), float_list_SPAN : (Lex.pos * Lex.pos), KW_VAR_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_10 (strm) = let
+            val (KW_COV_RES, KW_COV_SPAN, strm') = matchKW_COV(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (float_list1_RES, float_list1_SPAN, strm') = float_list_NT(strm')
+            val (COMMA_RES, COMMA_SPAN, strm') = matchCOMMA(strm')
+            val (float_list2_RES, float_list2_SPAN, strm') = float_list_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_COV_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_10_ACT (LP_RES, RP_RES, COMMA_RES, float_list1_RES, float_list2_RES, KW_COV_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), KW_COV_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_11 (strm) = let
+            val (KW_TOFLOAT_RES, KW_TOFLOAT_SPAN, strm') = matchKW_TOFLOAT(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (exp_arit_RES, exp_arit_SPAN, strm') = exp_arit_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_TOFLOAT_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_11_ACT (LP_RES, RP_RES, exp_arit_RES, KW_TOFLOAT_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_TOFLOAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_float_PROD_12 (strm) = let
+            val (KW_LINREG_RES, KW_LINREG_SPAN, strm') = matchKW_LINREG(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (float_list1_RES, float_list1_SPAN, strm') = float_list_NT(strm')
+            val (COMMA_RES, COMMA_SPAN, strm') = matchCOMMA(strm')
+            val (float_list2_RES, float_list2_SPAN, strm') = float_list_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_LINREG_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_float_PROD_12_ACT (LP_RES, RP_RES, KW_LINREG_RES, COMMA_RES, float_list1_RES, float_list2_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_LINREG_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      in
+        (case (lex(strm))
+         of (Tok.KW_LINREG, _, strm') => funcs_float_PROD_12(strm)
+          | (Tok.KW_COV, _, strm') => funcs_float_PROD_10(strm)
+          | (Tok.KW_MEDIAN, _, strm') => funcs_float_PROD_8(strm)
+          | (Tok.KW_CORR, _, strm') => funcs_float_PROD_6(strm)
+          | (Tok.KW_SUM, _, strm') =>
+              (case (lex(strm'))
+               of (Tok.LP, _, strm') =>
+                    (case (lex(strm'))
+                     of (Tok.ID(_), _, strm') => funcs_float_PROD_2(strm)
+                      | (Tok.SFLOAT(_), _, strm') => funcs_float_PROD_2(strm)
+                      | (Tok.EMPTY, _, strm') => funcs_float_PROD_1(strm)
+                      | _ => fail()
+                    (* end case *))
+                | _ => fail()
+              (* end case *))
+          | (Tok.KW_PROD, _, strm') =>
+              (case (lex(strm'))
+               of (Tok.LP, _, strm') =>
+                    (case (lex(strm'))
+                     of (Tok.ID(_), _, strm') => funcs_float_PROD_4(strm)
+                      | (Tok.SFLOAT(_), _, strm') => funcs_float_PROD_4(strm)
+                      | (Tok.EMPTY, _, strm') => funcs_float_PROD_3(strm)
+                      | _ => fail()
+                    (* end case *))
+                | _ => fail()
+              (* end case *))
+          | (Tok.KW_MEAN, _, strm') => funcs_float_PROD_5(strm)
+          | (Tok.KW_STDEV, _, strm') => funcs_float_PROD_7(strm)
+          | (Tok.KW_VAR, _, strm') => funcs_float_PROD_9(strm)
+          | (Tok.KW_TOFLOAT, _, strm') => funcs_float_PROD_11(strm)
+          | _ => fail()
+        (* end case *))
+      end
 fun expr_NT (strm) = let
       fun expr_PROD_1 (strm) = let
             val (exp_string_RES, exp_string_SPAN, strm') = exp_string_NT(strm)
@@ -1118,9 +1304,32 @@ fun expr_NT (strm) = let
               (UserCode.expr_PROD_4_ACT (funcs_string_RES, funcs_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
                 FULL_SPAN, strm')
             end
+      fun expr_PROD_5 (strm) = let
+            val (funcs_float_RES, funcs_float_SPAN, strm') = funcs_float_NT(strm)
+            val FULL_SPAN = (#1(funcs_float_SPAN), #2(funcs_float_SPAN))
+            in
+              (UserCode.expr_PROD_5_ACT (funcs_float_RES, funcs_float_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
       in
         (case (lex(strm))
-         of (Tok.BOOL(_), _, strm') => expr_PROD_2(strm)
+         of (Tok.KW_SUM, _, strm') => expr_PROD_5(strm)
+          | (Tok.KW_PROD, _, strm') => expr_PROD_5(strm)
+          | (Tok.KW_MEAN, _, strm') => expr_PROD_5(strm)
+          | (Tok.KW_CORR, _, strm') => expr_PROD_5(strm)
+          | (Tok.KW_MEDIAN, _, strm') => expr_PROD_5(strm)
+          | (Tok.KW_STDEV, _, strm') => expr_PROD_5(strm)
+          | (Tok.KW_VAR, _, strm') => expr_PROD_5(strm)
+          | (Tok.KW_COV, _, strm') => expr_PROD_5(strm)
+          | (Tok.KW_LINREG, _, strm') => expr_PROD_5(strm)
+          | (Tok.KW_TOFLOAT, _, strm') => expr_PROD_5(strm)
+          | (Tok.STR(_), _, strm') => expr_PROD_1(strm)
+          | (Tok.KW_TOSTRING, _, strm') =>
+              tryProds(strm, [expr_PROD_1, expr_PROD_4])
+          | (Tok.ID(_), _, strm') =>
+              tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
+          | (Tok.LP, _, strm') =>
+              tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
           | (Tok.NUM(_), _, strm') =>
               tryProds(strm, [expr_PROD_2, expr_PROD_3])
           | (Tok.REAL(_), _, strm') =>
@@ -1128,13 +1337,7 @@ fun expr_NT (strm) = let
           | (Tok.KW_RT, _, strm') => tryProds(strm, [expr_PROD_2, expr_PROD_3])
           | (Tok.KW_POW, _, strm') =>
               tryProds(strm, [expr_PROD_2, expr_PROD_3])
-          | (Tok.ID(_), _, strm') =>
-              tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
-          | (Tok.LP, _, strm') =>
-              tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
-          | (Tok.KW_TOSTRING, _, strm') =>
-              tryProds(strm, [expr_PROD_1, expr_PROD_4])
-          | (Tok.STR(_), _, strm') => expr_PROD_1(strm)
+          | (Tok.BOOL(_), _, strm') => expr_PROD_2(strm)
           | _ => fail()
         (* end case *))
       end

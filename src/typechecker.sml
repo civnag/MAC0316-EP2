@@ -65,17 +65,14 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
 fun exprTypes e1 e2 = (typeof e1) = (typeof e2)
 fun isType e1 t = (typeof e1) = t
 
-fun toSMLType(Primitivo(Float_ x)) = x
-  | toSMLType(_) = raise TypeMismatch
-
-fun statistics("correlation", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.correlation((List.map toSMLType x), (List.map toSMLType y))))
-  | statistics("covariance", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.covariance((List.map toSMLType x), (List.map toSMLType y))))
+fun statistics("correlation", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.correlation((List.map extractFloat x), (List.map extractFloat y))))
+  | statistics("covariance", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.covariance((List.map extractFloat x), (List.map extractFloat y))))
   | statistics(_, _, _) = raise StatisticsNotImplemented
 
-fun functionOne("mean", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map toSMLType x)))
-  | functionOne("stdDeviation", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map toSMLType x)))
-  | functionOne("variance", Sample(x)) = Primitivo(Float_ (Statistics.variance (List.map toSMLType x)))
-  | functionOne("median", Sample(x)) = Primitivo(Float_ (Statistics.median (List.map toSMLType x)))
+fun functionOne("mean", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map extractFloat x)))
+  | functionOne("stdDeviation", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map extractFloat x)))
+  | functionOne("variance", Sample(x)) = Primitivo(Float_ (Statistics.variance (List.map extractFloat x)))
+  | functionOne("median", Sample(x)) = Primitivo(Float_ (Statistics.median (List.map extractFloat x)))
   | functionOne("toString", Primitivo(Int_ x)) = Primitivo(String_ (Int.toString x))
   | functionOne("toString", Primitivo(Float_ x)) = Primitivo(String_ (Real.toString x))
   | functionOne("toFloat", Primitivo(String_ value)) = Primitivo(Float_ (case Real.fromString value of SOME value => value | NONE => raise TypeMismatch))
