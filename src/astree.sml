@@ -47,6 +47,9 @@ fun intListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(Int_ x)
 
 fun stringListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(String_ x)) il))
 
+fun boolListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(Boolean_ x)) il))
+
+
 
 fun showBinOp(Add) = "+"
   | showBinOp(Sub) = "-"

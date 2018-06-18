@@ -103,11 +103,11 @@ expr
     ;
 
 val_list
-    : SINT => (ParseTree.Const (Grammar.Sample (List.map (fn(x) => Grammar.Primitivo(Grammar.Int_ x)) SINT) ))
-    | SFLOAT => ()
-    | SBOOL => ()
-    | SSTRING => ()
-    | ID => ()
+    : SINT => (ParseTree.intListToSampleExpr(SINT))
+    | SFLOAT => (ParseTree.floatListToSampleExpr(SFLOAT))
+    | SBOOL => (ParseTree.boolListToSampleExpr(SBOOL))
+    | SSTRING => (ParseTree.stringListToSampleExpr(SSTRING))
+    | ID => (ParseTree.Var ID)
     ;
 
 prints
