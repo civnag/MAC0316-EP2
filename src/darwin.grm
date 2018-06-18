@@ -139,7 +139,7 @@ funcs_float
     | KW_MEDIAN LP float_list RP => (ParseTree.getFunctionOne("median", float_list))
     | KW_VAR LP float_list RP => (ParseTree.getFunctionOne("variance", float_list))
     | KW_COV LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("covariance", float_list1, float_list2))
-    (*| KW_GETF LP float_list COMMA exp_arit RP => ()*)
+    | KW_GETF LP float_list COMMA exp_arit RP => (ParseTree.getBinaryFun("getFloat", float_list, exp_arit))
     | KW_TOFLOAT LP exp_arit RP => (ParseTree.getFunctionOne("toFloat", exp_arit))
     | KW_LINREG LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("linearRegression", float_list1, float_list2))
     ;

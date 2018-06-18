@@ -69,6 +69,9 @@ fun statistics("correlation", Sample(x), Sample(y)) = Primitivo(Float_ (Statisti
   | statistics("covariance", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.covariance((List.map extractFloat x), (List.map extractFloat y))))
   | statistics(_, _, _) = raise StatisticsNotImplemented
 
+fun functionTwo("getFloat",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
+  | functionTwo(_,_,_) = raise FunctionTwoNotImplemented
+
 fun functionOne("mean", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map extractFloat x)))
   | functionOne("stdDeviation", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map extractFloat x)))
   | functionOne("variance", Sample(x)) = Primitivo(Float_ (Statistics.variance (List.map extractFloat x)))

@@ -6,8 +6,8 @@ exception OperationNotSupported
 open Grammar
 open Helper
 
-datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance
-datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg
+datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance 
+datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
 
 datatype Expr = Const of tipo
@@ -38,12 +38,12 @@ fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("correlation", e1, e2) = FuncTwo(Corr, e1, e2)
   | getBinaryFun("++", e1, e2) = FuncTwo(Concat, e1, e2)
   | getBinaryFun("linearRegression", e1, e2) = FuncTwo(LinReg, e1, e2)
+  | getBinaryFun("getFloat", e1, e2) = FuncTwo(GetFloat, e1, e2)
   | getBinaryFun(_,_,_) = raise OperationNotSupported
 
 fun floatListToSampleExpr(fl) = Const(Sample (List.map (fn(x) => Primitivo(Float_ x)) fl))
+
 fun intListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(Float_ x)) il))
-
-
 
 fun showBinOp(Add) = "+"
   | showBinOp(Sub) = "-"
@@ -58,6 +58,7 @@ fun showBinOp(Add) = "+"
   | showBinOp(Corr) = "correlation"
   | showBinOp(Concat) = "++"
   | showBinOp(LinReg) = "linearRegression"
+  | showBinOp(GetFloat) = "getFloat"
 
 fun getFunctionOne("mean", e1) = FuncOne(Mean,e1)
   | getFunctionOne("stdDeviation", e1) = FuncOne(StdDev,e1)
