@@ -1,8 +1,10 @@
+
 structure ParseTree = struct
 
 exception OperationNotSupported
 
 open Grammar
+open Helper
 
 datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance
 datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg

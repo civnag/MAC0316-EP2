@@ -12,6 +12,15 @@ datatype tipo_primitivo = Int_ of int
                         | Boolean_ of bool
 
 datatype tipo = Sample of (tipo list)
+              | Tupla2 of tipo * tipo
+              | Tupla3 of tipo * tipo * tipo
+              | Tupla4 of tipo * tipo * tipo * tipo
+              | Tupla5 of tipo * tipo * tipo * tipo * tipo
+              | Tupla6 of tipo * tipo * tipo * tipo * tipo * tipo
+              | Tupla7 of tipo * tipo * tipo * tipo * tipo * tipo * tipo
+              | Tupla8 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
+              | Tupla9 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
+              | Tupla0 of tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo * tipo
               | Primitivo of tipo_primitivo
               | Void
 
