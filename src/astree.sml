@@ -200,6 +200,23 @@ fun interpret((Print expr)::cs,vars,tps) =
                 interpret(c2,vars,tps)
             ; interpret(cs,vars,tps)
         end
+  | interpret(While(e,c1)::cs,vars,tps) =
+        let
+            val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
+            fun innerLoop evExpr exp =
+                if evExpr then
+                    let 
+                        val newExpr = TypeChecker.extractBool(eval(exp,vars))
+                    in
+                        interpret(c1,vars,tps);
+                        innerLoop newExpr exp
+                    end
+                else
+                    ()
+        in        
+            innerLoop evaluedExpr e;
+            interpret(cs,vars,tps)
+        end
   | interpret(nil,vars,tps) = print "fim\n"
 
 end

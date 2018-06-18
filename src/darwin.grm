@@ -98,8 +98,8 @@ expr
     | %try funcs_string => (funcs_string)
     | %try funcs_float => (funcs_float)
     | %try funcs_int => (funcs_int)
-    (*| %try funcs_list => (funcs_list)
-    | %try val_list => (val_list)*)
+    | %try funcs_list => (funcs_list)
+    | %try val_list => (val_list)
     ;
 
 val_list
