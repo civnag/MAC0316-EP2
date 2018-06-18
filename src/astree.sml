@@ -7,12 +7,14 @@ open Grammar
 open Helper
 
 datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance 
-datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt
+datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt 
+datatype TerOp = SubString
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
 
 datatype Expr = Const of tipo
               | FuncOne of UnOp * Expr
               | FuncTwo of BinOp * Expr * Expr
+              | FuncThree of TerOp * Expr * Expr * Expr
               | Rel of OpRel * Expr * Expr
               | Var of string
 
@@ -24,6 +26,9 @@ datatype Tree = Assign of string * Expr
               | Null
 
 type RoseTree = Tree list
+
+fun getTertiaryFun("substring", e1, e2, e3) = FuncThree(SubString, e1, e2, e3)
+  | getTertiaryFun(_,_,_,_) = raise OperationNotSupported
 
 fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("-", e1, e2) = FuncTwo(Sub, e1, e2)
@@ -39,6 +44,7 @@ fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("++", e1, e2) = FuncTwo(Concat, e1, e2)
   | getBinaryFun("linearRegression", e1, e2) = FuncTwo(LinReg, e1, e2)
   | getBinaryFun("getFloat", e1, e2) = FuncTwo(GetFloat, e1, e2)
+  | getBinaryFun("substring", e1, e2) = FuncTwo(GetFloat, e1, e2)
   | getBinaryFun(_,_,_) = raise OperationNotSupported
 
 fun floatListToSampleExpr(fl) = Const(Sample (List.map (fn(x) => Primitivo(Float_ x)) fl))
@@ -66,6 +72,7 @@ fun showBinOp(Add) = "+"
   | showBinOp(LinReg) = "linearRegression"
   | showBinOp(GetFloat) = "getFloat"
   | showBinOp(GetInt) = "getInt"
+
 
 fun getFunctionOne("mean", e1) = FuncOne(Mean,e1)
   | getFunctionOne("stdDeviation", e1) = FuncOne(StdDev,e1)
@@ -151,6 +158,16 @@ fun eval(Const t,vars) = t
               | ("int", "int") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("string", "string") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | (_) => raise TypeChecker.TypeMismatch
+        end
+  | eval(FuncThree(binop, e1, e2, e3), vars) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+            val ee3 = eval(e3, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
+                ("string", "int", "int") => TypeChecker.functionThree("substring", ee1, ee2, ee3)
+              | _ => raise TypeChecker.TypeMismatch
         end
 
 

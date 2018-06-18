@@ -144,7 +144,7 @@ funcs_float
     | KW_LINREG LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("linearRegression", float_list1, float_list2))
     ;
 funcs_list
-    : KW_SUBS LP val_list COMMA exp_arit COMMA exp_arit RP => ()
+    : KW_SUBS LP exp_string COMMA exp_arit COMMA exp_arit RP => (ParseTree.getTertiaryFun("substring", exp_string, exp_arit1,exp_arit2))
     ;
 float_list
     : ID => (ParseTree.Var ID)
