@@ -85,6 +85,7 @@ commands
     : prints SEMI  => (prints)
     | assign SEMI  => (assign)
     | conditional  => (conditional)
+    | loop => (loop)
     ;
 
 assign
@@ -199,7 +200,7 @@ atom_bool
     ;
 
 loop
-    : KW_WHILE exp_bool KW_DO commands KW_END => ()
+    : KW_WHILE exp_bool KW_DO (commands)* KW_END => (ParseTree.While(exp_bool,SR))
     ;
 
 conditional

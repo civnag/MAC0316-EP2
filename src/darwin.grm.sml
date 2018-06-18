@@ -252,6 +252,8 @@ fun commands_PROD_2_ACT (SEMI, assign, SEMI_SPAN : (Lex.pos * Lex.pos), assign_S
   ( assign)
 fun commands_PROD_3_ACT (conditional, conditional_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( conditional)
+fun commands_PROD_4_ACT (loop, loop_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  ( loop)
 fun assign_PROD_1_ACT (ID, expr, DOTDOT, ID_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), DOTDOT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( tree:=(ParseTree.Assign(ID,expr))::(!tree); (ParseTree.Assign(ID,expr)))
 fun expr_PROD_1_ACT (exp_string, exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
@@ -371,8 +373,8 @@ fun atom_bool_PROD_1_ACT (ID, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.po
   ( ParseTree.Var ID)
 fun atom_bool_PROD_2_ACT (BOOL, BOOL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (  (ParseTree.Const (Grammar.Primitivo (Grammar.Boolean_ BOOL))))
-fun loop_PROD_1_ACT (commands, KW_WHILE, exp_bool, KW_DO, KW_END, commands_SPAN : (Lex.pos * Lex.pos), KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
-  ( )
+fun loop_PROD_1_ACT (SR, KW_WHILE, exp_bool, KW_DO, KW_END, SR_SPAN : (Lex.pos * Lex.pos), KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  ( ParseTree.While(exp_bool,SR))
 fun conditional_PROD_1_ACT (SR1, SR2, exp_bool, KW_ELSE, KW_THEN, KW_IF, KW_END, SR1_SPAN : (Lex.pos * Lex.pos), SR2_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_ELSE_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( 
             let
@@ -1632,13 +1634,45 @@ fun commands_NT (strm) = let
               (UserCode.commands_PROD_3_ACT (conditional_RES, conditional_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
                 FULL_SPAN, strm')
             end
+      fun commands_PROD_4 (strm) = let
+            val (loop_RES, loop_SPAN, strm') = loop_NT(strm)
+            val FULL_SPAN = (#1(loop_SPAN), #2(loop_SPAN))
+            in
+              (UserCode.commands_PROD_4_ACT (loop_RES, loop_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
       in
         (case (lex(strm))
-         of (Tok.KW_IF, _, strm') => commands_PROD_3(strm)
-          | (Tok.KW_Print, _, strm') => commands_PROD_1(strm)
+         of (Tok.KW_WHILE, _, strm') => commands_PROD_4(strm)
           | (Tok.ID(_), _, strm') => commands_PROD_2(strm)
+          | (Tok.KW_Print, _, strm') => commands_PROD_1(strm)
+          | (Tok.KW_IF, _, strm') => commands_PROD_3(strm)
           | _ => fail()
         (* end case *))
+      end
+and loop_NT (strm) = let
+      val (KW_WHILE_RES, KW_WHILE_SPAN, strm') = matchKW_WHILE(strm)
+      val (exp_bool_RES, exp_bool_SPAN, strm') = exp_bool_NT(strm')
+      val (KW_DO_RES, KW_DO_SPAN, strm') = matchKW_DO(strm')
+      fun loop_PROD_1_SUBRULE_1_NT (strm) = let
+            val (commands_RES, commands_SPAN, strm') = commands_NT(strm)
+            val FULL_SPAN = (#1(commands_SPAN), #2(commands_SPAN))
+            in
+              ((commands_RES), FULL_SPAN, strm')
+            end
+      fun loop_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
+             of (Tok.ID(_), _, strm') => true
+              | (Tok.KW_Print, _, strm') => true
+              | (Tok.KW_IF, _, strm') => true
+              | (Tok.KW_WHILE, _, strm') => true
+              | _ => false
+            (* end case *))
+      val (SR_RES, SR_SPAN, strm') = EBNF.closure(loop_PROD_1_SUBRULE_1_PRED, loop_PROD_1_SUBRULE_1_NT, strm')
+      val (KW_END_RES, KW_END_SPAN, strm') = matchKW_END(strm')
+      val FULL_SPAN = (#1(KW_WHILE_SPAN), #2(KW_END_SPAN))
+      in
+        (UserCode.loop_PROD_1_ACT (SR_RES, KW_WHILE_RES, exp_bool_RES, KW_DO_RES, KW_END_RES, SR_SPAN : (Lex.pos * Lex.pos), KW_WHILE_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_DO_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+          FULL_SPAN, strm')
       end
 and conditional_NT (strm) = let
       val (KW_IF_RES, KW_IF_SPAN, strm') = matchKW_IF(strm)
@@ -1654,6 +1688,7 @@ and conditional_NT (strm) = let
              of (Tok.ID(_), _, strm') => true
               | (Tok.KW_Print, _, strm') => true
               | (Tok.KW_IF, _, strm') => true
+              | (Tok.KW_WHILE, _, strm') => true
               | _ => false
             (* end case *))
       val (SR1_RES, SR1_SPAN, strm') = EBNF.closure(conditional_PROD_1_SUBRULE_1_PRED, conditional_PROD_1_SUBRULE_1_NT, strm')
@@ -1668,6 +1703,7 @@ and conditional_NT (strm) = let
              of (Tok.ID(_), _, strm') => true
               | (Tok.KW_Print, _, strm') => true
               | (Tok.KW_IF, _, strm') => true
+              | (Tok.KW_WHILE, _, strm') => true
               | _ => false
             (* end case *))
       val (SR2_RES, SR2_SPAN, strm') = EBNF.closure(conditional_PROD_1_SUBRULE_2_PRED, conditional_PROD_1_SUBRULE_2_NT, strm')
@@ -1721,6 +1757,7 @@ fun program_NT (strm) = let
              of (Tok.ID(_), _, strm') => true
               | (Tok.KW_Print, _, strm') => true
               | (Tok.KW_IF, _, strm') => true
+              | (Tok.KW_WHILE, _, strm') => true
               | _ => false
             (* end case *))
       val (SR_RES, SR_SPAN, strm') = EBNF.closure(program_PROD_1_SUBRULE_1_PRED, program_PROD_1_SUBRULE_1_NT, strm')
