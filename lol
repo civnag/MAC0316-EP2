@@ -11,6 +11,6 @@ variables
 end variables
 commands
     print("lol");
-    h := 1;
-    s := toString(h+1);
+    h := 9;
+    s := toString(9 > 7);
     print(s);

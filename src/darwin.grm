@@ -91,9 +91,9 @@ expr
     : %try exp_string => (exp_string) 
     | %try exp_bool => (exp_bool)
     | %try exp_arit => (exp_arit)
+    | %try funcs_string => (funcs_string)
     (*| %try funcs_float => ()
     | %try funcs_int => ()
-    | %try funcs_string => ()
     | %try funcs_list => ()
     | %try val_list => ()*)
     ;
