@@ -12,6 +12,8 @@ end variables
 commands
     print("lol");
     p := correlation({1.0,2.0,3.0},{2.0,4.0,6.0});
-    q := 4 <= 5;
+    q := 4 != 5;
+    h = 5-6*2;
     print(toString(p));
     print(toString(q));
+    print(toString(h));
