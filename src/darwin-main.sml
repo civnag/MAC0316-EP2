@@ -3,7 +3,9 @@ struct
 	open Grammar
 	open ParseTree
 	structure CP = DarwinParseFn(DarwinLexer)
-
+	
+	fun exnToString(e) = "[" ^ (exnName e) ^ " " ^ (exnMessage e) ^ "]"
+	
 	fun darwin instrm =
 		let
 			val sm = AntlrStreamPos.mkSourcemap()
@@ -33,4 +35,7 @@ struct
     	in
       		1
     	end
+    	handle e => (print "Error\n";exnToString e; 43)
+
+
 end
