@@ -67,7 +67,10 @@ fun isType e1 t = (typeof e1) = t
 
 fun statistics("correlation", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.correlation((List.map extractFloat x), (List.map extractFloat y))))
   | statistics("covariance", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.covariance((List.map extractFloat x), (List.map extractFloat y))))
+  | statistics("linearRegression", Sample(x), Sample(y)) = Primitivo(String_ (Statistics.linearRegression((List.map extractFloat x), (List.map extractFloat y))))
   | statistics(_, _, _) = raise StatisticsNotImplemented
+  handle e => (print ("Exception: " ^ exnName e); e)
+
 
 fun functionTwo("getFloat",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo("getInt",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)

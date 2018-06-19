@@ -11,9 +11,7 @@ variables
 end variables
 commands
     print("lol");
-    h := 9*1;
-    s := toString(q);
-    print(s);
-    print(toString(h));
-    print(s);
-    print(q);
+    p := correlation({1.0,2.0,3.0},{2.0,4.0,6.0});
+    q := 4 <= 5;
+    print(toString(p));
+    print(toString(q));

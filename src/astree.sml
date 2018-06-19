@@ -46,6 +46,7 @@ fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("getFloat", e1, e2) = FuncTwo(GetFloat, e1, e2)
   | getBinaryFun("substring", e1, e2) = FuncTwo(GetFloat, e1, e2)
   | getBinaryFun(_,_,_) = raise OperationNotSupported
+  handle e => (print "Exception: ";exnName e; e)
 
 fun floatListToSampleExpr(fl) = Const(Sample (List.map (fn(x) => Primitivo(Float_ x)) fl))
 
@@ -84,13 +85,14 @@ fun getFunctionOne("mean", e1) = FuncOne(Mean,e1)
   | getFunctionOne("toInt", e1) = FuncOne(ToInt,e1)
   | getFunctionOne("toFloat", e1) = FuncOne(ToFloat,e1)
   | getFunctionOne(_, _) = raise OperationNotSupported
+  handle e => (print "Exception: ";exnName e; e)
 
-fun getExprBoolTree("EEQ",e1,e2) = Rel(EQR,e1,e2)
-    | getExprBoolTree("NEQ",e1,e2) = Rel(NEQR,e1,e2)
-    | getExprBoolTree("LEQ",e1,e2) = Rel(LEQR,e1,e2)
-    | getExprBoolTree("GEQ",e1,e2) = Rel(GEQR,e1,e2)
-    | getExprBoolTree("LT",e1,e2) = Rel(LTR,e1,e2)
-    | getExprBoolTree("GT",e1,e2) = Rel(GTR,e1,e2)
+fun getExprBoolTree("==",e1,e2) = Rel(EQR,e1,e2)
+    | getExprBoolTree("!=",e1,e2) = Rel(NEQR,e1,e2)
+    | getExprBoolTree("<=",e1,e2) = Rel(LEQR,e1,e2)
+    | getExprBoolTree(">=",e1,e2) = Rel(GEQR,e1,e2)
+    | getExprBoolTree("<",e1,e2) = Rel(LTR,e1,e2)
+    | getExprBoolTree(">",e1,e2) = (print "opop";Rel(GTR,e1,e2))
     | getExprBoolTree(_,_,_) = raise OperationNotSupported
 
 fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0))
@@ -139,7 +141,7 @@ fun eval(Const t,vars) = t
             val ee1 = eval(e1, vars)
         in
             case (TypeChecker.typeof ee1) of
-                ("Sample of float") => TypeChecker.functionOne(showFunctionOne func, ee1)
+                ("sample of float") => TypeChecker.functionOne(showFunctionOne func, ee1)
               | ("float") => TypeChecker.functionOne(showFunctionOne func, ee1)
               | ("int") => TypeChecker.functionOne(showFunctionOne func, ee1)
               | ("string") => TypeChecker.functionOne(showFunctionOne func, ee1)
@@ -151,9 +153,9 @@ fun eval(Const t,vars) = t
             val ee2 = eval(e2, vars)
         in
             case (TypeChecker.typeof ee1, TypeChecker.typeof ee2) of
-                ("Sample of float", "Sample of float") => TypeChecker.statistics(showBinOp binop, ee1, ee2)
-              | ("Sample of float","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
-              | ("Sample of int","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
+                ("sample of float", "sample of float") => TypeChecker.statistics(showBinOp binop, ee1, ee2)
+              | ("sample of float","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
+              | ("sample of int","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("float", "float") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("int", "int") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("string", "string") => TypeChecker.oper(showBinOp binop, ee1, ee2)
@@ -218,5 +220,6 @@ fun interpret((Print expr)::cs,vars,tps) =
             interpret(cs,vars,tps)
         end
   | interpret(nil,vars,tps) = print "fim\n"
+  handle e => (print ("Exception: " ^ exnName e); ())
 
 end
