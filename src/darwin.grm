@@ -124,6 +124,7 @@ prints
 funcs_string
     : KW_TOSTRING LP expr RP => (ParseTree.FuncOne(ParseTree.ToString,expr))
     | KW_GETS LP string_list COMMA exp_arit RP => (ParseTree.getBinaryFun("getString", string_list, exp_arit))
+    | KW_LINREG LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("linearRegression", float_list1, float_list2))
     ;
 funcs_int
     : KW_GETI LP int_list COMMA exp_arit RP =>  (ParseTree.getBinaryFun("getInt", int_list, exp_arit))
@@ -142,7 +143,6 @@ funcs_float
     | KW_COV LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("covariance", float_list1, float_list2))
     | KW_GETF LP float_list COMMA exp_arit RP => (ParseTree.getBinaryFun("getFloat", float_list, exp_arit))
     | KW_TOFLOAT LP exp_arit RP => (ParseTree.getFunctionOne("toFloat", exp_arit))
-    | KW_LINREG LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("linearRegression", float_list1, float_list2))
     ;
 funcs_list
     : KW_SUBS LP exp_string COMMA exp_arit COMMA exp_arit RP => (ParseTree.getTertiaryFun("substring", exp_string, exp_arit1,exp_arit2))

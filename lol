@@ -12,7 +12,12 @@ end variables
 commands
     print("lol");
     p := correlation({1.0,2.0,3.0},{2.0,4.0,6.0});
-    h := -2;
+    h := 3+4*7;
+    while (h < 8) do
+        print("ahahahaj");
+        h := (h+1);
+        print(toString(h));
+    end
     if 3>4 then
         print("1");
     else
@@ -20,4 +25,3 @@ commands
     end
     print(toString(p));
     print(toString(q));
-    print(toString(h));
