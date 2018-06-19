@@ -7,7 +7,7 @@ open Grammar
 open Helper
 
 datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance 
-datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt 
+datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt | GetString
 datatype TerOp = SubString
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
 
@@ -44,7 +44,7 @@ fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("++", e1, e2) = FuncTwo(Concat, e1, e2)
   | getBinaryFun("linearRegression", e1, e2) = FuncTwo(LinReg, e1, e2)
   | getBinaryFun("getFloat", e1, e2) = FuncTwo(GetFloat, e1, e2)
-  | getBinaryFun("substring", e1, e2) = FuncTwo(GetFloat, e1, e2)
+  | getBinaryFun("getString", e1, e2) = FuncTwo(GetString, e1, e2)
   | getBinaryFun(_,_,_) = raise OperationNotSupported
   handle e => (print "Exception: ";exnName e; e)
 
@@ -73,6 +73,7 @@ fun showBinOp(Add) = "+"
   | showBinOp(LinReg) = "linearRegression"
   | showBinOp(GetFloat) = "getFloat"
   | showBinOp(GetInt) = "getInt"
+  | showBinOp(GetString) = "getString"
 
 
 fun getFunctionOne("mean", e1) = FuncOne(Mean,e1)
@@ -92,7 +93,7 @@ fun getExprBoolTree("==",e1,e2) = Rel(EQR,e1,e2)
     | getExprBoolTree("<=",e1,e2) = Rel(LEQR,e1,e2)
     | getExprBoolTree(">=",e1,e2) = Rel(GEQR,e1,e2)
     | getExprBoolTree("<",e1,e2) = Rel(LTR,e1,e2)
-    | getExprBoolTree(">",e1,e2) = (print "opop";Rel(GTR,e1,e2))
+    | getExprBoolTree(">",e1,e2) = Rel(GTR,e1,e2)
     | getExprBoolTree(_,_,_) = raise OperationNotSupported
 
 fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0))
@@ -156,6 +157,7 @@ fun eval(Const t,vars) = t
                 ("sample of float", "sample of float") => TypeChecker.statistics(showBinOp binop, ee1, ee2)
               | ("sample of float","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("sample of int","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
+              | ("sample of string","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("float", "float") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("int", "int") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("string", "string") => TypeChecker.oper(showBinOp binop, ee1, ee2)

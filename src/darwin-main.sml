@@ -5,7 +5,7 @@ struct
 	structure CP = DarwinParseFn(DarwinLexer)
 	
 	fun exnToString(e) = "[" ^ (exnName e) ^ " " ^ (exnMessage e) ^ "]"
-	
+
 	fun darwin instrm =
 		let
 			val sm = AntlrStreamPos.mkSourcemap()

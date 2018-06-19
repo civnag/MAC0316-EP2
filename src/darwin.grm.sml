@@ -293,6 +293,8 @@ fun prints_PROD_1_ACT (LP, RP, KW_Print, exp_string, LP_SPAN : (Lex.pos * Lex.po
     )
 fun funcs_string_PROD_1_ACT (LP, RP, expr, KW_TOSTRING, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_TOSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( ParseTree.FuncOne(ParseTree.ToString,expr))
+fun funcs_string_PROD_2_ACT (LP, RP, exp_arit, KW_GETS, COMMA, string_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETS_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), string_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  ( ParseTree.getBinaryFun("getString", string_list, exp_arit))
 fun funcs_int_PROD_1_ACT (LP, RP, exp_arit, KW_GETI, COMMA, int_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETI_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), int_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (  ParseTree.getBinaryFun("getInt", int_list, exp_arit))
 fun funcs_int_PROD_2_ACT (LP, RP, KW_TOINT, exp_arit, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_TOINT_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
@@ -1092,6 +1094,28 @@ fun val_list_NT (strm) = let
           | _ => fail()
         (* end case *))
       end
+fun string_list_NT (strm) = let
+      fun string_list_PROD_1 (strm) = let
+            val (ID_RES, ID_SPAN, strm') = matchID(strm)
+            val FULL_SPAN = (#1(ID_SPAN), #2(ID_SPAN))
+            in
+              (UserCode.string_list_PROD_1_ACT (ID_RES, ID_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun string_list_PROD_2 (strm) = let
+            val (SSTRING_RES, SSTRING_SPAN, strm') = matchSSTRING(strm)
+            val FULL_SPAN = (#1(SSTRING_SPAN), #2(SSTRING_SPAN))
+            in
+              (UserCode.string_list_PROD_2_ACT (SSTRING_RES, SSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      in
+        (case (lex(strm))
+         of (Tok.SSTRING(_), _, strm') => string_list_PROD_2(strm)
+          | (Tok.ID(_), _, strm') => string_list_PROD_1(strm)
+          | _ => fail()
+        (* end case *))
+      end
 fun int_list_NT (strm) = let
       fun int_list_PROD_1 (strm) = let
             val (ID_RES, ID_SPAN, strm') = matchID(strm)
@@ -1417,6 +1441,8 @@ fun expr_NT (strm) = let
                 expr_PROD_8])
           | (Tok.LP, _, strm') =>
               tryProds(strm, [expr_PROD_1, expr_PROD_2, expr_PROD_3])
+          | (Tok.KW_GETS, _, strm') =>
+              tryProds(strm, [expr_PROD_1, expr_PROD_4])
           | (Tok.KW_TOSTRING, _, strm') =>
               tryProds(strm, [expr_PROD_1, expr_PROD_4])
           | (Tok.STR(_), _, strm') => expr_PROD_1(strm)
@@ -1472,6 +1498,8 @@ and exp_string_NT (strm) = let
               tryProds(strm, [exp_string_PROD_1, exp_string_PROD_2])
           | (Tok.STR(_), _, strm') =>
               tryProds(strm, [exp_string_PROD_1, exp_string_PROD_2])
+          | (Tok.KW_GETS, _, strm') =>
+              tryProds(strm, [exp_string_PROD_1, exp_string_PROD_2])
           | (Tok.KW_TOSTRING, _, strm') =>
               tryProds(strm, [exp_string_PROD_1, exp_string_PROD_2])
           | _ => fail()
@@ -1511,19 +1539,40 @@ and atom_string_NT (strm) = let
          of (Tok.LP, _, strm') => atom_string_PROD_4(strm)
           | (Tok.STR(_), _, strm') => atom_string_PROD_2(strm)
           | (Tok.ID(_), _, strm') => atom_string_PROD_1(strm)
+          | (Tok.KW_GETS, _, strm') => atom_string_PROD_3(strm)
           | (Tok.KW_TOSTRING, _, strm') => atom_string_PROD_3(strm)
           | _ => fail()
         (* end case *))
       end
 and funcs_string_NT (strm) = let
-      val (KW_TOSTRING_RES, KW_TOSTRING_SPAN, strm') = matchKW_TOSTRING(strm)
-      val (LP_RES, LP_SPAN, strm') = matchLP(strm')
-      val (expr_RES, expr_SPAN, strm') = expr_NT(strm')
-      val (RP_RES, RP_SPAN, strm') = matchRP(strm')
-      val FULL_SPAN = (#1(KW_TOSTRING_SPAN), #2(RP_SPAN))
+      fun funcs_string_PROD_1 (strm) = let
+            val (KW_TOSTRING_RES, KW_TOSTRING_SPAN, strm') = matchKW_TOSTRING(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (expr_RES, expr_SPAN, strm') = expr_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_TOSTRING_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_string_PROD_1_ACT (LP_RES, RP_RES, expr_RES, KW_TOSTRING_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_TOSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_string_PROD_2 (strm) = let
+            val (KW_GETS_RES, KW_GETS_SPAN, strm') = matchKW_GETS(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (string_list_RES, string_list_SPAN, strm') = string_list_NT(strm')
+            val (COMMA_RES, COMMA_SPAN, strm') = matchCOMMA(strm')
+            val (exp_arit_RES, exp_arit_SPAN, strm') = exp_arit_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(KW_GETS_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_string_PROD_2_ACT (LP_RES, RP_RES, exp_arit_RES, KW_GETS_RES, COMMA_RES, string_list_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETS_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), string_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
       in
-        (UserCode.funcs_string_PROD_1_ACT (LP_RES, RP_RES, expr_RES, KW_TOSTRING_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), KW_TOSTRING_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
-          FULL_SPAN, strm')
+        (case (lex(strm))
+         of (Tok.KW_GETS, _, strm') => funcs_string_PROD_2(strm)
+          | (Tok.KW_TOSTRING, _, strm') => funcs_string_PROD_1(strm)
+          | _ => fail()
+        (* end case *))
       end
 and op_str_NT (strm) = let
       val (atom_string1_RES, atom_string1_SPAN, strm') = atom_string_NT(strm)

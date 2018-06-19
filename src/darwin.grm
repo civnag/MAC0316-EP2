@@ -123,7 +123,7 @@ prints
    ;
 funcs_string
     : KW_TOSTRING LP expr RP => (ParseTree.FuncOne(ParseTree.ToString,expr))
-    (*| KW_GETS LP string_list COMMA exp_arit RP => ()*)
+    | KW_GETS LP string_list COMMA exp_arit RP => (ParseTree.getBinaryFun("getString", string_list, exp_arit))
     ;
 funcs_int
     : KW_GETI LP int_list COMMA exp_arit RP =>  (ParseTree.getBinaryFun("getInt", int_list, exp_arit))

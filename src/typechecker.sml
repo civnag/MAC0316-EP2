@@ -74,6 +74,7 @@ fun statistics("correlation", Sample(x), Sample(y)) = Primitivo(Float_ (Statisti
 
 fun functionTwo("getFloat",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo("getInt",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
+  | functionTwo("getString",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo(_,_,_) = raise FunctionTwoNotImplemented
 
 fun functionThree("substring",Primitivo(String_ ls),Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo(String_(String.substring(ls,i,j)))
