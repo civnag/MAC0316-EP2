@@ -12,7 +12,7 @@ end variables
 commands
     print("lol");
     p := correlation({1.0,2.0,3.0},{2.0,4.0,6.0});
-    h := 3+4*7;
+    h := 0;
     while (h < 8) do
         print("ahahahaj");
         h := (h+1);

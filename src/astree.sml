@@ -201,14 +201,14 @@ fun interpret((Print expr)::cs,vars,tps) =
             if evaluedExpr then
                 interpret(c1,vars,tps)
             else
-                interpret(c2,vars,tps)
-            ; interpret(cs,vars,tps)
+                interpret(c2,vars,tps);
+            interpret(cs,vars,tps)
         end
   | interpret(While(e,c1)::cs,vars,tps) =
         let
             val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
             fun innerLoop evExpr exp =
-                if not(evExpr) then
+                if evExpr then
                     let 
                         val newExpr = TypeChecker.extractBool(eval(exp,vars))
                     in
@@ -222,7 +222,7 @@ fun interpret((Print expr)::cs,vars,tps) =
             interpret(cs,vars,tps)
         end
   | interpret(Null::cs,vars,tps) = print "Null"
-  | interpret(nil,vars,tps) = print "fim\n"
+  | interpret(nil,vars,tps) = ()
   handle e => (print ("Exception: " ^ exnName e); ())
 
 end
