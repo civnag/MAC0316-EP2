@@ -15,7 +15,7 @@ commands
     h := 1;
     while h < 8 do
         h := (h+1);
-        print("yyyyy");
+        print("yyyyy " ++ toString(h));
         print(toString(h));
     end
     print(toString(h));
