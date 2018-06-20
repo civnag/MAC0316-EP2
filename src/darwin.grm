@@ -241,9 +241,9 @@ multExp
     ;
 
 rootExp
-    : KW_RT LP prefixExp COMMA prefixExp RP => (ParseTree.FuncTwo(ParseTree.RT,prefixExp1,prefixExp2))
-    | KW_POW LP prefixExp COMMA prefixExp RP => (ParseTree.FuncTwo(ParseTree.Pow,prefixExp1,prefixExp2))
-    | prefixExp => (prefixExp)
+    : %try KW_RT LP prefixExp COMMA prefixExp RP => (ParseTree.FuncTwo(ParseTree.RT,prefixExp1,prefixExp2))
+    | %try KW_POW LP prefixExp COMMA prefixExp RP => (ParseTree.FuncTwo(ParseTree.Pow,prefixExp1,prefixExp2))
+    | %try prefixExp => (prefixExp)
     ;
 
 prefixExp
