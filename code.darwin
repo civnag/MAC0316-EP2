@@ -1,29 +1,33 @@
-title: "Avaliação de características presentes em automóveis nacionais.";
-variables:
-    sample of tuple(string, string) modelos;
+title "Avaliacao de caracteristicas presentes em automoveis nacionais";
+variables
     sample of float consumo;
     sample of float aceleracao;
     float media;
     int indice;
-    sample of float variancia;
-    sample of float correlacao;
-commands:
-    modelos = {("Ford", "Fusion"), ("Chevrolet", "Onix"), ("Volkswagen", "Gol"), ("Fiat", "Uno")};
-    consumo = {15.1, 14.6, 13.6, 11.6};
-    aceleracao = {9.3, 15.4, 24.5, 2.3};
+    float variancia;
+    float correlacao;
+end variables
+commands
+    consumo := {15.1,14.6,13.6,11.6};
+    aceleracao := {9.3,15.4,24.5,2.3};
 
-    media = mean(consumo);
-    variancia = variance(consumo);
-    correlacao = correlation(consumo, aceleracao);
+    media := mean(consumo);
+    print("A media de consumo: " ++ toString(media));
 
-    indice = 0;
+    variancia := variance(consumo);
+    print("A variancia de consumo: " ++ toString(variancia));
+
+    correlacao := correlation(consumo, aceleracao);
+    print("A correlacao entre consumo e aceleracao: " ++ toString(correlacao));
+
+    indice := 0;
     while(indice < 4)
         do
-            if (media > get(consumo, indice))
+            if (media < 1.0)
                 then
-                    print("A média de consumo para o carro selecionado é alta");
+                    print("A media de consumo para o carro selecionado e alta");
                 else
-                    print("A média de consumo para o carro selecionado é baixa");
+                    print("A media de consumo para o carro selecionado e baixa");
             end
-            indice = indice + 1;
+            indice := (indice + 1);
         end
