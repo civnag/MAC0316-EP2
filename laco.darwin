@@ -1,0 +1,13 @@
+title  "Laco de repeticao";
+variables
+    float porcentagem;
+    float quantidade;
+end variables
+commands
+    porcentagem := 5.0;
+    quantidade := 15.5;
+
+    while(porcentagem < quantidade) do
+        print("A porcentagem precisa ser aumentada: " ++ toString(porcentagem));
+        porcentagem := (porcentagem + 0.5);
+    end

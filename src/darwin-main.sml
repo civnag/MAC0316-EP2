@@ -39,7 +39,7 @@ struct
 
 	fun main (prog_name) =
     	let
-      		val _ = darwin (TextIO.openIn "lol")
+      		val _ = darwin (TextIO.openIn prog_name)
     	in
       		1
     	end
