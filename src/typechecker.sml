@@ -60,6 +60,7 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
    | oper("rt", Primitivo(Float_ i),Primitivo(Float_ j)) = Primitivo (Float_ (Math.pow(i, 1.0/j)))
    | oper("neg",_,Primitivo(Int_ i)) = Primitivo(Int_ (0-i))
    | oper("neg",_,Primitivo(Float_ i)) = Primitivo(Float_ (0.0-i))
+   | oper("++",Primitivo(String_ l),Primitivo(String_ m)) = Primitivo(String_ (l ^ m))
    | oper(_,_,_) = raise FunctionTwoNotImplemented
 
 fun exprTypes e1 e2 = (typeof e1) = (typeof e2)

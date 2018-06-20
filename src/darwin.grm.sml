@@ -295,7 +295,9 @@ fun funcs_string_PROD_1_ACT (LP, RP, expr, KW_TOSTRING, LP_SPAN : (Lex.pos * Lex
   ( ParseTree.FuncOne(ParseTree.ToString,expr))
 fun funcs_string_PROD_2_ACT (LP, RP, exp_arit, KW_GETS, COMMA, string_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETS_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), string_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( ParseTree.getBinaryFun("getString", string_list, exp_arit))
-fun funcs_string_PROD_3_ACT (LP, RP, KW_LINREG, COMMA, float_list1, float_list2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_LINREG_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+fun funcs_string_PROD_3_ACT (LP, RP, COMMA, string_list1, string_list2, CONCAT, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), string_list1_SPAN : (Lex.pos * Lex.pos), string_list2_SPAN : (Lex.pos * Lex.pos), CONCAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  ( ParseTree.getBinaryFun("concat", string_list1, string_list2))
+fun funcs_string_PROD_4_ACT (LP, RP, KW_LINREG, COMMA, float_list1, float_list2, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_LINREG_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   ( ParseTree.getBinaryFun("linearRegression", float_list1, float_list2))
 fun funcs_int_PROD_1_ACT (LP, RP, exp_arit, KW_GETI, COMMA, int_list, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), exp_arit_SPAN : (Lex.pos * Lex.pos), KW_GETI_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), int_list_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (  ParseTree.getBinaryFun("getInt", int_list, exp_arit))
@@ -1441,6 +1443,8 @@ fun expr_NT (strm) = let
               tryProds(strm, [expr_PROD_1, expr_PROD_4])
           | (Tok.KW_LINREG, _, strm') =>
               tryProds(strm, [expr_PROD_1, expr_PROD_4])
+          | (Tok.CONCAT, _, strm') =>
+              tryProds(strm, [expr_PROD_1, expr_PROD_4])
           | (Tok.STR(_), _, strm') => expr_PROD_1(strm)
           | (Tok.KW_SUM, _, strm') => expr_PROD_5(strm)
           | (Tok.KW_PROD, _, strm') => expr_PROD_5(strm)
@@ -1499,6 +1503,8 @@ and exp_string_NT (strm) = let
               tryProds(strm, [exp_string_PROD_1, exp_string_PROD_2])
           | (Tok.KW_LINREG, _, strm') =>
               tryProds(strm, [exp_string_PROD_1, exp_string_PROD_2])
+          | (Tok.CONCAT, _, strm') =>
+              tryProds(strm, [exp_string_PROD_1, exp_string_PROD_2])
           | _ => fail()
         (* end case *))
       end
@@ -1539,6 +1545,7 @@ and atom_string_NT (strm) = let
           | (Tok.KW_GETS, _, strm') => atom_string_PROD_3(strm)
           | (Tok.KW_TOSTRING, _, strm') => atom_string_PROD_3(strm)
           | (Tok.KW_LINREG, _, strm') => atom_string_PROD_3(strm)
+          | (Tok.CONCAT, _, strm') => atom_string_PROD_3(strm)
           | _ => fail()
         (* end case *))
       end
@@ -1566,6 +1573,18 @@ and funcs_string_NT (strm) = let
                 FULL_SPAN, strm')
             end
       fun funcs_string_PROD_3 (strm) = let
+            val (CONCAT_RES, CONCAT_SPAN, strm') = matchCONCAT(strm)
+            val (LP_RES, LP_SPAN, strm') = matchLP(strm')
+            val (string_list1_RES, string_list1_SPAN, strm') = string_list_NT(strm')
+            val (COMMA_RES, COMMA_SPAN, strm') = matchCOMMA(strm')
+            val (string_list2_RES, string_list2_SPAN, strm') = string_list_NT(strm')
+            val (RP_RES, RP_SPAN, strm') = matchRP(strm')
+            val FULL_SPAN = (#1(CONCAT_SPAN), #2(RP_SPAN))
+            in
+              (UserCode.funcs_string_PROD_3_ACT (LP_RES, RP_RES, COMMA_RES, string_list1_RES, string_list2_RES, CONCAT_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), string_list1_SPAN : (Lex.pos * Lex.pos), string_list2_SPAN : (Lex.pos * Lex.pos), CONCAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun funcs_string_PROD_4 (strm) = let
             val (KW_LINREG_RES, KW_LINREG_SPAN, strm') = matchKW_LINREG(strm)
             val (LP_RES, LP_SPAN, strm') = matchLP(strm')
             val (float_list1_RES, float_list1_SPAN, strm') = float_list_NT(strm')
@@ -1574,14 +1593,15 @@ and funcs_string_NT (strm) = let
             val (RP_RES, RP_SPAN, strm') = matchRP(strm')
             val FULL_SPAN = (#1(KW_LINREG_SPAN), #2(RP_SPAN))
             in
-              (UserCode.funcs_string_PROD_3_ACT (LP_RES, RP_RES, KW_LINREG_RES, COMMA_RES, float_list1_RES, float_list2_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_LINREG_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+              (UserCode.funcs_string_PROD_4_ACT (LP_RES, RP_RES, KW_LINREG_RES, COMMA_RES, float_list1_RES, float_list2_RES, LP_SPAN : (Lex.pos * Lex.pos), RP_SPAN : (Lex.pos * Lex.pos), KW_LINREG_SPAN : (Lex.pos * Lex.pos), COMMA_SPAN : (Lex.pos * Lex.pos), float_list1_SPAN : (Lex.pos * Lex.pos), float_list2_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
                 FULL_SPAN, strm')
             end
       in
         (case (lex(strm))
-         of (Tok.KW_LINREG, _, strm') => funcs_string_PROD_3(strm)
-          | (Tok.KW_TOSTRING, _, strm') => funcs_string_PROD_1(strm)
+         of (Tok.KW_LINREG, _, strm') => funcs_string_PROD_4(strm)
           | (Tok.KW_GETS, _, strm') => funcs_string_PROD_2(strm)
+          | (Tok.KW_TOSTRING, _, strm') => funcs_string_PROD_1(strm)
+          | (Tok.CONCAT, _, strm') => funcs_string_PROD_3(strm)
           | _ => fail()
         (* end case *))
       end

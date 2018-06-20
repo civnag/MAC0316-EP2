@@ -124,6 +124,7 @@ prints
 funcs_string
     : KW_TOSTRING LP expr RP => (ParseTree.FuncOne(ParseTree.ToString,expr))
     | KW_GETS LP string_list COMMA exp_arit RP => (ParseTree.getBinaryFun("getString", string_list, exp_arit))
+    | CONCAT LP string_list COMMA string_list RP => (ParseTree.getBinaryFun("concat", string_list1, string_list2))
     | KW_LINREG LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("linearRegression", float_list1, float_list2))
     ;
 funcs_int
