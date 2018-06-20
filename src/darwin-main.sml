@@ -33,7 +33,7 @@ struct
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs
 		in
-			(case r of SOME r2 => ParseTree.interpret(r2,vs,tps) | NONE => raise NothingFound);
+			(case r of SOME r2 => ParseTree.programa(r2,vs,tps) | NONE => raise NothingFound);
 			r
 		end
 

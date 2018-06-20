@@ -174,14 +174,14 @@ fun eval(Const t,vars) = t
         end
 
 
-fun interpret((Print expr)::cs,vars,tps) =
+fun interpret((Print expr),vars,tps) =
         let
             val evaluedExpr = eval(expr,vars)
         in
             print(Grammar.show evaluedExpr ^ "\n");
-            interpret(cs,vars,tps)
+            vars
         end
-  | interpret(Assign(var,e)::cs,vars,tps) =
+  | interpret(Assign(var,e),vars,tps) =
         let
             val evaluedExpr = eval(e,vars)
             val varExists = AtomMap.inDomain(vars,Atom.atom var)
@@ -189,45 +189,34 @@ fun interpret((Print expr)::cs,vars,tps) =
             val sameType = (TypeChecker.isType evaluedExpr t)
         in
             if (varExists andalso sameType) then
-                interpret(cs,Grammar.updateHt(vars,Atom.atom var,evaluedExpr),tps)
+                Grammar.updateHt(vars,Atom.atom var,evaluedExpr)
             else
                 raise TypeChecker.TypeError
         end
-  | interpret(If(e,c1,c2)::cs,vars,tps) =
+  | interpret(If(e,c1,c2),vars,tps) =
         let
             val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
         in
             if evaluedExpr then
-                interpret(c1,vars,tps)
+                programa(c1, vars, tps)
             else
-                interpret(c2,vars,tps);
-            interpret(cs,vars,tps)
+                programa(c2, vars, tps);
+            vars
         end
-  | interpret(While(e,c1)::cs,vars,tps) =
+  | interpret(While(e,c1),vars,tps) =
         let
             val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
-            fun innerLoop evExpr =
-                if evExpr then (
-                    (List.foldl (fn(comm,_) =>
-                        interpret([comm],vars,tps)
-                    ) () c1);
-                    innerLoop (TypeChecker.extractBool(eval(e,vars)))
-                )
-                else
-                    ()
         in
-            innerLoop evaluedExpr;
-            interpret(cs,vars,tps)
+            if evaluedExpr then
+              let val newVars = programa(c1, vars, tps) in interpret(While(e,c1), newVars, tps) end
+            else
+              vars
         end
-  | interpret(Null::cs,vars,tps) = print "Null"
-  | interpret(nil,vars,tps) = ()
-  handle e => (print ("Exception: " ^ exnName e); ())
+  | interpret(cs,vars,tps) = vars
+  (* handle e => (print ("Exception: " ^ exnName e); ()) *)
 
-  fun correctGrammar(If(_,c1::cl,c2::cr)::r) = List.length (c1::cl) + List.length (c2::cr) + correctGrammar(cl) + correctGrammar(cr) + correctGrammar(r)
-	  | correctGrammar(If(_,c1::cs,nil)::r) = List.length (c1::cs) + correctGrammar(cs) + correctGrammar(r)
-	  | correctGrammar(If(_,nil,c2::cs)::r) = List.length (c2::cs) + correctGrammar(cs) + correctGrammar(r)
-	  | correctGrammar(c::r)  = correctGrammar(r)
-	  | correctGrammar _ = 0
+and programa(x::ls, vars, tps) = let val varsNew = interpret(x, vars, tps) in programa(ls, varsNew, tps) end
+  | programa([], vars, tps) = vars
 
 
 end

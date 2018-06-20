@@ -15,13 +15,9 @@ commands
     h := 1;
     j := toInt(3.0);
     print("Teste: " ++ toString(j));
-
-
-    if h < 8 then
+    while h < 8 do
         h := (h+1);
         print("yyyyy " ++ toString(h));
         print(toString(h));
-    else
-      print("triste");
     end
     print(toString(h));
