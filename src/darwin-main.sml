@@ -33,7 +33,6 @@ struct
 			    AntlrRepair.repairToString DarwinTokens.toString sm err ^ "\n")
 			val _ = app doErr errs
 		in
-			print (Int.toString(correctGrammar tr));
 			(case r of SOME r2 => ParseTree.interpret(r2,vs,tps) | NONE => raise NothingFound);
 			r
 		end

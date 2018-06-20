@@ -87,8 +87,8 @@ fun functionOne("mean", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviat
   | functionOne("median", Sample(x)) = Primitivo(Float_ (Statistics.median (List.map extractFloat x)))
   | functionOne("toString", Primitivo(Int_ x)) = Primitivo(String_ (Int.toString x))
   | functionOne("toString", Primitivo(Float_ x)) = Primitivo(String_ (Real.toString x))
-  | functionOne("toFloat", Primitivo(String_ value)) = Primitivo(Float_ (case Real.fromString value of SOME value => value | NONE => raise TypeMismatch))
-  | functionOne("toInt", Primitivo(String_ value)) = Primitivo(Float_ (case Real.fromString value of SOME value => value | NONE => raise TypeMismatch))
+  | functionOne("toFloat", Primitivo(Int_ value)) = Primitivo(Float_ (Real.fromInt value))
+  | functionOne("toInt", Primitivo(Float_ value)) = Primitivo(Int_ (Real.trunc value))
   | functionOne("sum", Sample(x)) = raise FunctionOneNotImplemented
   | functionOne("prod", Sample(x)) = raise FunctionOneNotImplemented
   | functionOne(_, _) = raise TypeMismatch

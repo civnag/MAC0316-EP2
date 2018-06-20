@@ -6,7 +6,7 @@ exception OperationNotSupported
 open Grammar
 open Helper
 
-datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance 
+datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance
 datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt | GetString
 datatype TerOp = SubString
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
@@ -136,7 +136,6 @@ fun eval(Const t,vars) = t
                 | ("float","float") => TypeChecker.oper(showOpRel oprel,ee1,ee2)
                 | (_,_) => raise TypeChecker.TypeMismatch
         end
-  | eval(FuncOne(ToString,e),vars) = Grammar.Primitivo(Grammar.String_(Grammar.show(eval(e,vars))))
   | eval(FuncOne(func, e1), vars) =
         let
             val ee1 = eval(e1, vars)
@@ -209,14 +208,14 @@ fun interpret((Print expr)::cs,vars,tps) =
             val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
             fun innerLoop evExpr =
                 if evExpr then (
-                    (List.foldl (fn(comm,_) => 
+                    (List.foldl (fn(comm,_) =>
                         interpret([comm],vars,tps)
                     ) () c1);
                     innerLoop (TypeChecker.extractBool(eval(e,vars)))
                 )
                 else
                     ()
-        in       
+        in
             innerLoop evaluedExpr;
             interpret(cs,vars,tps)
         end
@@ -229,6 +228,6 @@ fun interpret((Print expr)::cs,vars,tps) =
 	  | correctGrammar(If(_,nil,c2::cs)::r) = List.length (c2::cs) + correctGrammar(cs) + correctGrammar(r)
 	  | correctGrammar(c::r)  = correctGrammar(r)
 	  | correctGrammar _ = 0
-		
+
 
 end
