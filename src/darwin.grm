@@ -72,7 +72,6 @@
 %refcell vars : tipo AtomMap.map = (AtomMap.empty);
 %refcell ts : string AtomMap.map = (AtomMap.empty);
 
-
 program
     : KW_title STR SEMI
       KW_variables
@@ -236,9 +235,15 @@ addExp
     ;
 
 multExp
-    : %try prefixExp DIV prefixExp => (ParseTree.FuncTwo(ParseTree.Div,prefixExp1,prefixExp2))
-    | %try prefixExp TIMES prefixExp => (ParseTree.FuncTwo(ParseTree.Mul,prefixExp1,prefixExp2))
-    | %try prefixExp => (prefixExp)
+    : %try rootExp DIV rootExp => (ParseTree.FuncTwo(ParseTree.Div,rootExp1,rootExp2))
+    | %try rootExp TIMES rootExp => (ParseTree.FuncTwo(ParseTree.Mul,rootExp1,rootExp2))
+    | %try rootExp => (rootExp)
+    ;
+
+rootExp
+    : KW_RT LP prefixExp COMMA prefixExp RP => (ParseTree.FuncTwo(ParseTree.RT,prefixExp1,prefixExp2))
+    | KW_POW LP prefixExp COMMA prefixExp RP => (ParseTree.FuncTwo(ParseTree.Pow,prefixExp1,prefixExp2))
+    | prefixExp => (prefixExp)
     ;
 
 prefixExp
