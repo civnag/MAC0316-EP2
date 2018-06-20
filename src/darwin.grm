@@ -78,7 +78,7 @@ program
       KW_variables
       variables
       KW_commands
-      (commands)* => ()
+      (commands)* => (SR)
     ;
 
 commands
@@ -201,7 +201,7 @@ atom_bool
     ;
 
 loop
-    : KW_WHILE exp_bool KW_DO (commands)* KW_END 
+    : KW_WHILE exp_bool KW_DO (commands)* KW_END
         => (
             let
                 val w = (ParseTree.While(exp_bool,SR))
