@@ -224,4 +224,11 @@ fun interpret((Print expr)::cs,vars,tps) =
   | interpret(nil,vars,tps) = ()
   handle e => (print ("Exception: " ^ exnName e); ())
 
+  fun correctGrammar(If(_,c1::cl,c2::cr)::r) = List.length (c1::cl) + List.length (c2::cr) + correctGrammar(cl) + correctGrammar(cr) + correctGrammar(r)
+	  | correctGrammar(If(_,c1::cs,nil)::r) = List.length (c1::cs) + correctGrammar(cs) + correctGrammar(r)
+	  | correctGrammar(If(_,nil,c2::cs)::r) = List.length (c2::cs) + correctGrammar(cs) + correctGrammar(r)
+	  | correctGrammar(c::r)  = correctGrammar(r)
+	  | correctGrammar _ = 0
+		
+
 end
