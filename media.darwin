@@ -12,5 +12,5 @@ commands
     j := 3.0 * (i + 10.0) - 1.0;
     k := toString(j);
     print(k);
-    w := toString(i / (3.0 + 1.0));
+    w := toString((i / (3.0 + 1.0)));
     print(w);
