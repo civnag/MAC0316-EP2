@@ -207,18 +207,17 @@ fun interpret((Print expr)::cs,vars,tps) =
   | interpret(While(e,c1)::cs,vars,tps) =
         let
             val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
-            fun innerLoop evExpr exp =
-                if evExpr then
-                    let 
-                        val newExpr = TypeChecker.extractBool(eval(exp,vars))
-                    in
-                        interpret(c1,vars,tps);
-                        innerLoop newExpr exp
-                    end
+            fun innerLoop evExpr =
+                if evExpr then (
+                    (List.foldl (fn(comm,_) => 
+                        interpret([comm],vars,tps)
+                    ) () c1);
+                    innerLoop (TypeChecker.extractBool(eval(e,vars)))
+                )
                 else
                     ()
         in       
-            innerLoop evaluedExpr e;
+            innerLoop evaluedExpr;
             interpret(cs,vars,tps)
         end
   | interpret(Null::cs,vars,tps) = print "Null"
