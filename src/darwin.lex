@@ -8,8 +8,8 @@
 %let id = {alpha}({alpha} | {digit} | "_")*;
 %let str = ["]{alphaChars}["];
 %let primitivo = ("int"|"string"|"boolean"|"float");
-%let lista = ("sample of "({primitivo}));
 %let tipoTupla = ("(" {primitivo} ("," {primitivo})+ ")");
+%let lista = ("sample of "({primitivo}|{tipoTupla}));
 %let tipo = ({primitivo}|{lista}|{tipoTupla});
 %let float = {int}["."]({digit}+|{digit}+("e"|"E"){int});
 %let valPrim = ({int} | {str} | {booleano} | {float});
@@ -19,6 +19,7 @@
 %let booleanList = ({empty} | "{" {booleano} ("," {booleano})* "}" );
 %let strList = ({empty} | "{" {str} ("," {str})* "}" );
 %let tuple = (["#"]["("] {valPrim} ([","] {valPrim})+ [")"]);
+%let tupleList = ({empty} | "{" {tuple} ("," {tuple})* "}" );
 %defs (
     structure T = DarwinTokens
     type lex_result = T.token
@@ -66,6 +67,7 @@
 {booleanList} => (T.SBOOL (Grammar.toBoolList (Grammar.tokenize yytext)));
 {strList} => ( T.SSTRING (Grammar.tokenize yytext));
 {tuple} => ( T.TUPLE yytext);
+{tupleList} => (T.STUPLE yytext );
 "=" => ( T.EQ );
 "==" => ( T.EEQ );
 ";" => ( T.SEMI);

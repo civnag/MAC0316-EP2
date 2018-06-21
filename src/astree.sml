@@ -145,6 +145,7 @@ fun eval(Const t,vars) = t
               | ("float") => TypeChecker.functionOne(showFunctionOne func, ee1)
               | ("int") => TypeChecker.functionOne(showFunctionOne func, ee1)
               | ("string") => TypeChecker.functionOne(showFunctionOne func, ee1)
+              | ("boolean") => TypeChecker.functionOne(showFunctionOne func, ee1)
               | (_) => raise TypeChecker.TypeMismatch
         end
   | eval(FuncTwo(binop, e1, e2), vars) =

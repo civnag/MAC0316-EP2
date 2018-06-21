@@ -32,7 +32,7 @@
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
     | KW_VAR("variance") | KW_RT("rt") | KW_POW("pow") | KW_GETF("getFloat") | KW_COV("covariance") | KW_SUBS("subSample")
-    | KW_LINREG("linearRegression") | VOID("void") | TUPLE of string
+    | KW_LINREG("linearRegression") | VOID("void") | TUPLE of string | STUPLE of string
     | KW_GETI("getInt") | KW_TOFLOAT("toFloat") | KW_TOINT("toInt") | CONCAT("++")
     ;
 

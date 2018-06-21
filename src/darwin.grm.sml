@@ -6,6 +6,7 @@ DarwinTokens = struct
       | KW_TOINT
       | KW_TOFLOAT
       | KW_GETI
+      | STUPLE of string
       | TUPLE of string
       | VOID
       | KW_LINREG
@@ -79,6 +80,7 @@ DarwinTokens = struct
   | (KW_TOINT) => "toInt"
   | (KW_TOFLOAT) => "toFloat"
   | (KW_GETI) => "getInt"
+  | (STUPLE(_)) => "STUPLE"
   | (TUPLE(_)) => "TUPLE"
   | (VOID) => "void"
   | (KW_LINREG) => "linearRegression"
@@ -150,6 +152,7 @@ DarwinTokens = struct
   | (KW_TOINT) => true
   | (KW_TOFLOAT) => true
   | (KW_GETI) => true
+  | (STUPLE(_)) => false
   | (TUPLE(_)) => false
   | (VOID) => false
   | (KW_LINREG) => true
@@ -488,6 +491,10 @@ fun matchKW_TOFLOAT strm = (case (lex(strm))
 (* end case *))
 fun matchKW_GETI strm = (case (lex(strm))
  of (Tok.KW_GETI, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchSTUPLE strm = (case (lex(strm))
+ of (Tok.STUPLE(x), span, strm') => (x, span, strm')
   | _ => fail()
 (* end case *))
 fun matchTUPLE strm = (case (lex(strm))
