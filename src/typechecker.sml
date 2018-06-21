@@ -31,6 +31,30 @@ fun typeof (Primitivo(Float_ _)) = "float"
     | typeof (Primitivo(String_ _)) = "string"
     | typeof (Sample nil) = "[]"
     | typeof (Sample (x::_)) = "sample of " ^ (typeof x)
+    | typeof (Tupla2 (a,b)) = "(" ^ typeof a ^ "," ^ typeof b ^ ")"
+    | typeof (Tupla3 (a,b,c)) = "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ ")"
+    | typeof (Tupla4 (a,b,c,d)) = 
+        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ ")"
+    | typeof (Tupla5 (a,b,c,d,e)) = 
+        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^")"
+    | typeof (Tupla6 (a,b,c,d,e,f)) = 
+        "(" ^ typeof a ^ "," ^ typeof b ^ "," 
+            ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," ^ typeof f ^")"
+    | typeof (Tupla7 (a,b,c,d,e,f,g)) = 
+        "(" ^ typeof a ^ "," ^ typeof b ^ "," 
+            ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," ^ typeof f ^"," ^ typeof g ^")"
+    | typeof (Tupla8 (a,b,c,d,e,f,g,h)) = 
+        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," 
+            ^ typeof f ^"," ^ typeof g ^"," ^ typeof h ^")"
+    | typeof (Tupla9 (a,b,c,d,e,f,g,h,i)) = 
+        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c 
+            ^ "," ^ typeof d ^ "," ^ typeof e ^","
+            ^ typeof f ^"," ^ typeof g ^"," 
+            ^ typeof h ^"," ^ typeof i ^")"
+    | typeof (Tupla0 (a,b,c,d,e,f,g,h,i,j)) = 
+        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^ "," 
+            ^ typeof f ^ "," ^ typeof g ^"," ^ typeof h ^"," 
+            ^ typeof i ^"," ^ typeof j ^")"
     | typeof _ = "null"
 
 fun != (x: real, y:real):bool = Real.!=(x,y)
@@ -85,8 +109,7 @@ fun functionOne("mean", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviat
   | functionOne("stdDeviation", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map extractFloat x)))
   | functionOne("variance", Sample(x)) = Primitivo(Float_ (Statistics.variance (List.map extractFloat x)))
   | functionOne("median", Sample(x)) = Primitivo(Float_ (Statistics.median (List.map extractFloat x)))
-  | functionOne("toString", Primitivo(Int_ x)) = Primitivo(String_ (Int.toString x))
-  | functionOne("toString", Primitivo(Float_ x)) = Primitivo(String_ (Real.toString x))
+  | functionOne("toString", x ) = Primitivo (String_ (Grammar.show x))
   | functionOne("toFloat", Primitivo(Int_ value)) = Primitivo(Float_ (Real.fromInt value))
   | functionOne("toInt", Primitivo(Float_ value)) = Primitivo(Int_ (Real.trunc value))
   | functionOne("sum", Sample(x)) = raise FunctionOneNotImplemented

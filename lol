@@ -1,5 +1,6 @@
 title "lol";
 variables
+    (int,int,int) tu;
     sample of float y;
     sample of string z;
     float p;
@@ -15,6 +16,7 @@ commands
     h := 1;
     j := toInt(3.0);
     t := pow(2.0,2.0);
+    tu := #(1,2,3);
     print("Teste: " ++ toString(j));
     while h < 8 do
         h := (h+1);
@@ -22,3 +24,4 @@ commands
         print(toString(h));
     end
     print(toString(h));
+    print(tu);

@@ -32,7 +32,7 @@
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
     | KW_VAR("variance") | KW_RT("rt") | KW_POW("pow") | KW_GETF("getFloat") | KW_COV("covariance") | KW_SUBS("subSample")
-    | KW_LINREG("linearRegression") | VOID("void")
+    | KW_LINREG("linearRegression") | VOID("void") | TUPLE of string
     | KW_GETI("getInt") | KW_TOFLOAT("toFloat") | KW_TOINT("toInt") | CONCAT("++")
     ;
 
@@ -95,6 +95,7 @@ expr
     : %try exp_string => (exp_string)
     | %try exp_bool => (exp_bool)
     | %try exp_arit => (exp_arit)
+    | %try exp_tupla => (exp_tupla)
     | %try funcs_string => (funcs_string)
     | %try funcs_float => (funcs_float)
     | %try funcs_int => (funcs_int)
@@ -163,6 +164,10 @@ exp_bool
     : %try addExp rel_op addExp => (ParseTree.getExprBoolTree(rel_op,addExp1,addExp2))
     | %try op_bool => (op_bool)
     | %try atom_bool => (atom_bool)
+    ;
+exp_tupla
+    : ID => (ParseTree.Var ID)
+    | TUPLE => (ParseTree.Const (Helper.toTupla(Helper.getTupleFrom (TUPLE))))
     ;
 op_bool
     : %try atom_bool AND atom_bool => (ParseTree.FuncTwo(ParseTree.And,atom_bool1,atom_bool2))

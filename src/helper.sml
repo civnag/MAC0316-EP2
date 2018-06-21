@@ -7,6 +7,32 @@ open TypeChecker;
 
 val isComma = Char.contains ","
 
+fun readFromString(s) = 
+  case (Int.fromString s) of
+      SOME n => Primitivo (Int_ n)
+    | NONE => readFloat(s)
+and readFloat(s) =
+  case (Real.fromString s) of
+      SOME f => Primitivo (Float_ f)
+    | NONE => readBool(s)
+and readBool(s) =
+  case (Bool.fromString s) of
+      SOME b => Primitivo (Boolean_ b)
+    | NONE => Primitivo (String_ s)
+
+fun toTupla(x1::x2::nil) = Tupla2 (readFromString x1, readFromString x2)
+  | toTupla(x1::x2::x3::nil) = Tupla3 (readFromString x1, readFromString x2, readFromString x3)
+  | toTupla(x1::x2::x3::x4::nil) = Tupla4 (readFromString x1, readFromString x2, readFromString x3,readFromString x4)
+  | toTupla(x1::x2::x3::x4::x5::nil) = Tupla5 (readFromString x1, readFromString x2, readFromString x3,readFromString x4, readFromString x5)
+  | toTupla(x1::x2::x3::x4::x5::x6::nil) = Tupla6 (readFromString x1, readFromString x2, readFromString x3,readFromString x4, readFromString x5, readFromString x6)
+  | toTupla(x1::x2::x3::x4::x5::x6::x7::nil) = Tupla7 (readFromString x1, readFromString x2, readFromString x3,readFromString x4, readFromString x5, readFromString x6,readFromString x7)
+  | toTupla(x1::x2::x3::x4::x5::x6::x7::x8::nil) = Tupla8 (readFromString x1, readFromString x2, readFromString x3,readFromString x4, readFromString x5, readFromString x6,readFromString x7, readFromString x8)
+  | toTupla(x1::x2::x3::x4::x5::x6::x7::x8::x9::nil) = Tupla9 (readFromString x1, readFromString x2, readFromString x3,readFromString x4, readFromString x5, readFromString x6,readFromString x7, readFromString x8, readFromString x9)
+  | toTupla(x1::x2::x3::x4::x5::x6::x7::x8::x9::x0::nil) = Tupla0 (readFromString x1, readFromString x2, readFromString x3,readFromString x4, readFromString x5, readFromString x6,readFromString x7, readFromString x8, readFromString x9,readFromString x0)
+  | toTupla _ = raise SizeNotAllowed
+    
+fun removeHashTag(ls: string) = String.implode(List.filter (fn(l)=> not (l = #"#")) (String.explode(ls)))
+
 fun deleteOpenParenthesis (list: char list) =
     case list of
       nil=> ""
@@ -34,7 +60,7 @@ fun deleteCloseBracket (list: char list) =
 fun length nil = 0
     | length (x::xs) = 1 + length xs
 
-fun removeParenthesis (tupleString: string) = deleteOpenParenthesis(String.explode(deleteCloseParenthesis(String.explode tupleString)));
+fun removeParenthesis (tupleString: string) = removeHashTag(deleteOpenParenthesis(String.explode(deleteCloseParenthesis(String.explode tupleString))));
 fun removeBrackets (sampleString: string) = deleteOpenBracket(String.explode(deleteCloseBracket(String.explode sampleString)));
 
 fun getCleanList(tupleString) =
@@ -68,6 +94,13 @@ fun auxToType x "string"  = Primitivo (String_ x)
 fun getListFrom(sampleString: string) =
   let
     val cleanString = removeBrackets(sampleString)
+  in
+    (String.tokens isComma cleanString)
+  end
+
+fun getTupleFrom(sampleString: string) =
+  let
+    val cleanString = removeParenthesis(sampleString)
   in
     (String.tokens isComma cleanString)
   end

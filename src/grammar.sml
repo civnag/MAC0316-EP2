@@ -57,6 +57,23 @@ fun show (Primitivo(Int_ i)) = Int.toString i
     | show (Primitivo(Float_ b)) = Real.toString b
     | show (Sample nil) = "[]"
     | show (Sample (x::xs)) = (show x) ^ "," ^ String.concat(List.map show xs)
+    | show (Tupla2 (a,b)) = "(" ^ show a ^ "," ^ show b ^ ")" 
+    | show (Tupla3 (a,b,c)) = 
+        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ ")" 
+    | show (Tupla4 (a,b,c,d)) = 
+        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ ")"
+    | show (Tupla5 (a,b,c,d,e)) = 
+        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ ")" 
+    | show (Tupla6 (a,b,c,d,e,f)) = 
+        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ ")"
+    | show (Tupla7 (a,b,c,d,e,f,g)) = 
+        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ "," ^ show g ^ ")" 
+    | show (Tupla8 (a,b,c,d,e,f,g,h)) = 
+        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ "," ^ show g ^ "," ^ show h ^")" 
+    | show (Tupla9 (a,b,c,d,e,f,g,h,i)) =
+        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ "," ^ show g ^ "," ^ show h ^ "," ^ show i ^ ")" 
+    | show (Tupla0 (a,b,c,d,e,f,g,h,i,j)) = 
+        "(" ^ show a ^ "," ^ show b ^ "," ^ show c ^ "," ^ show d ^ "," ^ show e ^ "," ^ show f ^ "," ^ show g ^ "," ^ show h ^ "," ^ show i ^ "," ^ show j ^")" 
     | show _ = "null"
 
 
