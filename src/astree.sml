@@ -7,7 +7,7 @@ open Grammar
 open Helper
 
 datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance
-datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt | GetString
+datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt | GetString | ReadFile
 datatype TerOp = SubString
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
 
@@ -74,6 +74,7 @@ fun showBinOp(Add) = "+"
   | showBinOp(GetFloat) = "getFloat"
   | showBinOp(GetInt) = "getInt"
   | showBinOp(GetString) = "getString"
+  | showBinOp(ReadFile) = "read"
 
 
 fun getFunctionOne("mean", e1) = FuncOne(Mean,e1)
@@ -157,6 +158,7 @@ fun eval(Const t,vars) = t
                 ("sample of float", "sample of float") => TypeChecker.statistics(showBinOp binop, ee1, ee2)
               | ("sample of float","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("sample of int","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
+              | ("string","sample of string") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("sample of string","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("float", "float") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("int", "int") => TypeChecker.oper(showBinOp binop, ee1, ee2)

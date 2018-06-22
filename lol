@@ -20,5 +20,7 @@ commands
         print("yyyyy " ++ toString(h));
         print(toString(h));
     end
+    g := {#(1.1,2.3),#(2.6,7.9)};
     print(toString(h));
     print(toString(q));
+    print(g);

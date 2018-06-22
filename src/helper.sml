@@ -3,22 +3,27 @@ exception SizeNotAllowed
 exception TypeError
 
 open Grammar;
-open TypeChecker;
 
 val isComma = Char.contains ","
+val isSemi = Char.contains ";"
+
 
 fun readFromString(s) = 
-  case (Int.fromString s) of
-      SOME n => Primitivo (Int_ n)
-    | NONE => readFloat(s)
-and readFloat(s) =
   case (Real.fromString s) of
-      SOME f => Primitivo (Float_ f)
+      SOME n => Primitivo (Float_ n)
+    | NONE => readInt(s)
+and readInt(s) =
+  case (Int.fromString s) of
+      SOME f => Primitivo (Int_ f)
     | NONE => readBool(s)
 and readBool(s) =
   case (Bool.fromString s) of
       SOME b => Primitivo (Boolean_ b)
     | NONE => Primitivo (String_ s)
+
+fun toSemi nil = nil
+  | toSemi((#")")::(#",")::ss) = (#")")::(#";")::(toSemi ss)
+  | toSemi(x::xs) = x :: (toSemi xs)
 
 fun toTupla(x1::x2::nil) = Tupla2 (readFromString x1, readFromString x2)
   | toTupla(x1::x2::x3::nil) = Tupla3 (readFromString x1, readFromString x2, readFromString x3)

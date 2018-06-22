@@ -2,7 +2,8 @@
 
 %defs (
     open ParseTree
-
+    fun getTupla x = Helper.toTupla(Helper.getTupleFrom x)
+    fun getSampleTuple x = List.map getTupla (String.tokens Helper.isSemi (Helper.removeBrackets(String.implode(Helper.toSemi(String.explode x)))))
     fun getInt x = (TypeChecker.extractInt x)
     fun getFloat x = (TypeChecker.extractFloat x)
     fun getString x = (TypeChecker.extractString x)
@@ -26,7 +27,7 @@
     | SPACE (" ") | GT(">") | LT("<") | LEQ("<=") | GEQ(">=") | NEQ("!=")
     | KW_variables ("variables") | SEMI | TIPO of string | DOTDOT(":=")
     | KW_commands ("commands") | STR of string | KW_Print ("print")
-    | KW_endvars ("end variables") | KW_terminate ("terminate")
+    | KW_endvars ("end variables") | KW_terminate ("terminate") | KW_READFILE("read")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") | KW_GETS("getString")
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
@@ -51,6 +52,7 @@
     KW_PROD,
     KW_SUM,
     KW_TOSTRING,
+    KW_READFILE,
     KW_MEAN,
     KW_CORR,
     KW_MEDIAN,
@@ -108,6 +110,7 @@ val_list
     | SFLOAT => (ParseTree.floatListToSampleExpr(SFLOAT))
     | SBOOL => (ParseTree.boolListToSampleExpr(SBOOL))
     | SSTRING => (ParseTree.stringListToSampleExpr(SSTRING))
+    | STUPLE => (ParseTree.Const (ParseTree.Sample (getSampleTuple STUPLE)))
     | ID => (ParseTree.Var ID)
     ;
 
@@ -126,6 +129,7 @@ funcs_string
     | KW_GETS LP string_list COMMA exp_arit RP => (ParseTree.getBinaryFun("getString", string_list, exp_arit))
     | CONCAT LP string_list COMMA string_list RP => (ParseTree.getBinaryFun("concat", string_list1, string_list2))
     | KW_LINREG LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("linearRegression", float_list1, float_list2))
+    | KW_READFILE LP exp_string COMMA string_list RP => (ParseTree.getBinaryFun("read", exp_string, string_list))
     ;
 funcs_int
     : KW_GETI LP int_list COMMA exp_arit RP =>  (ParseTree.getBinaryFun("getInt", int_list, exp_arit))

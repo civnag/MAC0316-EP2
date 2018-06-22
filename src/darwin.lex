@@ -42,6 +42,7 @@
 "getFloat" => ( T.KW_GETF );
 "getInt" => ( T.KW_GETI );
 "getString" => ( T.KW_GETS );
+"read" => ( T.KW_READFILE );
 "toFloat" => (T.KW_TOFLOAT);
 "toInt" => (T.KW_TOINT);
 "subSample" => ( T.KW_SUBS );
