@@ -221,7 +221,8 @@ loop
     ;
 
 conditional
-    : KW_IF exp_bool KW_THEN (commands)* KW_ELSE (commands)* KW_END
+    : %try KW_IF exp_bool KW_THEN (commands)* KW_END => (ParseTree.IfNoElse(exp_bool, SR))
+    | %try KW_IF exp_bool KW_THEN (commands)* KW_ELSE (commands)* KW_END
         => (
             let
                 val ifi = (ParseTree.If(exp_bool,SR1,SR2))

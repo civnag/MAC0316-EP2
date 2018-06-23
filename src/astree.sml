@@ -22,6 +22,7 @@ datatype Expr = Const of tipo
 datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
+              | IfNoElse of Expr * (Tree list)
               | While of Expr * (Tree list)
               | Null
 
@@ -55,8 +56,6 @@ fun intListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(Int_ x)
 fun stringListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(String_ x)) il))
 
 fun boolListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(Boolean_ x)) il))
-
-
 
 fun showBinOp(Add) = "+"
   | showBinOp(Sub) = "-"
@@ -196,6 +195,15 @@ fun interpret((Print expr),vars,tps) =
             else
                 raise TypeChecker.TypeError
         end
+  | interpret(IfNoElse(e,c1),vars,tps) =
+        let
+            val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
+        in
+            if evaluedExpr then
+                programa(c1, vars, tps)
+            else
+                vars
+        end
   | interpret(If(e,c1,c2),vars,tps) =
         let
             val evaluedExpr = TypeChecker.extractBool(eval(e,vars))
@@ -203,8 +211,7 @@ fun interpret((Print expr),vars,tps) =
             if evaluedExpr then
                 programa(c1, vars, tps)
             else
-                programa(c2, vars, tps);
-            vars
+                programa(c2, vars, tps)
         end
   | interpret(While(e,c1),vars,tps) =
         let
