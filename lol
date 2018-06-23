@@ -20,14 +20,6 @@ commands
         print("yyyyy " ++ toString(h));
         print(toString(h));
     end
-    if 1 > 2 then
-      print("if com else");
-      if 2 > 1 then
-        print("sem else");
-      end
-    else
-      print("esse é o else");
-    end
     g := {#(1.1,2.3),#(2.6,7.9)};
     print(toString(h));
     print(toString(q));
