@@ -265,6 +265,8 @@ atomicExp
     | NUM => (ParseTree.Const (Grammar.Primitivo (Grammar.Int_ NUM)))
     | REAL => (ParseTree.Const (Grammar.Primitivo (Grammar.Float_ REAL)))
     | "(" exp_arit ")"
+    | %try funcs_float => (funcs_float)
+    | %try funcs_int => (funcs_int)
     ;
 
 variables
