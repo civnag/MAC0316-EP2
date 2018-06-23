@@ -1,4 +1,4 @@
-title "Controlando a variancia de uma amostra de porcentagens";
+title "Controlando a variância de uma amostra de porcentagens";
 variables
     sample of float porcentagens;
     float variancia;
@@ -7,7 +7,7 @@ commands
     porcentagens := {12.4,43.5,53.3,93.4};
     variancia := variance(porcentagens);
     if(variancia > 50.0) then
-        print("A variancia esta muito alta");
+        print("A variância está muito alta");
     else
-        print("A variancia esta de acordo");
+        print("A variância está de acordo");
     end

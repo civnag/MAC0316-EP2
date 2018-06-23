@@ -1,4 +1,4 @@
-title  "Laco de repeticao";
+title  "Laço de repetição";
 variables
     float porcentagem;
     float quantidade;
@@ -8,6 +8,6 @@ commands
     quantidade := 15.5;
 
     while(porcentagem < quantidade) do
-        print("A porcentagem precisa ser aumentada: " ++ toString(porcentagem));
+        print("A porcentagem precisa ser aumentada! Porcentagem atual é: " ++ toString(porcentagem));
         porcentagem := (porcentagem + 0.5);
     end

@@ -1,4 +1,4 @@
-title "Avaliacao de caracteristicas presentes em automoveis nacionais";
+title "Avaliação de características presentes em automóveis nacionais";
 variables
     sample of float consumo;
     sample of float aceleracao;
@@ -12,22 +12,22 @@ commands
     aceleracao := {9.3,15.4,24.5,2.3};
 
     media := mean(consumo);
-    print("A media de consumo: " ++ toString(media));
+    print("A média de consumo é: " ++ toString(media));
 
     variancia := variance(consumo);
-    print("A variancia de consumo: " ++ toString(variancia));
+    print("A variância de consumo é: " ++ toString(variancia));
 
     correlacao := correlation(consumo, aceleracao);
-    print("A correlacao entre consumo e aceleracao: " ++ toString(correlacao));
+    print("A correlação entre consumo e aceleração: " ++ toString(correlacao));
 
     indice := 0;
     while(indice < 4)
         do
             if (media < 1.0)
                 then
-                    print("A media de consumo para o carro selecionado e alta");
+                    print("A média de consumo para o carro selecionado é alta");
                 else
-                    print("A media de consumo para o carro selecionado e baixa");
+                    print("A média de consumo para o carro selecionado é baixa");
             end
             indice := (indice + 1);
         end

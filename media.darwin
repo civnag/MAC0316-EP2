@@ -1,4 +1,4 @@
-title  "Media e operadores aritmeticos";
+title  "Média e operadores aritméticos";
 variables
     sample of float amostra;
     float i;
@@ -10,7 +10,7 @@ commands
     amostra := {12.0,32.0,34.0,53.0};
     i := mean(amostra);
     j := 3.0 * (i + 10.0) - 1.0;
-    k := toString(j);
+    k := "Aplicando cálculo aritmético em cima da amostra: " ++ toString(j);
     print(k);
     w := toString((i / (3.0 + 1.0)));
-    print(w);
+    print("Aplicando segundo cálculo aritmético em cima da amostra: " ++ w);
