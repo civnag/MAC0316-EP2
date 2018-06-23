@@ -33,27 +33,27 @@ fun typeof (Primitivo(Float_ _)) = "float"
     | typeof (Sample (x::_)) = "sample of " ^ (typeof x)
     | typeof (Tupla2 (a,b)) = "(" ^ typeof a ^ "," ^ typeof b ^ ")"
     | typeof (Tupla3 (a,b,c)) = "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ ")"
-    | typeof (Tupla4 (a,b,c,d)) = 
+    | typeof (Tupla4 (a,b,c,d)) =
         "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ ")"
-    | typeof (Tupla5 (a,b,c,d,e)) = 
+    | typeof (Tupla5 (a,b,c,d,e)) =
         "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^")"
-    | typeof (Tupla6 (a,b,c,d,e,f)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," 
+    | typeof (Tupla6 (a,b,c,d,e,f)) =
+        "(" ^ typeof a ^ "," ^ typeof b ^ ","
             ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," ^ typeof f ^")"
-    | typeof (Tupla7 (a,b,c,d,e,f,g)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," 
+    | typeof (Tupla7 (a,b,c,d,e,f,g)) =
+        "(" ^ typeof a ^ "," ^ typeof b ^ ","
             ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," ^ typeof f ^"," ^ typeof g ^")"
-    | typeof (Tupla8 (a,b,c,d,e,f,g,h)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^"," 
+    | typeof (Tupla8 (a,b,c,d,e,f,g,h)) =
+        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^","
             ^ typeof f ^"," ^ typeof g ^"," ^ typeof h ^")"
-    | typeof (Tupla9 (a,b,c,d,e,f,g,h,i)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c 
+    | typeof (Tupla9 (a,b,c,d,e,f,g,h,i)) =
+        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c
             ^ "," ^ typeof d ^ "," ^ typeof e ^","
-            ^ typeof f ^"," ^ typeof g ^"," 
+            ^ typeof f ^"," ^ typeof g ^","
             ^ typeof h ^"," ^ typeof i ^")"
-    | typeof (Tupla0 (a,b,c,d,e,f,g,h,i,j)) = 
-        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^ "," 
-            ^ typeof f ^ "," ^ typeof g ^"," ^ typeof h ^"," 
+    | typeof (Tupla0 (a,b,c,d,e,f,g,h,i,j)) =
+        "(" ^ typeof a ^ "," ^ typeof b ^ "," ^ typeof c ^ "," ^ typeof d ^ "," ^ typeof e ^ ","
+            ^ typeof f ^ "," ^ typeof g ^"," ^ typeof h ^","
             ^ typeof i ^"," ^ typeof j ^")"
     | typeof _ = "null"
 
@@ -82,6 +82,8 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
    | oper("==", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Boolean_ (i=j))
    | oper("pow", Primitivo(Float_ i),Primitivo(Float_ j)) = Primitivo (Float_ (Math.pow(i, j)))
    | oper("rt", Primitivo(Float_ i),Primitivo(Float_ j)) = Primitivo (Float_ (Math.pow(i, 1.0/j)))
+   | oper("pow", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Float_ (Math.pow(Real.fromInt i, Real.fromInt j)))
+   | oper("rt", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Float_ (Math.pow(Real.fromInt i, 1.0/(Real.fromInt j))))
    | oper("neg",_,Primitivo(Int_ i)) = Primitivo(Int_ (0-i))
    | oper("neg",_,Primitivo(Float_ i)) = Primitivo(Float_ (0.0-i))
    | oper("++",Primitivo(String_ l),Primitivo(String_ m)) = Primitivo(String_ ("\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(l ^ m)))) ^ "\""))

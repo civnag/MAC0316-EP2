@@ -14,10 +14,10 @@
 %let float = {int}["."]({digit}+|{digit}+("e"|"E"){int});
 %let valPrim = ({int} | {str} | {booleano} | {float});
 %let empty = "{}";
-%let intList = ({empty} | "{" {int} ("," {int})* "}" );
-%let floatList = ({empty} | "{" {float} ("," {float})* "}" );
-%let booleanList = ({empty} | "{" {booleano} ("," {booleano})* "}" );
-%let strList = ({empty} | "{" {str} ("," {str})* "}" );
+%let intList = ({empty} | "{" (" ")* {int} (" ")* (","(" ")* {int})* (" ")* "}" );
+%let floatList = ({empty} | "{" (" ")* {float} (" ")* ("," (" ")* {float})* (" ")*"}" );
+%let booleanList = ({empty} | "{" (" ")* {booleano} (" ")* ("," (" ")* {booleano})* (" ")* "}" );
+%let strList = ({empty} | "{" (" ")* {str} (" ")* ("," (" ")* {str})* (" ")* "}" );
 %let tuple = (["#"]["("] {valPrim} ([","] {valPrim})+ [")"]);
 %let tupleList = ({empty} | "{" {tuple} ("," {tuple})* "}" );
 %defs (
