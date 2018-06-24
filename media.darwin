@@ -7,8 +7,9 @@ variables
     string w;
 end variables
 commands
-    amostra := {12.0,32.0,34.0,53.0};
+    amostra := {1.0,2.0,3.0,4.0};
     i := mean(amostra);
+    print("A média da amostra é: " ++ toString(i));
     j := 3.0 * (i + 10.0) - 1.0;
     k := "Aplicando cálculo aritmético em cima da amostra: " ++ toString(j);
     print(k);
