@@ -86,6 +86,8 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
    | oper("rt", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Float_ (Math.pow(Real.fromInt i, 1.0/(Real.fromInt j))))
    | oper("neg",_,Primitivo(Int_ i)) = Primitivo(Int_ (0-i))
    | oper("neg",_,Primitivo(Float_ i)) = Primitivo(Float_ (0.0-i))
+   | oper("&&", Primitivo(Boolean_ i),Primitivo(Boolean_ j)) = Primitivo(Boolean_ (i andalso j))
+   | oper("||", Primitivo(Boolean_ i),Primitivo(Boolean_ j)) = Primitivo(Boolean_ (i orelse j))
    | oper("++",Primitivo(String_ l),Primitivo(String_ m)) = Primitivo(String_ ("\""^ String.implode((List.filter (fn(x) => not(x = #"\"")) (String.explode(l ^ m)))) ^ "\""))
    | oper(_,_,_) = raise FunctionTwoNotImplemented
 

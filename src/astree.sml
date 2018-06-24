@@ -167,7 +167,8 @@ fun eval(Const t,vars) = t
               | ("float", "float") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("int", "int") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("string", "string") => TypeChecker.oper(showBinOp binop, ee1, ee2)
-              | (_) => raise TypeChecker.TypeMismatch
+              | ("boolean", "boolean") => TypeChecker.oper(showBinOp binop, ee1, ee2)
+              | (_, _) => raise TypeChecker.TypeMismatch
         end
   | eval(FuncThree(binop, e1, e2, e3), vars) =
         let

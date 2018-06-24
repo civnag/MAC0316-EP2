@@ -1,10 +1,13 @@
 title "lol";
 variables
     sample of string s;
-    sample of (float,float) g;
+    sample of (float,float,float) g;
     string ss;
     string ss3;
 end variables
 commands
-    ss := "arquivocsv";
-    print(ss);
+    if (1 < (2 + 4)) && (3 != 4) then
+      print("Ok");
+    else
+      print("Not ok");
+    end
