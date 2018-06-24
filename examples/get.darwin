@@ -1,0 +1,22 @@
+title "Teste de get";
+variables
+    sample of float pesos;
+    sample of int idades;
+    sample of string nomes;
+    float peso;
+    int idade;
+    string nome;
+end variables
+commands
+    pesos := {15.1, 14.6, 13.6, 11.6};
+    idades := {9, 15, 24, 2};
+    nomes := {"João", "Ana", "Gabriel", "Joana"};
+
+    peso := getFloat(pesos, 3);
+    print(toString(peso));
+
+    nome := getString(nomes, 2);
+    print(nome);
+
+    idade := getInt(idades, 1);
+    print(toString(idade));
