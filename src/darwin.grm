@@ -133,7 +133,7 @@ funcs_string
     ;
 funcs_int
     : KW_GETI LP int_list COMMA exp_arit RP =>  (ParseTree.getBinaryFun("getInt", int_list, exp_arit))
-    | KW_TOINT LP exp_arit RP => (ParseTree.getFunctionOne("toInt", exp_arit))
+    | KW_TOINT LP expr RP => (ParseTree.getFunctionOne("toInt", expr))
     ;
 funcs_float
     : KW_SUM LP EMPTY RP => (ParseTree.getFunctionOne("sum", ParseTree.Const(Grammar.Sample nil)))
@@ -147,7 +147,7 @@ funcs_float
     | KW_VAR LP numbers_list RP => (ParseTree.getFunctionOne("variance", numbers_list))
     | KW_COV LP numbers_list COMMA numbers_list RP => (ParseTree.getBinaryFun("covariance", numbers_list1, numbers_list2))
     | KW_GETF LP float_list COMMA exp_arit RP => (ParseTree.getBinaryFun("getFloat", float_list, exp_arit))
-    | KW_TOFLOAT LP exp_arit RP => (ParseTree.getFunctionOne("toFloat", exp_arit))
+    | KW_TOFLOAT LP expr RP => (ParseTree.getFunctionOne("toFloat", expr))
     ;
 funcs_list
     : KW_SUBS LP exp_string COMMA exp_arit COMMA exp_arit RP => (ParseTree.getTertiaryFun("substring", exp_string, exp_arit1,exp_arit2))
