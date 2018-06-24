@@ -46,6 +46,7 @@ fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("getFloat", e1, e2) = FuncTwo(GetFloat, e1, e2)
   | getBinaryFun("getString", e1, e2) = FuncTwo(GetString, e1, e2)
   | getBinaryFun("getInt", e1, e2) = FuncTwo(GetInt, e1, e2)
+  | getBinaryFun("read", e1, e2) = FuncTwo(ReadFile, e1, e2)
   | getBinaryFun(_,_,_) = raise OperationNotSupported
   handle e => (print "Exception: ";exnName e; e)
 
