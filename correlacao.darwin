@@ -5,7 +5,7 @@ variables
     float correlacao;
 end variables
 commands
-    quilometros := {1233.0,1534.0,65363.0,3453.0};
-    consumo := {12.0,13.0,15.0,12.0};
+    quilometros := {1233.0,1534.0,65363.0,3453.0,212.0};
+    consumo := {12.0,13.0,15.0,12.0,15.0};
     correlacao := correlation(quilometros,consumo);
     print("A correlação é dada por: " ++ toString(correlacao));
