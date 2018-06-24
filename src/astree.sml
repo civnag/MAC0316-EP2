@@ -45,6 +45,7 @@ fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("linearRegression", e1, e2) = FuncTwo(LinReg, e1, e2)
   | getBinaryFun("getFloat", e1, e2) = FuncTwo(GetFloat, e1, e2)
   | getBinaryFun("getString", e1, e2) = FuncTwo(GetString, e1, e2)
+  | getBinaryFun("getInt", e1, e2) = FuncTwo(GetInt, e1, e2)
   | getBinaryFun(_,_,_) = raise OperationNotSupported
   handle e => (print "Exception: ";exnName e; e)
 
@@ -153,13 +154,13 @@ fun eval(Const t,vars) = t
         let
             val ee1 = eval(e1, vars)
             val ee2 = eval(e2, vars)
-            (* val _ = print("Type 2: " ^ (TypeChecker.typeof ee1) ^ (TypeChecker.typeof ee2) ^ "\n") *)
+            (* val _ = print("Type 2: " ^ (TypeChecker.typeof ee1)^ " " ^ (TypeChecker.typeof ee2) ^ " " ^ (showBinOp binop) ^"\n") *)
         in
             case (TypeChecker.typeof ee1, TypeChecker.typeof ee2) of
                 ("sample of float", "sample of float") => TypeChecker.statistics("sample of float", showBinOp binop, ee1, ee2)
               | ("sample of int", "sample of int") => TypeChecker.statistics("sample of int", showBinOp binop, ee1, ee2)
-              | ("sample of float","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
-              | ("sample of int","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
+              | ("sample of float", "int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
+              | ("sample of int", "int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("string","sample of string") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("sample of string","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("float", "float") => TypeChecker.oper(showBinOp binop, ee1, ee2)

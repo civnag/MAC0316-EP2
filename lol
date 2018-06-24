@@ -3,7 +3,7 @@ variables
     sample of float y;
     sample of string z;
     sample of (float,float) g;
-    float p;
+    sample of int p;
     int h;
     int j;
     string s;
@@ -13,8 +13,9 @@ variables
 end variables
 commands
     print("lol");
-    p := mean({2,2,2});
-    print(toString(p));
+    p := {1,2,3};
+    j := getInt(p, 1);
+    print(toString(j));
     h := 1;
     while h < 8 do
         h := (h+1);

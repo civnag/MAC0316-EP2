@@ -104,9 +104,11 @@ fun statistics("sample of float", "correlation", Sample(x), Sample(y)) = Primiti
   | statistics(_, _, _, _) = raise StatisticsNotImplemented
   handle e => (print ("Exception: " ^ exnName e); e)
 
-fun functionTwo("getFloat",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
-  | functionTwo("getInt",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
-  | functionTwo("getString",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
+fun printValuesFList(Primitivo (Int_ i)) = print("Valor: " ^ (Int.toString i) ^ "\n")
+
+fun functionTwo("getFloat", Sample ls, Primitivo(Int_ i)) = List.nth(ls,i)
+  | functionTwo("getInt", Sample ls, Primitivo(Int_ i)) = List.nth(ls,i)
+  | functionTwo("getString", Sample ls, Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo("read",Primitivo(String_ s),Sample ls) = Sample (Helper.readlist(s,List.map extractString ls))
   | functionTwo(_,_,_) = raise FunctionTwoNotImplemented
 
