@@ -1,11 +1,11 @@
-title "Avaliação de características presentes em automóveis nacionais.";
+title "Avaliação de características presentes em automóveis nacionais";
 variables
     sample of float consumo;
     sample of float aceleracao;
     float media;
     int indice;
-    sample of float variancia;
-    sample of float correlacao;
+    float variancia;
+    float correlacao;
 end variables
 commands
     consumo := {15.1, 14.6, 13.6, 11.6};
@@ -24,5 +24,5 @@ commands
                 else
                     print("A média de consumo para o carro selecionado é baixa");
             end
-            indice := indice + 1;
+            indice := (indice + 1);
         end
