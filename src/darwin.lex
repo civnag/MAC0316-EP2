@@ -3,7 +3,7 @@
 %let digit = [0-9];
 %let int = ({digit}+ );
 %let alpha = [a-zA-Z];
-%let alphaChars = [a-zA-Z:\" !@#$%*záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ&0-9]*;
+%let alphaChars = [a-zA-Z:\" !@#.$/%*záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ&0-9]*;
 %let booleano = ("true"|"false");
 %let id = {alpha}({alpha} | {digit} | "_")*;
 %let str = ["]{alphaChars}["];
