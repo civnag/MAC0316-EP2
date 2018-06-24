@@ -7,7 +7,7 @@ open Grammar
 open Helper
 
 datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance
-datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt | GetString
+datatype BinOp = Add | Sub | Div | Mul | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt | GetString
 datatype TerOp = SubString
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
 
@@ -61,7 +61,6 @@ fun showBinOp(Add) = "+"
   | showBinOp(Sub) = "-"
   | showBinOp(Div) = "/"
   | showBinOp(Mul) = "*"
-  | showBinOp(Not) = "!"
   | showBinOp(And) = "&&"
   | showBinOp(Or) = "||"
   | showBinOp(Pow) = "pow"

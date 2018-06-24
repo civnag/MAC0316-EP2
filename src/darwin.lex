@@ -67,7 +67,6 @@
 {strList} => ( T.SSTRING (Grammar.tokenize yytext));
 {tuple} => ( T.TUPLE yytext);
 {tupleList} => (T.STUPLE yytext );
-"=" => ( T.EQ );
 "==" => ( T.EEQ );
 ";" => ( T.SEMI);
 "+" => ( T.PLUS );
@@ -77,10 +76,8 @@
 "/" => ( T.DIV );
 "(" => ( T.LP );
 ")" => ( T.RP );
-"." => ( T.DOT );
 "&&" => ( T.AND );
 "||" => ( T.OR );
-"!" => ( T.NOT );
 ">=" => ( T.GEQ );
 "<=" => ( T.LEQ );
 ">" => ( T.GT );
