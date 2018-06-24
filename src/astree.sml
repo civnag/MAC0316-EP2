@@ -56,8 +56,6 @@ fun stringListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(Stri
 
 fun boolListToSampleExpr(il) = Const(Sample (List.map (fn(x) => Primitivo(Boolean_ x)) il))
 
-
-
 fun showBinOp(Add) = "+"
   | showBinOp(Sub) = "-"
   | showBinOp(Div) = "/"
@@ -142,20 +140,23 @@ fun eval(Const t,vars) = t
             val ee1 = eval(e1, vars)
         in
             case (TypeChecker.typeof ee1) of
-                ("sample of float") => TypeChecker.functionOne(showFunctionOne func, ee1)
-              | ("float") => TypeChecker.functionOne(showFunctionOne func, ee1)
-              | ("int") => TypeChecker.functionOne(showFunctionOne func, ee1)
-              | ("string") => TypeChecker.functionOne(showFunctionOne func, ee1)
-              | ("boolean") => TypeChecker.functionOne(showFunctionOne func, ee1)
+                ("sample of float") => TypeChecker.functionOne("sample of float", showFunctionOne func, ee1)
+              | ("sample of int") => TypeChecker.functionOne("sample of int", showFunctionOne func, ee1)
+              | ("float") => TypeChecker.functionOne("float", showFunctionOne func, ee1)
+              | ("int") => TypeChecker.functionOne("int", showFunctionOne func, ee1)
+              | ("string") => TypeChecker.functionOne("string", showFunctionOne func, ee1)
+              | ("boolean") => TypeChecker.functionOne("boolean", showFunctionOne func, ee1)
               | (_) => raise TypeChecker.TypeMismatch
         end
   | eval(FuncTwo(binop, e1, e2), vars) =
         let
             val ee1 = eval(e1, vars)
             val ee2 = eval(e2, vars)
+            (* val _ = print("Type: " ^ (TypeChecker.typeof ee1) ^ (TypeChecker.typeof ee2) ^ "\n") *)
         in
             case (TypeChecker.typeof ee1, TypeChecker.typeof ee2) of
-                ("sample of float", "sample of float") => TypeChecker.statistics(showBinOp binop, ee1, ee2)
+                ("sample of float", "sample of float") => TypeChecker.statistics("sample of float", showBinOp binop, ee1, ee2)
+              | ("sample of int", "sample of int") => TypeChecker.statistics("sample of int", showBinOp binop, ee1, ee2)
               | ("sample of float","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("sample of int","int") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)
               | ("string","sample of string") => TypeChecker.functionTwo(showBinOp binop,ee1,ee2)

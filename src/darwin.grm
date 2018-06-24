@@ -128,7 +128,7 @@ funcs_string
     : KW_TOSTRING LP expr RP => (ParseTree.FuncOne(ParseTree.ToString,expr))
     | KW_GETS LP string_list COMMA exp_arit RP => (ParseTree.getBinaryFun("getString", string_list, exp_arit))
     | CONCAT LP string_list COMMA string_list RP => (ParseTree.getBinaryFun("concat", string_list1, string_list2))
-    | KW_LINREG LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("linearRegression", float_list1, float_list2))
+    | KW_LINREG LP numbers_list COMMA numbers_list RP => (ParseTree.getBinaryFun("linearRegression", numbers_list1, numbers_list2))
     | KW_READFILE LP exp_string COMMA string_list RP => (ParseTree.getBinaryFun("read", exp_string, string_list))
     ;
 funcs_int
@@ -140,18 +140,19 @@ funcs_float
     | KW_SUM LP float_list RP => (ParseTree.getFunctionOne("sum", float_list))
     | KW_PROD LP EMPTY RP  => (ParseTree.getFunctionOne("prod", ParseTree.Const(Grammar.Sample nil)))
     | KW_PROD LP float_list RP => (ParseTree.getFunctionOne("prod", float_list))
-    | KW_MEAN LP float_list RP => (ParseTree.getFunctionOne("mean", float_list))
-    | KW_CORR LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("correlation", float_list1, float_list2))
-    | KW_STDEV LP float_list RP => (ParseTree.getFunctionOne("stdDeviation", float_list))
-    | KW_MEDIAN LP float_list RP => (ParseTree.getFunctionOne("median", float_list))
-    | KW_VAR LP float_list RP => (ParseTree.getFunctionOne("variance", float_list))
-    | KW_COV LP float_list COMMA float_list RP => (ParseTree.getBinaryFun("covariance", float_list1, float_list2))
+    | KW_MEAN LP numbers_list RP => (ParseTree.getFunctionOne("mean", numbers_list))
+    | KW_CORR LP numbers_list COMMA numbers_list RP => (ParseTree.getBinaryFun("correlation", numbers_list1, numbers_list2))
+    | KW_STDEV LP numbers_list RP => (ParseTree.getFunctionOne("stdDeviation", numbers_list))
+    | KW_MEDIAN LP numbers_list RP => (ParseTree.getFunctionOne("median", numbers_list))
+    | KW_VAR LP numbers_list RP => (ParseTree.getFunctionOne("variance", numbers_list))
+    | KW_COV LP numbers_list COMMA numbers_list RP => (ParseTree.getBinaryFun("covariance", numbers_list1, numbers_list2))
     | KW_GETF LP float_list COMMA exp_arit RP => (ParseTree.getBinaryFun("getFloat", float_list, exp_arit))
     | KW_TOFLOAT LP exp_arit RP => (ParseTree.getFunctionOne("toFloat", exp_arit))
     ;
 funcs_list
     : KW_SUBS LP exp_string COMMA exp_arit COMMA exp_arit RP => (ParseTree.getTertiaryFun("substring", exp_string, exp_arit1,exp_arit2))
     ;
+
 float_list
     : ID => (ParseTree.Var ID)
     | SFLOAT => (ParseTree.floatListToSampleExpr(SFLOAT))
@@ -164,6 +165,12 @@ int_list
     : ID => (ParseTree.Var ID)
     | SINT => (ParseTree.intListToSampleExpr(SINT))
     ;
+
+numbers_list
+    : %try float_list => (float_list)
+    | %try int_list => (int_list)
+    ;
+
 exp_bool
     : %try addExp rel_op addExp => (ParseTree.getExprBoolTree(rel_op,addExp1,addExp2))
     | %try op_bool => (op_bool)

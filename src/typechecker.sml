@@ -92,10 +92,16 @@ fun oper("+", Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo (Int_ (i+j))
 fun exprTypes e1 e2 = (typeof e1) = (typeof e2)
 fun isType e1 t = (typeof e1) = t
 
-fun statistics("correlation", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.correlation((List.map extractFloat x), (List.map extractFloat y))))
-  | statistics("covariance", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.covariance((List.map extractFloat x), (List.map extractFloat y))))
-  | statistics("linearRegression", Sample(x), Sample(y)) = Primitivo(String_ (Statistics.linearRegression((List.map extractFloat x), (List.map extractFloat y))))
-  | statistics(_, _, _) = raise StatisticsNotImplemented
+fun intToFloat (Primitivo(Int_ i)) = Real.fromInt i
+   | intToFloat (_) = raise TypeMismatch
+
+fun statistics("sample of float", "correlation", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.correlation((List.map extractFloat x), (List.map extractFloat y))))
+  | statistics("sample of float", "covariance", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.covariance((List.map extractFloat x), (List.map extractFloat y))))
+  | statistics("sample of float", "linearRegression", Sample(x), Sample(y)) = Primitivo(String_ (Statistics.linearRegression((List.map extractFloat x), (List.map extractFloat y))))
+  | statistics("sample of int", "correlation", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.correlation((List.map intToFloat x), (List.map intToFloat y))))
+  | statistics("sample of int", "covariance", Sample(x), Sample(y)) = Primitivo(Float_ (Statistics.covariance((List.map intToFloat x), (List.map intToFloat y))))
+  | statistics("sample of int", "linearRegression", Sample(x), Sample(y)) = Primitivo(String_ (Statistics.linearRegression((List.map intToFloat x), (List.map intToFloat y))))
+  | statistics(_, _, _, _) = raise StatisticsNotImplemented
   handle e => (print ("Exception: " ^ exnName e); e)
 
 
@@ -108,15 +114,19 @@ fun functionTwo("getFloat",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
 fun functionThree("substring",Primitivo(String_ ls),Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo(String_(String.substring(ls,i,j)))
   | functionThree(_,_,_,_) = raise FunctionTwoNotImplemented
 
-fun functionOne("mean", Sample(x)) = Primitivo(Float_ (Statistics.mean (List.map extractFloat x))) 
-  | functionOne("stdDeviation", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map extractFloat x)))
-  | functionOne("variance", Sample(x)) = Primitivo(Float_ (Statistics.variance (List.map extractFloat x)))
-  | functionOne("median", Sample(x)) = Primitivo(Float_ (Statistics.median (List.map extractFloat x)))
-  | functionOne("toString", x ) = Primitivo (String_ (Grammar.show x))
-  | functionOne("toFloat", Primitivo(Int_ value)) = Primitivo(Float_ (Real.fromInt value))
-  | functionOne("toInt", Primitivo(Float_ value)) = Primitivo(Int_ (Real.trunc value))
-  | functionOne("sum", Sample(x)) = raise FunctionOneNotImplemented
-  | functionOne("prod", Sample(x)) = raise FunctionOneNotImplemented
-  | functionOne(_, _) = raise TypeMismatch
+fun functionOne("sample of float", "mean", Sample(x)) = Primitivo(Float_ (Statistics.mean (List.map extractFloat x)))
+  | functionOne("sample of float", "stdDeviation", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map extractFloat x)))
+  | functionOne("sample of float", "variance", Sample(x)) = Primitivo(Float_ (Statistics.variance (List.map extractFloat x)))
+  | functionOne("sample of float", "median", Sample(x)) = Primitivo(Float_ (Statistics.median (List.map extractFloat x)))
+  | functionOne("sample of int", "mean", Sample(x)) = Primitivo(Float_ (Statistics.mean (List.map intToFloat x)))
+  | functionOne("sample of int", "stdDeviation", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map intToFloat x)))
+  | functionOne("sample of int", "variance", Sample(x)) = Primitivo(Float_ (Statistics.variance (List.map intToFloat x)))
+  | functionOne("sample of int", "median", Sample(x)) = Primitivo(Float_ (Statistics.median (List.map intToFloat x)))
+  | functionOne(_, "toString", x ) = Primitivo (String_ (Grammar.show x))
+  | functionOne(_, "toFloat", Primitivo(Int_ value)) = Primitivo(Float_ (Real.fromInt value))
+  | functionOne(_, "toInt", Primitivo(Float_ value)) = Primitivo(Int_ (Real.trunc value))
+  | functionOne(_, "sum", Sample(x)) = raise FunctionOneNotImplemented
+  | functionOne(_, "prod", Sample(x)) = raise FunctionOneNotImplemented
+  | functionOne(_, _, _) = raise TypeMismatch
 
 end
