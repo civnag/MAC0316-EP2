@@ -14,7 +14,6 @@ datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
 datatype Expr = Const of tipo
               | FuncOne of UnOp * Expr
               | FuncTwo of BinOp * Expr * Expr
-              | FuncThree of TerOp * Expr * Expr * Expr
               | Rel of OpRel * Expr * Expr
               | Var of string
 
@@ -26,9 +25,6 @@ datatype Tree = Assign of string * Expr
               | Null
 
 type RoseTree = Tree list
-
-fun getTertiaryFun("substring", e1, e2, e3) = FuncThree(SubString, e1, e2, e3)
-  | getTertiaryFun(_,_,_,_) = raise OperationNotSupported
 
 fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("-", e1, e2) = FuncTwo(Sub, e1, e2)
@@ -165,16 +161,6 @@ fun eval(Const t,vars) = t
               | ("string", "string") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | ("boolean", "boolean") => TypeChecker.oper(showBinOp binop, ee1, ee2)
               | (_, _) => raise TypeChecker.TypeMismatch
-        end
-  | eval(FuncThree(binop, e1, e2, e3), vars) =
-        let
-            val ee1 = eval(e1, vars)
-            val ee2 = eval(e2, vars)
-            val ee3 = eval(e3, vars)
-        in
-            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
-                ("string", "int", "int") => TypeChecker.functionThree("substring", ee1, ee2, ee3)
-              | _ => raise TypeChecker.TypeMismatch
         end
 
 

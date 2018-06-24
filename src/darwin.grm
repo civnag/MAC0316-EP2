@@ -62,7 +62,6 @@
     KW_GETF,
     KW_COV,
     KW_LINREG,
-    KW_SUBS,
     KW_GETI,
     KW_GETS,
     KW_TOFLOAT,
@@ -99,7 +98,6 @@ expr
     | %try exp_tupla => (exp_tupla)
     | %try funcs_float => (funcs_float)
     | %try funcs_int => (funcs_int)
-    | %try funcs_list => (funcs_list)
     | %try funcs_string => (funcs_string)
     | %try val_list => (val_list)
     ;
@@ -146,9 +144,6 @@ funcs_float
     | KW_COV LP numbers_list COMMA numbers_list RP => (ParseTree.getBinaryFun("covariance", numbers_list1, numbers_list2))
     | KW_GETF LP float_list COMMA exp_arit RP => (ParseTree.getBinaryFun("getFloat", float_list, exp_arit))
     | KW_TOFLOAT LP expr RP => (ParseTree.getFunctionOne("toFloat", expr))
-    ;
-funcs_list
-    : KW_SUBS LP exp_string COMMA exp_arit COMMA exp_arit RP => (ParseTree.getTertiaryFun("substring", exp_string, exp_arit1,exp_arit2))
     ;
 
 float_list

@@ -113,9 +113,6 @@ fun functionTwo("getFloat", Sample ls, Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo("getString", Sample ls, Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo(_,_,_) = raise FunctionTwoNotImplemented
 
-fun functionThree("substring",Primitivo(String_ ls),Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo(String_(String.substring(ls,i,j)))
-  | functionThree(_,_,_,_) = raise FunctionTwoNotImplemented
-
 fun functionOne("sample of float", "mean", Sample(x)) = Primitivo(Float_ (Statistics.mean (List.map extractFloat x)))
   | functionOne("sample of float", "stdDeviation", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map extractFloat x)))
   | functionOne("sample of float", "variance", Sample(x)) = Primitivo(Float_ (Statistics.variance (List.map extractFloat x)))
