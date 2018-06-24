@@ -7,7 +7,7 @@ open Grammar
 open Helper
 
 datatype UnOp = Mean | StdDev | Median | SumL | ProdL | ToString | ToInt | ToFloat | Variance
-datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt | GetString | ReadFile
+datatype BinOp = Add | Sub | Div | Mul | Not | And | Or | Pow | RT | Cov | Corr | Concat | LinReg | GetFloat | GetInt | GetString
 datatype TerOp = SubString
 datatype OpRel = GTR | LTR | EQR | NEQR | GEQR | LEQR
 
@@ -46,7 +46,6 @@ fun getBinaryFun("+", e1, e2) = FuncTwo(Add, e1, e2)
   | getBinaryFun("getFloat", e1, e2) = FuncTwo(GetFloat, e1, e2)
   | getBinaryFun("getString", e1, e2) = FuncTwo(GetString, e1, e2)
   | getBinaryFun("getInt", e1, e2) = FuncTwo(GetInt, e1, e2)
-  | getBinaryFun("read", e1, e2) = FuncTwo(ReadFile, e1, e2)
   | getBinaryFun(_,_,_) = raise OperationNotSupported
   handle e => (print "Exception: ";exnName e; e)
 
@@ -74,7 +73,6 @@ fun showBinOp(Add) = "+"
   | showBinOp(GetFloat) = "getFloat"
   | showBinOp(GetInt) = "getInt"
   | showBinOp(GetString) = "getString"
-  | showBinOp(ReadFile) = "read"
 
 
 fun getFunctionOne("mean", e1) = FuncOne(Mean,e1)

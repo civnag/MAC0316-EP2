@@ -111,7 +111,6 @@ fun printValuesFList(Primitivo (Int_ i)) = print("Valor: " ^ (Int.toString i) ^ 
 fun functionTwo("getFloat", Sample ls, Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo("getInt", Sample ls, Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo("getString", Sample ls, Primitivo(Int_ i)) = List.nth(ls,i)
-  | functionTwo("read",Primitivo(String_ s),Sample ls) = Sample (Helper.readlist(s,List.map extractString ls))
   | functionTwo(_,_,_) = raise FunctionTwoNotImplemented
 
 fun functionThree("substring",Primitivo(String_ ls),Primitivo(Int_ i),Primitivo(Int_ j)) = Primitivo(String_(String.substring(ls,i,j)))
