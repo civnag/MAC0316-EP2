@@ -2,6 +2,7 @@ structure Helper = struct
 exception SizeNotAllowed
 exception TypeError
 
+
 open Grammar;
 
 val isComma = Char.contains ","
@@ -190,6 +191,62 @@ fun tupleType(x1::x2::nil) = Tupla2 (initTupleType x1, initTupleType x2)
   | tupleType(x1::x2::x3::x4::x5::x6::x7::x8::x9::nil) = Tupla9 (initTupleType x1, initTupleType x2, initTupleType x3, initTupleType x4, initTupleType x5, initTupleType x6, initTupleType x7, initTupleType x8, initTupleType x9)
   | tupleType(x1::x2::x3::x4::x5::x6::x7::x8::x9::x0::nil) = Tupla0 (initTupleType x1, initTupleType x2, initTupleType x3, initTupleType x4, initTupleType x5, initTupleType x6, initTupleType x7, initTupleType x8, initTupleType x9, initTupleType x0)
   | tupleType _ = raise SizeNotAllowed
+
+fun extractColumn 1 (Tupla2(a,b)) = a
+  | extractColumn 2 (Tupla2(a,b)) = b
+  | extractColumn 1 (Tupla3(a,b,c)) = a
+  | extractColumn 2 (Tupla3(a,b,c)) = b
+  | extractColumn 3 (Tupla3(a,b,c)) = c
+  | extractColumn 1 (Tupla4(a,b,c,d)) = a
+  | extractColumn 2 (Tupla4(a,b,c,d)) = b
+  | extractColumn 3 (Tupla4(a,b,c,d)) = c
+  | extractColumn 4 (Tupla4(a,b,c,d)) = d
+  | extractColumn 1 (Tupla5(a,b,c,d,e)) = a
+  | extractColumn 2 (Tupla5(a,b,c,d,e)) = b
+  | extractColumn 3 (Tupla5(a,b,c,d,e)) = c
+  | extractColumn 4 (Tupla5(a,b,c,d,e)) = d
+  | extractColumn 5 (Tupla5(a,b,c,d,e)) = e
+  | extractColumn 1 (Tupla6(a,b,c,d,e,f)) = a
+  | extractColumn 2 (Tupla6(a,b,c,d,e,f)) = b
+  | extractColumn 3 (Tupla6(a,b,c,d,e,f)) = c
+  | extractColumn 4 (Tupla6(a,b,c,d,e,f)) = d
+  | extractColumn 5 (Tupla6(a,b,c,d,e,f)) = e
+  | extractColumn 6 (Tupla6(a,b,c,d,e,f)) = f
+  | extractColumn 1 (Tupla7(a,b,c,d,e,f,g)) = a
+  | extractColumn 2 (Tupla7(a,b,c,d,e,f,g)) = b
+  | extractColumn 3 (Tupla7(a,b,c,d,e,f,g)) = c
+  | extractColumn 4 (Tupla7(a,b,c,d,e,f,g)) = d
+  | extractColumn 5 (Tupla7(a,b,c,d,e,f,g)) = e
+  | extractColumn 6 (Tupla7(a,b,c,d,e,f,g)) = f
+  | extractColumn 7 (Tupla7(a,b,c,d,e,f,g)) = g
+  | extractColumn 1 (Tupla8(a,b,c,d,e,f,g,h)) = a
+  | extractColumn 2 (Tupla8(a,b,c,d,e,f,g,h)) = b
+  | extractColumn 3 (Tupla8(a,b,c,d,e,f,g,h)) = c
+  | extractColumn 4 (Tupla8(a,b,c,d,e,f,g,h)) = d
+  | extractColumn 5 (Tupla8(a,b,c,d,e,f,g,h)) = e
+  | extractColumn 6 (Tupla8(a,b,c,d,e,f,g,h)) = f
+  | extractColumn 7 (Tupla8(a,b,c,d,e,f,g,h)) = g
+  | extractColumn 8 (Tupla8(a,b,c,d,e,f,g,h)) = h
+  | extractColumn 1 (Tupla9(a,b,c,d,e,f,g,h,i)) = a
+  | extractColumn 2 (Tupla9(a,b,c,d,e,f,g,h,i)) = b
+  | extractColumn 3 (Tupla9(a,b,c,d,e,f,g,h,i)) = c
+  | extractColumn 4 (Tupla9(a,b,c,d,e,f,g,h,i)) = d
+  | extractColumn 5 (Tupla9(a,b,c,d,e,f,g,h,i)) = e
+  | extractColumn 6 (Tupla9(a,b,c,d,e,f,g,h,i)) = f
+  | extractColumn 7 (Tupla9(a,b,c,d,e,f,g,h,i)) = g
+  | extractColumn 8 (Tupla9(a,b,c,d,e,f,g,h,i)) = h
+  | extractColumn 9 (Tupla9(a,b,c,d,e,f,g,h,i)) = i
+  | extractColumn 1 (Tupla0(a,b,c,d,e,f,g,h,i,j)) = a
+  | extractColumn 2 (Tupla0(a,b,c,d,e,f,g,h,i,j)) = b
+  | extractColumn 3 (Tupla0(a,b,c,d,e,f,g,h,i,j)) = c
+  | extractColumn 4 (Tupla0(a,b,c,d,e,f,g,h,i,j)) = d
+  | extractColumn 5 (Tupla0(a,b,c,d,e,f,g,h,i,j)) = e
+  | extractColumn 6 (Tupla0(a,b,c,d,e,f,g,h,i,j)) = f
+  | extractColumn 7 (Tupla0(a,b,c,d,e,f,g,h,i,j)) = g
+  | extractColumn 8 (Tupla0(a,b,c,d,e,f,g,h,i,j)) = h
+  | extractColumn 9 (Tupla0(a,b,c,d,e,f,g,h,i,j)) = i
+  | extractColumn 0 (Tupla0(a,b,c,d,e,f,g,h,i,j)) = j
+  | extractColumn _ _ = raise TypeError
 
 
 end
