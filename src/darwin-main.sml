@@ -43,7 +43,5 @@ struct
     	in
       		1
     	end
-    	handle e => (print "Error\n";exnToString e; 43)
-
 
 end

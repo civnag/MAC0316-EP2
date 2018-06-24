@@ -98,10 +98,10 @@ expr
     | %try exp_bool => (exp_bool)
     | %try exp_arit => (exp_arit)
     | %try exp_tupla => (exp_tupla)
-    | %try funcs_string => (funcs_string)
     | %try funcs_float => (funcs_float)
     | %try funcs_int => (funcs_int)
     | %try funcs_list => (funcs_list)
+    | %try funcs_string => (funcs_string)
     | %try val_list => (val_list)
     ;
 

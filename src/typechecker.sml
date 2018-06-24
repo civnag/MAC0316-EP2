@@ -121,11 +121,11 @@ fun functionOne("sample of float", "mean", Sample(x)) = Primitivo(Float_ (Statis
   | functionOne("sample of int", "stdDeviation", Sample(x)) = Primitivo(Float_ (Statistics.standardDeviation (List.map intToFloat x)))
   | functionOne("sample of int", "variance", Sample(x)) = Primitivo(Float_ (Statistics.variance (List.map intToFloat x)))
   | functionOne("sample of int", "median", Sample(x)) = Primitivo(Float_ (Statistics.median (List.map intToFloat x)))
-  | functionOne(_, "toString", x ) = Primitivo (String_ (Grammar.show x))
-  | functionOne(_, "toFloat", Primitivo(Int_ value)) = Primitivo(Float_ (Real.fromInt value))
-  | functionOne(_, "toInt", Primitivo(Float_ value)) = Primitivo(Int_ (Real.trunc value))
-  | functionOne(_, "sum", Sample(x)) = raise FunctionOneNotImplemented
-  | functionOne(_, "prod", Sample(x)) = raise FunctionOneNotImplemented
+  | functionOne("", "toString", x ) = Primitivo (String_ (Grammar.show x))
+  | functionOne("", "toFloat", Primitivo(Int_ value)) = Primitivo(Float_ (Real.fromInt value))
+  | functionOne("", "toInt", Primitivo(Float_ value)) = Primitivo(Int_ (Real.trunc value))
+  | functionOne("", "sum", Sample(x)) = raise FunctionOneNotImplemented
+  | functionOne("", "prod", Sample(x)) = raise FunctionOneNotImplemented
   | functionOne(_, _, _) = raise TypeMismatch
 
 end
