@@ -102,7 +102,7 @@ fun insere(hm,n,"int") = AtomMap.insert(hm, n, Grammar.Primitivo(Grammar.Int_ 0)
     | insere(hm,n,_) = AtomMap.insert(hm, n, Grammar.Void)
 
 fun showOpRel(NEQR) = "!="
-  | showOpRel(EQR) = "="
+  | showOpRel(EQR) = "=="
   | showOpRel(GEQR) = ">="
   | showOpRel(LEQR) = "<="
   | showOpRel(GTR) = ">"
