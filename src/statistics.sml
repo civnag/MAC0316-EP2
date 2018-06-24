@@ -35,23 +35,6 @@ fun linearRegression(amostra_x, amostra_y) = concat[Real.fmt (StringCvt.FIX (SOM
 
 fun median(amostra) = List.nth(amostra, Real.round(length(amostra) / 2.0));
 
-fun maximum(amostra: real list) =
- case amostra of [] => NONE
-   | (head::[]) => SOME head
-   | (head::neck::tail) =>	if head > neck
-         then maximum(head::tail)
-         else maximum(neck::tail);
-
-fun minimum(amostra: real list) =
-case amostra of [] => NONE
-  | (head::[]) => SOME head
-  | (head::neck::tail) =>	if head < neck
-        then minimum(head::tail)
-        else minimum(neck::tail);
-
-(* Maximo menos minimo *)
-fun range(amostra) = Option.valOf(maximum(amostra)) - Option.valOf(minimum(amostra));
-
 (* standardDeviation *)
 fun sigma_summation(head::tail, mean) = pow(head - mean, 2.0) + sigma_summation(tail, mean) | sigma_summation(nil, mean) = 0.0;
 fun standardDeviation(amostra) = sqrt(1.0 / (length(amostra) - 1.0) * sigma_summation(amostra, mean(amostra)));
