@@ -1,0 +1,40 @@
+title "Testes das funções estatísticas";
+variables
+    sample of float consumo;
+    sample of float aceleracao;
+    float media;
+    float variancia;
+    float correlacao;
+    float covariancia;
+    string regressao;
+    float desvio;
+    float mediana;
+end variables
+commands
+    print("Testes com amostra de flutuantes");
+
+    consumo := {15.1, 14.6, 13.6, 11.6};
+    aceleracao := {9.3, 15.4, 24.5, 2.3};
+
+    media := (mean(consumo) + mean(aceleracao));
+    print("Média: " ++ toString(media));
+
+    variancia := variance({15.1, 14.6, 13.6, 11.6});
+    print("Variância: " ++ toString(variancia));
+
+    correlacao := correlation(consumo, aceleracao);
+    print("Correlação: " ++ toString(correlacao));
+
+    covariancia := covariance(consumo, aceleracao);
+    print("Covariância: " ++ toString(covariancia));
+
+    regressao := linearRegression(consumo, aceleracao);
+    print("Regressão linear: " ++ toString(regressao));
+
+    desvio := stdDeviation(aceleracao);
+    print("Desvio Padrão: " ++ toString(desvio));
+
+    mediana := stdDeviation({15.1, 14.6, 13.6, 11.6});
+    print("Mediana: " ++ toString(mediana));
+
+

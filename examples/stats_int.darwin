@@ -1,0 +1,40 @@
+title "Testes das funções estatísticas";
+variables
+    sample of int idade;
+    sample of int filhos;
+    float media;
+    float variancia;
+    float correlacao;
+    float covariancia;
+    string regressao;
+    float desvio;
+    float mediana;
+end variables
+commands
+    print("Testes com amostra de inteiros");
+
+    idade := {15, 14, 13, 11};
+    filhos := {9, 15, 24, 2};
+
+    media := (mean(idade) + mean(filhos));
+    print("Média: " ++ toString(media));
+
+    variancia := variance({15, 14, 13, 11});
+    print("Variância: " ++ toString(variancia));
+
+    correlacao := correlation(idade, filhos);
+    print("Correlação: " ++ toString(correlacao));
+
+    covariancia := covariance(idade, filhos);
+    print("Covariância: " ++ toString(covariancia));
+
+    regressao := linearRegression(idade, filhos);
+    print("Regressão linear: " ++ toString(regressao));
+
+    desvio := stdDeviation(filhos);
+    print("Desvio Padrão: " ++ toString(desvio));
+
+    mediana := stdDeviation({15, 14, 13, 11});
+    print("Mediana: " ++ toString(mediana));
+
+
