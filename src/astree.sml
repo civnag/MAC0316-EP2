@@ -139,7 +139,7 @@ fun eval(Const t,vars) = t
   | eval(FuncOne(func, e1), vars) =
         let
             val ee1 = eval(e1, vars)
-            (* val _ = print("Type 1: " ^ (TypeChecker.typeof ee1) ^ "fun" ^ showFunctionOne func) *)
+            val _ = print("Type 1: " ^ (TypeChecker.typeof ee1) ^ " fun " ^ showFunctionOne func ^ "\n")
         in
             case (TypeChecker.typeof ee1) of
                 ("sample of float") => TypeChecker.functionOne("sample of float", showFunctionOne func, ee1)
@@ -148,7 +148,7 @@ fun eval(Const t,vars) = t
               | ("int") => TypeChecker.functionOne("", showFunctionOne func, ee1)
               | ("string") => TypeChecker.functionOne("", showFunctionOne func, ee1)
               | ("boolean") => TypeChecker.functionOne("", showFunctionOne func, ee1)
-              | (_) => raise TypeChecker.TypeMismatch
+              | (_) => TypeChecker.functionOne("", showFunctionOne func, ee1)
         end
   | eval(FuncTwo(binop, e1, e2), vars) =
         let
