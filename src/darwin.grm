@@ -26,7 +26,7 @@
     | LP ("(") | RP (")") | BOOL of bool | AND ("&&") | OR ("||") | NOT("!")
     | SPACE (" ") | GT(">") | LT("<") | LEQ("<=") | GEQ(">=") | NEQ("!=")
     | KW_variables ("variables") | SEMI | TIPO of string | DOTDOT(":=")
-    | KW_commands ("commands") | STR of string | KW_Print ("print")
+    | KW_commands ("commands") | STR of string | KW_Print ("print") | UNDER("__")
     | KW_endvars ("end variables") | KW_terminate ("terminate") | KW_READFILE("read")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") | KW_GETS("getString")
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
@@ -151,6 +151,8 @@ funcs_float
     ;
 funcs_list
     : KW_SUBS LP exp_string COMMA exp_arit COMMA exp_arit RP => (ParseTree.getTertiaryFun("substring", exp_string, exp_arit1,exp_arit2))
+    | TUPLE UNDER NUM => (ParseTree.Const (Helper.extractColumn NUM (getTupla TUPLE)))
+    | STUPLE UNDER NUM => (ParseTree.Const (Grammar.Sample( List.map (fn(x) => Helper.extractColumn NUM x) (getSampleTuple STUPLE))))
     ;
 
 float_list

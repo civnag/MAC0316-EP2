@@ -104,7 +104,6 @@ fun statistics("sample of float", "correlation", Sample(x), Sample(y)) = Primiti
   | statistics(_, _, _, _) = raise StatisticsNotImplemented
   handle e => (print ("Exception: " ^ exnName e); e)
 
-
 fun functionTwo("getFloat",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo("getInt",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)
   | functionTwo("getString",Sample ls,Primitivo(Int_ i)) = List.nth(ls,i)

@@ -4,8 +4,10 @@ variables
     float variancia;
 end variables
 commands
-    porcentagens := {12.4, 43.5, 53.3, 93.4};
+    porcentagens := {12.0, 43.0, 53.0, 93.0};
     variancia := variance(porcentagens);
+    print(toString(variancia));
+
     if(variancia > 50.0) then
         print("A variância está muito alta");
     else
