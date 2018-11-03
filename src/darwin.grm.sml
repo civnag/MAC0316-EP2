@@ -45,6 +45,9 @@ structure DarwinTokens =
       | KW_THEN
       | KW_ELSE
       | KW_WHILE
+      | KW_CASE
+      | KW_OF
+      | COLON
       | KW_DO
       | KW_END
       | KW_TOSTRING
@@ -67,7 +70,7 @@ structure DarwinTokens =
       | CONCAT
       | EOF
     val allToks = [
-            KW_let, KW_in, KW_title, PLUS, EEQ, TIMES, DIV, MINUS, COMMA, LP, RP, AND, OR, SPACE, GT, LT, LEQ, GEQ, NEQ, KW_variables, SEMI, DOTDOT, KW_commands, KW_Print, KW_endvars, KW_terminate, KW_SUM, KW_PROD, EMPTY, KW_GETS, KW_IF, KW_THEN, KW_ELSE, KW_WHILE, KW_DO, KW_END, KW_TOSTRING, KW_MEAN, KW_CORR, KW_MEDIAN, KW_STDEV, KW_VAR, KW_RT, KW_POW, KW_GETF, KW_COV, KW_LINREG, VOID, KW_GETI, KW_TOFLOAT, KW_TOINT, CONCAT, EOF
+            KW_let, KW_in, KW_title, PLUS, EEQ, TIMES, DIV, MINUS, COMMA, LP, RP, AND, OR, SPACE, GT, LT, LEQ, GEQ, NEQ, KW_variables, SEMI, DOTDOT, KW_commands, KW_Print, KW_endvars, KW_terminate, KW_SUM, KW_PROD, EMPTY, KW_GETS, KW_IF, KW_THEN, KW_ELSE, KW_WHILE, KW_CASE, KW_OF, COLON, KW_DO, KW_END, KW_TOSTRING, KW_MEAN, KW_CORR, KW_MEDIAN, KW_STDEV, KW_VAR, KW_RT, KW_POW, KW_GETF, KW_COV, KW_LINREG, VOID, KW_GETI, KW_TOFLOAT, KW_TOINT, CONCAT, EOF
            ]
     fun toString tok =
 (case (tok)
@@ -115,6 +118,9 @@ structure DarwinTokens =
   | (KW_THEN) => "then"
   | (KW_ELSE) => "else"
   | (KW_WHILE) => "while"
+  | (KW_CASE) => "case"
+  | (KW_OF) => "of"
+  | (COLON) => "COLON"
   | (KW_DO) => "do"
   | (KW_END) => "end"
   | (KW_TOSTRING) => "toString"
@@ -183,6 +189,9 @@ structure DarwinTokens =
   | (KW_THEN) => true
   | (KW_ELSE) => true
   | (KW_WHILE) => true
+  | (KW_CASE) => true
+  | (KW_OF) => true
+  | (COLON) => false
   | (KW_DO) => true
   | (KW_END) => true
   | (KW_TOSTRING) => true
@@ -243,6 +252,8 @@ fun commands_PROD_3_ACT (conditional, conditional_SPAN : (Lex.pos * Lex.pos), FU
   (conditional)
 fun commands_PROD_4_ACT (loop, loop_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (loop)
+fun commands_PROD_5_ACT (case_statement, case_statement_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  (case_statement)
 fun assign_PROD_1_ACT (ID, expr, DOTDOT, ID_SPAN : (Lex.pos * Lex.pos), expr_SPAN : (Lex.pos * Lex.pos), DOTDOT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (tree:=(ParseTree.Assign(ID,expr))::(!tree); (ParseTree.Assign(ID,expr)))
 fun expr_PROD_1_ACT (exp_string, exp_string_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
@@ -383,6 +394,32 @@ fun loop_PROD_1_ACT (SR, KW_WHILE, exp_bool, KW_DO, KW_END, SR_SPAN : (Lex.pos *
                 w
             end
         )
+fun case_statement_PROD_1_ACT (SR1, SR2, KW_CASE, KW_OF, case_list_element1, case_list_element2, COLON1, COLON2, case_expression, KW_END, SR1_SPAN : (Lex.pos * Lex.pos), SR2_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), KW_OF_SPAN : (Lex.pos * Lex.pos), case_list_element1_SPAN : (Lex.pos * Lex.pos), case_list_element2_SPAN : (Lex.pos * Lex.pos), COLON1_SPAN : (Lex.pos * Lex.pos), COLON2_SPAN : (Lex.pos * Lex.pos), case_expression_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  (
+            let
+                val cs = (ParseTree.Case2(case_expression,case_list_element1,case_list_element2,SR1,SR2))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+fun case_statement_PROD_2_ACT (SR, case_list_element, KW_CASE, COLON, KW_OF, case_expression, KW_END, SR_SPAN : (Lex.pos * Lex.pos), case_list_element_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), COLON_SPAN : (Lex.pos * Lex.pos), KW_OF_SPAN : (Lex.pos * Lex.pos), case_expression_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  (
+            let
+                val cs = (ParseTree.Case1(case_expression,case_list_element,SR))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+fun case_expression_PROD_1_ACT (exp_bool, exp_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  (exp_bool)
+fun case_expression_PROD_2_ACT (NUM, NUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  ( ParseTree .Const (Grammar. Primitivo (Grammar.Int_ NUM )))
+fun case_expression_PROD_3_ACT (REAL, REAL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  ( ParseTree .Const (Grammar. Primitivo (Grammar.Float_ REAL )))
+fun case_list_element_PROD_1_ACT (case_expression, case_expression_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
+  (case_expression)
 fun conditional_PROD_1_ACT (SR1, SR2, exp_bool, KW_ELSE, KW_THEN, KW_IF, KW_END, SR1_SPAN : (Lex.pos * Lex.pos), SR2_SPAN : (Lex.pos * Lex.pos), exp_bool_SPAN : (Lex.pos * Lex.pos), KW_ELSE_SPAN : (Lex.pos * Lex.pos), KW_THEN_SPAN : (Lex.pos * Lex.pos), KW_IF_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts, tree, vars) = 
   (
             let
@@ -669,6 +706,18 @@ fun matchKW_ELSE strm = (case (lex(strm))
 (* end case *))
 fun matchKW_WHILE strm = (case (lex(strm))
  of (Tok.KW_WHILE, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_CASE strm = (case (lex(strm))
+ of (Tok.KW_CASE, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchKW_OF strm = (case (lex(strm))
+ of (Tok.KW_OF, span, strm') => ((), span, strm')
+  | _ => fail()
+(* end case *))
+fun matchCOLON strm = (case (lex(strm))
+ of (Tok.COLON, span, strm') => ((), span, strm')
   | _ => fail()
 (* end case *))
 fun matchKW_DO strm = (case (lex(strm))
@@ -1892,6 +1941,90 @@ and op_str_NT (strm) = let
         (UserCode.op_str_PROD_1_ACT (atom_string1_RES, atom_string2_RES, CONCAT_RES, atom_string1_SPAN : (Lex.pos * Lex.pos), atom_string2_SPAN : (Lex.pos * Lex.pos), CONCAT_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
           FULL_SPAN, strm')
       end
+fun case_expression_NT (strm) = let
+      fun case_expression_PROD_1 (strm) = let
+            val (exp_bool_RES, exp_bool_SPAN, strm') = exp_bool_NT(strm)
+            val FULL_SPAN = (#1(exp_bool_SPAN), #2(exp_bool_SPAN))
+            in
+              (UserCode.case_expression_PROD_1_ACT (exp_bool_RES, exp_bool_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun case_expression_PROD_2 (strm) = let
+            val (NUM_RES, NUM_SPAN, strm') = matchNUM(strm)
+            val FULL_SPAN = (#1(NUM_SPAN), #2(NUM_SPAN))
+            in
+              (UserCode.case_expression_PROD_2_ACT (NUM_RES, NUM_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun case_expression_PROD_3 (strm) = let
+            val (REAL_RES, REAL_SPAN, strm') = matchREAL(strm)
+            val FULL_SPAN = (#1(REAL_SPAN), #2(REAL_SPAN))
+            in
+              (UserCode.case_expression_PROD_3_ACT (REAL_RES, REAL_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      in
+        (case (lex(strm))
+         of (Tok.REAL(_), _, strm') =>
+              (case (lex(strm'))
+               of (Tok.PLUS, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.EEQ, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.TIMES, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.DIV, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.MINUS, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.GT, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.LT, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.LEQ, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.GEQ, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.NEQ, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.KW_OF, _, strm') => case_expression_PROD_3(strm)
+                | (Tok.COLON, _, strm') => case_expression_PROD_3(strm)
+                | _ => fail()
+              (* end case *))
+          | (Tok.ID(_), _, strm') => case_expression_PROD_1(strm)
+          | (Tok.MINUS, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.LP, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.BOOL(_), _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_SUM, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_PROD, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_MEAN, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_CORR, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_MEDIAN, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_STDEV, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_VAR, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_RT, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_POW, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_GETF, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_COV, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_GETI, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_TOFLOAT, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.KW_TOINT, _, strm') => case_expression_PROD_1(strm)
+          | (Tok.NUM(_), _, strm') =>
+              (case (lex(strm'))
+               of (Tok.PLUS, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.EEQ, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.TIMES, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.DIV, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.MINUS, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.GT, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.LT, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.LEQ, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.GEQ, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.NEQ, _, strm') => case_expression_PROD_1(strm)
+                | (Tok.KW_OF, _, strm') => case_expression_PROD_2(strm)
+                | (Tok.COLON, _, strm') => case_expression_PROD_2(strm)
+                | _ => fail()
+              (* end case *))
+          | _ => fail()
+        (* end case *))
+      end
+fun case_list_element_NT (strm) = let
+      val (case_expression_RES, case_expression_SPAN, strm') = case_expression_NT(strm)
+      val FULL_SPAN = (#1(case_expression_SPAN), #2(case_expression_SPAN))
+      in
+        (UserCode.case_list_element_PROD_1_ACT (case_expression_RES, case_expression_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+          FULL_SPAN, strm')
+      end
 fun assign_NT (strm) = let
       val (ID_RES, ID_SPAN, strm') = matchID(strm)
       val (DOTDOT_RES, DOTDOT_SPAN, strm') = matchDOTDOT(strm')
@@ -1942,12 +2075,103 @@ fun commands_NT (strm) = let
               (UserCode.commands_PROD_4_ACT (loop_RES, loop_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
                 FULL_SPAN, strm')
             end
+      fun commands_PROD_5 (strm) = let
+            val (case_statement_RES, case_statement_SPAN, strm') = case_statement_NT(strm)
+            val FULL_SPAN = (#1(case_statement_SPAN), #2(case_statement_SPAN))
+            in
+              (UserCode.commands_PROD_5_ACT (case_statement_RES, case_statement_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
       in
         (case (lex(strm))
-         of (Tok.KW_WHILE, _, strm') => commands_PROD_4(strm)
-          | (Tok.ID(_), _, strm') => commands_PROD_2(strm)
-          | (Tok.KW_Print, _, strm') => commands_PROD_1(strm)
+         of (Tok.KW_CASE, _, strm') => commands_PROD_5(strm)
           | (Tok.KW_IF, _, strm') => commands_PROD_3(strm)
+          | (Tok.KW_Print, _, strm') => commands_PROD_1(strm)
+          | (Tok.ID(_), _, strm') => commands_PROD_2(strm)
+          | (Tok.KW_WHILE, _, strm') => commands_PROD_4(strm)
+          | _ => fail()
+        (* end case *))
+      end
+and case_statement_NT (strm) = let
+      fun case_statement_PROD_1 (strm) = let
+            val (KW_CASE_RES, KW_CASE_SPAN, strm') = matchKW_CASE(strm)
+            val (case_expression_RES, case_expression_SPAN, strm') = case_expression_NT(strm')
+            val (KW_OF_RES, KW_OF_SPAN, strm') = matchKW_OF(strm')
+            val (case_list_element1_RES, case_list_element1_SPAN, strm') = case_list_element_NT(strm')
+            val (COLON1_RES, COLON1_SPAN, strm') = matchCOLON(strm')
+            fun case_statement_PROD_1_SUBRULE_1_NT (strm) = let
+                  val (commands_RES, commands_SPAN, strm') = commands_NT(strm)
+                  val FULL_SPAN = (#1(commands_SPAN), #2(commands_SPAN))
+                  in
+                    ((commands_RES), FULL_SPAN, strm')
+                  end
+            fun case_statement_PROD_1_SUBRULE_1_PRED (strm) = (case (lex(strm))
+                   of (Tok.KW_Print, _, strm') => true
+                    | (Tok.KW_IF, _, strm') => true
+                    | (Tok.KW_WHILE, _, strm') => true
+                    | (Tok.KW_CASE, _, strm') => true
+                    | (Tok.ID(_), _, strm') =>
+                        (case (lex(strm'))
+                         of (Tok.DOTDOT, _, strm') => true
+                          | _ => false
+                        (* end case *))
+                    | _ => false
+                  (* end case *))
+            val (SR1_RES, SR1_SPAN, strm') = EBNF.closure(case_statement_PROD_1_SUBRULE_1_PRED, case_statement_PROD_1_SUBRULE_1_NT, strm')
+            val (case_list_element2_RES, case_list_element2_SPAN, strm') = case_list_element_NT(strm')
+            val (COLON2_RES, COLON2_SPAN, strm') = matchCOLON(strm')
+            fun case_statement_PROD_1_SUBRULE_2_NT (strm) = let
+                  val (commands_RES, commands_SPAN, strm') = commands_NT(strm)
+                  val FULL_SPAN = (#1(commands_SPAN), #2(commands_SPAN))
+                  in
+                    ((commands_RES), FULL_SPAN, strm')
+                  end
+            fun case_statement_PROD_1_SUBRULE_2_PRED (strm) = (case (lex(strm))
+                   of (Tok.ID(_), _, strm') => true
+                    | (Tok.KW_Print, _, strm') => true
+                    | (Tok.KW_IF, _, strm') => true
+                    | (Tok.KW_WHILE, _, strm') => true
+                    | (Tok.KW_CASE, _, strm') => true
+                    | _ => false
+                  (* end case *))
+            val (SR2_RES, SR2_SPAN, strm') = EBNF.closure(case_statement_PROD_1_SUBRULE_2_PRED, case_statement_PROD_1_SUBRULE_2_NT, strm')
+            val (KW_END_RES, KW_END_SPAN, strm') = matchKW_END(strm')
+            val FULL_SPAN = (#1(KW_CASE_SPAN), #2(KW_END_SPAN))
+            in
+              (UserCode.case_statement_PROD_1_ACT (SR1_RES, SR2_RES, KW_CASE_RES, KW_OF_RES, case_list_element1_RES, case_list_element2_RES, COLON1_RES, COLON2_RES, case_expression_RES, KW_END_RES, SR1_SPAN : (Lex.pos * Lex.pos), SR2_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), KW_OF_SPAN : (Lex.pos * Lex.pos), case_list_element1_SPAN : (Lex.pos * Lex.pos), case_list_element2_SPAN : (Lex.pos * Lex.pos), COLON1_SPAN : (Lex.pos * Lex.pos), COLON2_SPAN : (Lex.pos * Lex.pos), case_expression_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      fun case_statement_PROD_2 (strm) = let
+            val (KW_CASE_RES, KW_CASE_SPAN, strm') = matchKW_CASE(strm)
+            val (case_expression_RES, case_expression_SPAN, strm') = case_expression_NT(strm')
+            val (KW_OF_RES, KW_OF_SPAN, strm') = matchKW_OF(strm')
+            val (case_list_element_RES, case_list_element_SPAN, strm') = case_list_element_NT(strm')
+            val (COLON_RES, COLON_SPAN, strm') = matchCOLON(strm')
+            fun case_statement_PROD_2_SUBRULE_1_NT (strm) = let
+                  val (commands_RES, commands_SPAN, strm') = commands_NT(strm)
+                  val FULL_SPAN = (#1(commands_SPAN), #2(commands_SPAN))
+                  in
+                    ((commands_RES), FULL_SPAN, strm')
+                  end
+            fun case_statement_PROD_2_SUBRULE_1_PRED (strm) = (case (lex(strm))
+                   of (Tok.ID(_), _, strm') => true
+                    | (Tok.KW_Print, _, strm') => true
+                    | (Tok.KW_IF, _, strm') => true
+                    | (Tok.KW_WHILE, _, strm') => true
+                    | (Tok.KW_CASE, _, strm') => true
+                    | _ => false
+                  (* end case *))
+            val (SR_RES, SR_SPAN, strm') = EBNF.closure(case_statement_PROD_2_SUBRULE_1_PRED, case_statement_PROD_2_SUBRULE_1_NT, strm')
+            val (KW_END_RES, KW_END_SPAN, strm') = matchKW_END(strm')
+            val FULL_SPAN = (#1(KW_CASE_SPAN), #2(KW_END_SPAN))
+            in
+              (UserCode.case_statement_PROD_2_ACT (SR_RES, case_list_element_RES, KW_CASE_RES, COLON_RES, KW_OF_RES, case_expression_RES, KW_END_RES, SR_SPAN : (Lex.pos * Lex.pos), case_list_element_SPAN : (Lex.pos * Lex.pos), KW_CASE_SPAN : (Lex.pos * Lex.pos), COLON_SPAN : (Lex.pos * Lex.pos), KW_OF_SPAN : (Lex.pos * Lex.pos), case_expression_SPAN : (Lex.pos * Lex.pos), KW_END_SPAN : (Lex.pos * Lex.pos), FULL_SPAN : (Lex.pos * Lex.pos), ts_REFC, tree_REFC, vars_REFC),
+                FULL_SPAN, strm')
+            end
+      in
+        (case (lex(strm))
+         of (Tok.KW_CASE, _, strm') =>
+              tryProds(strm, [case_statement_PROD_1, case_statement_PROD_2])
           | _ => fail()
         (* end case *))
       end
@@ -1966,6 +2190,7 @@ and loop_NT (strm) = let
               | (Tok.KW_Print, _, strm') => true
               | (Tok.KW_IF, _, strm') => true
               | (Tok.KW_WHILE, _, strm') => true
+              | (Tok.KW_CASE, _, strm') => true
               | _ => false
             (* end case *))
       val (SR_RES, SR_SPAN, strm') = EBNF.closure(loop_PROD_1_SUBRULE_1_PRED, loop_PROD_1_SUBRULE_1_NT, strm')
@@ -1990,6 +2215,7 @@ and conditional_NT (strm) = let
               | (Tok.KW_Print, _, strm') => true
               | (Tok.KW_IF, _, strm') => true
               | (Tok.KW_WHILE, _, strm') => true
+              | (Tok.KW_CASE, _, strm') => true
               | _ => false
             (* end case *))
       val (SR1_RES, SR1_SPAN, strm') = EBNF.closure(conditional_PROD_1_SUBRULE_1_PRED, conditional_PROD_1_SUBRULE_1_NT, strm')
@@ -2005,6 +2231,7 @@ and conditional_NT (strm) = let
               | (Tok.KW_Print, _, strm') => true
               | (Tok.KW_IF, _, strm') => true
               | (Tok.KW_WHILE, _, strm') => true
+              | (Tok.KW_CASE, _, strm') => true
               | _ => false
             (* end case *))
       val (SR2_RES, SR2_SPAN, strm') = EBNF.closure(conditional_PROD_1_SUBRULE_2_PRED, conditional_PROD_1_SUBRULE_2_NT, strm')
@@ -2059,6 +2286,7 @@ fun program_NT (strm) = let
               | (Tok.KW_Print, _, strm') => true
               | (Tok.KW_IF, _, strm') => true
               | (Tok.KW_WHILE, _, strm') => true
+              | (Tok.KW_CASE, _, strm') => true
               | _ => false
             (* end case *))
       val (SR_RES, SR_SPAN, strm') = EBNF.closure(program_PROD_1_SUBRULE_1_PRED, program_PROD_1_SUBRULE_1_NT, strm')

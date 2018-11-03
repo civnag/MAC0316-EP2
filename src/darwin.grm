@@ -30,6 +30,7 @@
     | KW_endvars ("end variables") | KW_terminate ("terminate")
     | KW_SUM ("sum") | KW_PROD ("prod") | EMPTY ("{}") | KW_GETS("getString")
     | KW_IF("if") | KW_THEN("then") | KW_ELSE("else") | KW_WHILE("while")
+    | KW_CASE("case") | KW_OF("of") | COLON
     | KW_DO("do") | KW_END("end") | KW_TOSTRING ("toString") | KW_MEAN("mean")
     | KW_CORR("correlation") | KW_MEDIAN("median") | KW_STDEV("stdDeviation")
     | KW_VAR("variance") | KW_RT("rt") | KW_POW("pow") | KW_GETF("getFloat") | KW_COV("covariance")
@@ -47,6 +48,8 @@
     KW_THEN,
     KW_ELSE,
     KW_WHILE,
+    KW_CASE,
+    KW_OF, 
     KW_DO,
     KW_END,
     KW_PROD,
@@ -85,6 +88,7 @@ commands
     | assign SEMI  => (assign)
     | conditional  => (conditional)
     | loop => (loop)
+    | case_statement => (case_statement)
     ;
 
 assign
@@ -218,6 +222,37 @@ loop
                 w
             end
         )
+    ;
+
+case_statement
+    : %try KW_CASE case_expression KW_OF case_list_element COLON (commands)* case_list_element COLON (commands)* KW_END
+        => (
+            let
+                val cs = (ParseTree.Case2(case_expression,case_list_element1,case_list_element2,SR1,SR2))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+    | %try KW_CASE case_expression KW_OF case_list_element COLON (commands)* KW_END
+        => (
+            let
+                val cs = (ParseTree.Case1(case_expression,case_list_element,SR))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+    ;
+
+case_expression
+    : exp_bool => (exp_bool)
+    | NUM => ( ParseTree .Const (Grammar. Primitivo (Grammar.Int_ NUM )))
+    | REAL => ( ParseTree .Const (Grammar. Primitivo (Grammar.Float_ REAL )))
+    ;
+
+case_list_element
+    : case_expression => (case_expression)
     ;
 
 conditional

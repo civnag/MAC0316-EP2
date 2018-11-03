@@ -21,6 +21,8 @@ datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
               | While of Expr * (Tree list)
+              | Case1 of Expr * Expr * (Tree list) 
+              | Case2 of Expr * Expr * Expr * (Tree list) * (Tree list)
               | Null
 
 type RoseTree = Tree list
@@ -200,6 +202,57 @@ fun interpret((Print expr),vars,tps) =
               let val newVars = programa(c1, vars, tps) in interpret(While(e,c1), newVars, tps) end
             else
               vars
+        end
+  | interpret(Case1(e1, e2, c), vars, tps) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2) of
+                ("boolean", "boolean") => 
+                    if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee2) then 
+                        programa(c, vars, tps)
+                    else 
+                        vars
+              | ("int", "int") =>
+                    if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee2) then 
+                        programa(c, vars, tps)
+                    else 
+                        vars
+              | ("float", "float") =>
+                    if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee2)) then 
+                        programa(c, vars, tps)
+                    else 
+                        vars
+        end 
+  | interpret(Case2(e1, e2, e3, c1, c2), vars, tps) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+            val ee3 = eval(e3, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
+                ("boolean", "boolean", "boolean") => 
+                    if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee3) then 
+                        programa(c2, vars, tps)
+                    else 
+                        vars
+              | ("int", "int", "int") =>
+                    if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee3) then 
+                        programa(c2, vars, tps)
+                    else 
+                        vars
+              | ("float", "float", "float") =>
+                    if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee2)) then 
+                        programa(c1, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee3)) then 
+                        programa(c2, vars, tps)
+                    else 
+                        vars
         end
   | interpret(cs,vars,tps) = vars
   (* handle e => (print ("Exception: " ^ exnName e); ()) *)
