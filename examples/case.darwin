@@ -1,0 +1,37 @@
+title "Testes do comando case";
+
+variables
+    int a;
+    float b;
+    float c;
+    int d;
+end variables
+
+commands
+
+    a := 4;
+    b := 5.0;
+    c := 5.0;
+    d := 10;
+
+    print("ATRIBUIÇÕES");
+    print("a vale 4");
+    print("b vale 5.0");
+    print("c vale 5.0");
+    print("d vale 10");
+    print("TESTES");
+
+    case (a) of
+        5 : print("a é igual a 5");
+        4 : print("a é igual a 4");
+    end
+
+    case (b) of
+        c : print("b é igual a c");
+        b : print("b é diferente c");
+    end
+
+    case (d > a) of
+        (1 > 0) : print("d é maior que a");
+        (1 < 0) : print("d é menor que a");
+    end
