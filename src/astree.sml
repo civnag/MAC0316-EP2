@@ -21,8 +21,26 @@ datatype Tree = Assign of string * Expr
               | Print of Expr
               | If of Expr * (Tree list) * (Tree list)
               | While of Expr * (Tree list)
-              | Case1 of Expr * Expr * (Tree list) 
-              | Case2 of Expr * Expr * Expr * (Tree list) * (Tree list)
+              | Case1 of Expr * Expr * 
+                        (Tree list) 
+              | Case2 of Expr * Expr * Expr * 
+                        (Tree list) * (Tree list)
+              | Case3 of Expr * Expr * Expr * Expr *
+                        (Tree list) * (Tree list) * (Tree list)
+              | Case4 of Expr * Expr * Expr * Expr * Expr *
+                        (Tree list) * (Tree list) * (Tree list) * (Tree list)
+              | Case5 of Expr * Expr * Expr * Expr * Expr * Expr * 
+                        (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list)
+              | Case6 of Expr * Expr * Expr * Expr * Expr * Expr * Expr * 
+                        (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list)
+              | Case7 of Expr * Expr * Expr * Expr * Expr * Expr * Expr * Expr * 
+                        (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list)
+              | Case8 of Expr * Expr * Expr * Expr * Expr * Expr * Expr * Expr * Expr * 
+                        (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list)
+              | Case9 of Expr * Expr * Expr * Expr * Expr * Expr * Expr * Expr * Expr * Expr * 
+                        (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list)
+              | Case10 of Expr * Expr * Expr * Expr * Expr * Expr * Expr * Expr * Expr * Expr * Expr * 
+                        (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list) * (Tree list)
               | Null
 
 type RoseTree = Tree list
@@ -251,6 +269,490 @@ fun interpret((Print expr),vars,tps) =
                         programa(c1, vars, tps)
                     else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee3)) then 
                         programa(c2, vars, tps)
+                    else 
+                        vars
+        end
+  | interpret(Case3(e1, e2, e3, e4, c1, c2, c3), vars, tps) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+            val ee3 = eval(e3, vars)
+            val ee4 = eval(e4, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
+                ("boolean", "boolean", "boolean") => 
+                    if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee4) then 
+                        programa(c3, vars, tps)
+                    else 
+                        vars
+              | ("int", "int", "int") =>
+                    if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee4) then 
+                        programa(c3, vars, tps)
+                    else 
+                        vars
+              | ("float", "float", "float") =>
+                    if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee2)) then 
+                        programa(c1, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee3)) then 
+                        programa(c2, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee4)) then 
+                        programa(c3, vars, tps)    
+                    else 
+                        vars
+        end
+  | interpret(Case4(e1, e2, e3, e4, e5, c1, c2, c3, c4), vars, tps) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+            val ee3 = eval(e3, vars)
+            val ee4 = eval(e4, vars)
+            val ee5 = eval(e5, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
+                ("boolean", "boolean", "boolean") => 
+                    if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee5) then 
+                        programa(c4, vars, tps)
+                    else 
+                        vars
+              | ("int", "int", "int") =>
+                    if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee5) then 
+                        programa(c4, vars, tps)
+                    else 
+                        vars
+              | ("float", "float", "float") =>
+                    if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee2)) then 
+                        programa(c1, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee3)) then 
+                        programa(c2, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee4)) then 
+                        programa(c3, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee5)) then 
+                        programa(c4, vars, tps)  
+                    else 
+                        vars
+        end
+  | interpret(Case5(e1, e2, e3, e4, e5, e6, c1, c2, c3, c4, c5), vars, tps) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+            val ee3 = eval(e3, vars)
+            val ee4 = eval(e4, vars)
+            val ee5 = eval(e5, vars)
+            val ee6 = eval(e6, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
+                ("boolean", "boolean", "boolean") => 
+                    if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee6) then 
+                        programa(c5, vars, tps)
+                    else 
+                        vars
+              | ("int", "int", "int") =>
+                    if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee6) then 
+                        programa(c5, vars, tps)
+                    else 
+                        vars
+              | ("float", "float", "float") =>
+                    if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee2)) then 
+                        programa(c1, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee3)) then 
+                        programa(c2, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee4)) then 
+                        programa(c3, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee5)) then 
+                        programa(c4, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee6)) then 
+                        programa(c5, vars, tps)  
+                    else 
+                        vars
+        end
+  | interpret(Case6(e1, e2, e3, e4, e5, e6, e7, c1, c2, c3, c4, c5, c6), vars, tps) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+            val ee3 = eval(e3, vars)
+            val ee4 = eval(e4, vars)
+            val ee5 = eval(e5, vars)
+            val ee6 = eval(e6, vars)
+            val ee7 = eval(e7, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
+                ("boolean", "boolean", "boolean") => 
+                    if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee6) then 
+                        programa(c5, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee7) then 
+                        programa(c6, vars, tps)
+                    else 
+                        vars
+              | ("int", "int", "int") =>
+                    if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee6) then 
+                        programa(c5, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee7) then 
+                        programa(c6, vars, tps)
+                    else 
+                        vars
+              | ("float", "float", "float") =>
+                    if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee2)) then 
+                        programa(c1, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee3)) then 
+                        programa(c2, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee4)) then 
+                        programa(c3, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee5)) then 
+                        programa(c4, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee6)) then 
+                        programa(c5, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee7)) then 
+                        programa(c6, vars, tps) 
+                    else 
+                        vars
+        end
+  | interpret(Case7(e1, e2, e3, e4, e5, e6, e7, e8, c1, c2, c3, c4, c5, c6, c7), vars, tps) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+            val ee3 = eval(e3, vars)
+            val ee4 = eval(e4, vars)
+            val ee5 = eval(e5, vars)
+            val ee6 = eval(e6, vars)
+            val ee7 = eval(e7, vars)
+            val ee8 = eval(e8, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
+                ("boolean", "boolean", "boolean") => 
+                    if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee6) then 
+                        programa(c5, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee7) then 
+                        programa(c6, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee8) then 
+                        programa(c7, vars, tps)
+                    else 
+                        vars
+              | ("int", "int", "int") =>
+                    if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee6) then 
+                        programa(c5, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee7) then 
+                        programa(c6, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee8) then 
+                        programa(c7, vars, tps)
+                    else 
+                        vars
+              | ("float", "float", "float") =>
+                    if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee2)) then 
+                        programa(c1, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee3)) then 
+                        programa(c2, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee4)) then 
+                        programa(c3, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee5)) then 
+                        programa(c4, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee6)) then 
+                        programa(c5, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee7)) then 
+                        programa(c6, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee8)) then 
+                        programa(c7, vars, tps)   
+                    else 
+                        vars
+        end
+  | interpret(Case8(e1, e2, e3, e4, e5, e6, e7, e8, e9, c1, c2, c3, c4, c5, c6, c7, c8), vars, tps) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+            val ee3 = eval(e3, vars)
+            val ee4 = eval(e4, vars)
+            val ee5 = eval(e5, vars)
+            val ee6 = eval(e6, vars)
+            val ee7 = eval(e7, vars)
+            val ee8 = eval(e8, vars)
+            val ee9 = eval(e9, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
+                ("boolean", "boolean", "boolean") => 
+                    if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee6) then 
+                        programa(c5, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee7) then 
+                        programa(c6, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee8) then 
+                        programa(c7, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee9) then 
+                        programa(c8, vars, tps)
+                    else 
+                        vars
+              | ("int", "int", "int") =>
+                    if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee6) then 
+                        programa(c5, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee7) then 
+                        programa(c6, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee8) then 
+                        programa(c7, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee9) then 
+                        programa(c8, vars, tps)
+                    else 
+                        vars
+              | ("float", "float", "float") =>
+                    if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee2)) then 
+                        programa(c1, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee3)) then 
+                        programa(c2, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee4)) then 
+                        programa(c3, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee5)) then 
+                        programa(c4, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee6)) then 
+                        programa(c5, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee7)) then 
+                        programa(c6, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee8)) then 
+                        programa(c7, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee9)) then 
+                        programa(c8, vars, tps) 
+                    else 
+                        vars
+        end
+  | interpret(Case9(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, c1, c2, c3, c4, c5, c6, c7, c8, c9), vars, tps) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+            val ee3 = eval(e3, vars)
+            val ee4 = eval(e4, vars)
+            val ee5 = eval(e5, vars)
+            val ee6 = eval(e6, vars)
+            val ee7 = eval(e7, vars)
+            val ee8 = eval(e8, vars)
+            val ee9 = eval(e9, vars)
+            val ee10 = eval(e10, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
+                ("boolean", "boolean", "boolean") => 
+                    if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee6) then 
+                        programa(c5, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee7) then 
+                        programa(c6, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee8) then 
+                        programa(c7, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee9) then 
+                        programa(c8, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee10) then 
+                        programa(c9, vars, tps)
+                    else 
+                        vars
+              | ("int", "int", "int") =>
+                    if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee6) then 
+                        programa(c5, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee7) then 
+                        programa(c6, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee8) then 
+                        programa(c7, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee9) then 
+                        programa(c8, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee10) then 
+                        programa(c9, vars, tps)
+                    else 
+                        vars
+              | ("float", "float", "float") =>
+                    if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee2)) then 
+                        programa(c1, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee3)) then 
+                        programa(c2, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee4)) then 
+                        programa(c3, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee5)) then 
+                        programa(c4, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee6)) then 
+                        programa(c5, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee7)) then 
+                        programa(c6, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee8)) then 
+                        programa(c7, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee9)) then 
+                        programa(c8, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee10)) then 
+                        programa(c9, vars, tps)    
+                    else 
+                        vars
+        end
+  | interpret(Case10(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, c1, c2, c3, c4, c5, c6, c7, c8, c9, c10), vars, tps) =
+        let
+            val ee1 = eval(e1, vars)
+            val ee2 = eval(e2, vars)
+            val ee3 = eval(e3, vars)
+            val ee4 = eval(e4, vars)
+            val ee5 = eval(e5, vars)
+            val ee6 = eval(e6, vars)
+            val ee7 = eval(e7, vars)
+            val ee8 = eval(e8, vars)
+            val ee9 = eval(e9, vars)
+            val ee10 = eval(e10, vars)
+            val ee11 = eval(e11, vars)
+        in
+            case (TypeChecker.typeof ee1, TypeChecker.typeof ee2, TypeChecker.typeof ee3) of
+                ("boolean", "boolean", "boolean") => 
+                    if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee6) then 
+                        programa(c5, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee7) then 
+                        programa(c6, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee8) then 
+                        programa(c7, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee9) then 
+                        programa(c8, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee10) then 
+                        programa(c9, vars, tps)
+                    else if TypeChecker.extractBool(ee1) = TypeChecker.extractBool(ee11) then 
+                        programa(c10, vars, tps)
+                    else 
+                        vars
+              | ("int", "int", "int") =>
+                    if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee2) then 
+                        programa(c1, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee3) then 
+                        programa(c2, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee4) then 
+                        programa(c3, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee5) then 
+                        programa(c4, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee6) then 
+                        programa(c5, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee7) then 
+                        programa(c6, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee8) then 
+                        programa(c7, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee9) then 
+                        programa(c8, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee10) then 
+                        programa(c9, vars, tps)
+                    else if TypeChecker.extractInt(ee1) = TypeChecker.extractInt(ee11) then 
+                        programa(c10, vars, tps)
+                    else 
+                        vars
+              | ("float", "float", "float") =>
+                    if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee2)) then 
+                        programa(c1, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee3)) then 
+                        programa(c2, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee4)) then 
+                        programa(c3, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee5)) then 
+                        programa(c4, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee6)) then 
+                        programa(c5, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee7)) then 
+                        programa(c6, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee8)) then 
+                        programa(c7, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee9)) then 
+                        programa(c8, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee10)) then 
+                        programa(c9, vars, tps)
+                    else if Real.==(TypeChecker.extractFloat(ee1), TypeChecker.extractFloat(ee11)) then 
+                        programa(c10, vars, tps)    
                     else 
                         vars
         end

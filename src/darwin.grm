@@ -225,19 +225,162 @@ loop
     ;
 
 case_statement
-    : %try KW_CASE case_expression KW_OF case_list_element COLON (commands)* case_list_element COLON (commands)* KW_END
+    : %try  KW_CASE case_expression KW_OF
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            KW_END
         => (
             let
-                val cs = (ParseTree.Case2(case_expression,case_list_element1,case_list_element2,SR1,SR2))
+                val cs = (ParseTree.Case10(case_expression,cle1,cle2,cle3,cle4,cle5,cle6,cle7,cle8,cle9,cle10,
+                          SR1,SR2,SR3,SR4,SR5,SR6,SR7,SR8,SR9,SR10))
             in
                 tree := (cs :: (!tree));
                 cs
             end
         )
-    | %try KW_CASE case_expression KW_OF case_list_element COLON (commands)* KW_END
+    | %try  KW_CASE case_expression KW_OF
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            KW_END
         => (
             let
-                val cs = (ParseTree.Case1(case_expression,case_list_element,SR))
+                val cs = (ParseTree.Case9(case_expression,cle1,cle2,cle3,cle4,cle5,cle6,cle7,cle8,cle9,
+                          SR1,SR2,SR3,SR4,SR5,SR6,SR7,SR8,SR9))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )  
+    | %try  KW_CASE case_expression KW_OF
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            KW_END
+        => (
+            let
+                val cs = (ParseTree.Case8(case_expression,cle1,cle2,cle3,cle4,cle5,cle6,cle7,cle8,
+                          SR1,SR2,SR3,SR4,SR5,SR6,SR7,SR8))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+    | %try  KW_CASE case_expression KW_OF
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            KW_END
+        => (
+            let
+                val cs = (ParseTree.Case7(case_expression,cle1,cle2,cle3,cle4,cle5,cle6,cle7,
+                          SR1,SR2,SR3,SR4,SR5,SR6,SR7))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+    | %try  KW_CASE case_expression KW_OF
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            KW_END
+        => (
+            let
+                val cs = (ParseTree.Case6(case_expression,cle1,cle2,cle3,cle4,cle5,cle6,
+                          SR1,SR2,SR3,SR4,SR5,SR6))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+    | %try  KW_CASE case_expression KW_OF
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            KW_END
+        => (
+            let
+                val cs = (ParseTree.Case5(case_expression,cle1,cle2,cle3,cle4,cle5,
+                          SR1,SR2,SR3,SR4,SR5))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+    | %try  KW_CASE case_expression KW_OF
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            KW_END
+        => (
+            let
+                val cs = (ParseTree.Case4(case_expression,cle1,cle2,cle3,cle4,
+                          SR1,SR2,SR3,SR4))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+    | %try  KW_CASE case_expression KW_OF
+            cle COLON (commands)*
+            cle COLON (commands)*
+            cle COLON (commands)*
+            KW_END
+        => (
+            let
+                val cs = (ParseTree.Case3(case_expression,cle1,cle2,cle3,
+                          SR1,SR2,SR3))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+    | %try  KW_CASE case_expression KW_OF
+            cle COLON (commands)*
+            cle COLON (commands)*
+            KW_END
+        => (
+            let
+                val cs = (ParseTree.Case2(case_expression,cle1,cle2,SR1,SR2))
+            in
+                tree := (cs :: (!tree));
+                cs
+            end
+        )
+    | %try  KW_CASE case_expression KW_OF cle COLON (commands)* KW_END
+        => (
+            let
+                val cs = (ParseTree.Case1(case_expression,cle,SR))
             in
                 tree := (cs :: (!tree));
                 cs
@@ -251,7 +394,7 @@ case_expression
     | REAL => ( ParseTree .Const (Grammar. Primitivo (Grammar.Float_ REAL )))
     ;
 
-case_list_element
+cle
     : case_expression => (case_expression)
     ;
 
